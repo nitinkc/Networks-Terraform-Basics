@@ -1,0 +1,8 @@
+# Packet Tracer autosave/backup files
+*.pkt.bak
+*Packet Tracer Auto-recovery*
+
+# OS junk
+.DS_Store
+Thumbs.db
+site/

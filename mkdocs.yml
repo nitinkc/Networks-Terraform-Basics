@@ -1,0 +1,164 @@
+site_name: Computer Networks
+site_url:
+site_description:
+repo_url:
+repo_name: Computer Networks
+
+theme:
+  name: material
+  features:
+    # Navigation
+    - navigation.tabs
+    #    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes      # section landing pages (quiz/, sessions/)
+    - navigation.path
+    - navigation.top           # Back-to-top button
+    - navigation.footer        # Prev/Next page links
+    # navigation.instant disabled — breaks live reload (re-enable for production builds)
+    # - navigation.instant
+    # - navigation.instant.progress
+    # Search
+    - search.suggest
+    - search.highlight
+    - search.share
+    # Content
+    - content.code.copy
+    - content.code.annotate    # (1) style code annotations
+    - content.tabs.link        # Sync tabs across page
+    - content.tooltips
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: brown
+      accent: blue
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: brown
+      accent: blue
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      use_pygments: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true
+  - abbr
+  - attr_list
+  - md_in_html
+  - pymdownx.snippets:
+      base_path: docs
+
+plugins:
+  - search:
+      lang: en
+  - mkdocs_quiz
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      use_pygments: true
+      guess_lang: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - toc:
+      permalink: true
+      title: On this page
+  - abbr
+  - attr_list
+  - md_in_html
+  - pymdownx.snippets:
+      base_path:
+        - docs
+        - .            # lets docs pages single-source the sandbox README/RUNBOOK
+      check_paths: true
+      auto_append:
+        - includes/abbreviations.md   # hover tooltips for abbreviations on every page
+  - tables
+
+exclude_docs: |
+  includes/**
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
+
+nav:
+  - Start Here:
+      - Overview: index.md
+      - Lab-Aligned Learning Path: lab-theory-map.md
+  - Theory:
+      - Foundations:
+          - Networking Models (OSI & TCP/IP): 01-networking-models.md
+          - Packets & IP Addressing: 02-packets-ip-addressing.md
+          - MAC Addresses & ARP: 06-mac-arp.md
+          - Switches vs Routers: 07-switches-routers.md
+      - Core Services:
+          - DNS & Ports: 03-dns-and-ports.md
+          - Subnetting & DHCP: 05-subnetting-dhcp.md
+          - TCP vs UDP: 09-tcp-udp.md
+          - HTTP/HTTPS & TLS: 10-http-https-tls.md
+      - Routing & Edge:
+          - Private IPs & NAT: 04-private-ip-nat.md
+          - Static Routing, OSPF & BGP: 13-routing-protocols.md
+          - VPNs, Proxies & Load Balancers: 12-vpn-proxies-loadbalancers.md
+      - Segmentation & Security:
+          - VLANs: 08-vlans.md
+          - ACLs & Network Segmentation: 14-acls-segmentation.md
+          - Firewalls: 11-firewalls.md
+      - Cloud & Hybrid:
+          - Cloud & Hybrid Networking: 15-cloud-hybrid-networking.md
+      - Glossary & Cheat-Sheet: 99-glossary-cheatsheet.md
+  - Terraform Track:
+      - 01 - Setup & First Apply: terraform/01-setup-first-apply.md
+      - 02 - VPC & Subnets: terraform/02-vpc-subnets.md
+      - 03 - Routing, NAT & Firewall: terraform/03-routing-nat-firewall.md
+      - 04 - VMs & Private DNS: terraform/04-vms-and-dns.md
+  - Labs:
+      - 01 - Single-Subnet FTP/HTTP: labs/lab1-switch/1-basic-ftp-http-lan.md
+      - 02 - Router & Subnets: labs/lab2-Routers&Subnets/2-router-ftp-http-lab.md
+      - 03 - Multi-Router NAT & DHCP: labs/3-multi-router-nat-dhcp-lab.md
+      - 04 - DHCP & Relay: labs/lab4-DHCP/4-dhcp_lab.md
+      - 05 - DNS & Name Resolution: labs/lab5-DNS/5-dns_lab.md
+      - 06 - NAT, PAT & Port Forwarding: labs/6-nat_pat_lab.md
+      - 07 - OSPF & eBGP: labs/7-bgp_ospf_lab.md
+      - 08 - VLANs & ACLs: labs/8-lan_acl_lab.md
+      - 09 - Packet Tracer GCP Equivalent: labs/9-networking_gcp_equivalent_lab.md
+      - 10 - GCP Networking with Terraform: labs/10-gcp_terraform_networking_scenario.md
+      - 11 - VPC Peering & Shared VPC: labs/lab_vpc_peering_shared_vpc.md
+      - 12 - L4 & L7 Load Balancing: labs/lab_load_balancing_l4_l7.md
+      - 13 - IPsec VPN & BGP: labs/lab_ipsec_vpn_bgp_hybrid_cloud.md
+      - Reference:
+          - Devices: labs/devices.md
+          - Protocols: labs/protocols.md
