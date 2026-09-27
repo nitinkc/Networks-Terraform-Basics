@@ -5,6 +5,7 @@ You will learn how human-friendly hostnames (such as `www.company.local` and `ft
 IP addresses across different subnets.
 
 You will configure:
+
 * **A Records (Address Records):** Mapping domain names directly to IPv4 addresses.
 * **CNAME Records (Canonical Name / Alias):** Aliasing secondary service names to primary domain names.
 * **Integrated DHCP + DNS:** Automatically distributing DNS server settings to client PCs.

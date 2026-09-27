@@ -77,6 +77,7 @@ Open **DHCP-Server0**:
 
 ### Step A: Configure Static IP on the Server
 Go to **Desktop > IP Configuration**:
+
 * **IP Address:** `192.168.20.10`
 * **Subnet Mask:** `255.255.255.0`
 * **Default Gateway:** `192.168.20.1`
@@ -84,6 +85,7 @@ Go to **Desktop > IP Configuration**:
 
 ### Step B: Configure the DHCP Service for Remote Subnet
 Go to **Services tab > DHCP**:
+
 * Service: Toggle **On**
 * Pool Name: `LAN1-POOL`
 * Default Gateway: `192.168.10.1`
@@ -94,6 +96,8 @@ Go to **Services tab > DHCP**:
 * Click **Add** (or **Save**)
 
 *(Optional: You can also keep the default `serverPool` for the local `192.168.20.0/24` subnet if you add servers later).*
+
+![2.png](2.png)
 
 ## 4. Alternative Implementation: Router as the DHCP Server
 
