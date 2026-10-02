@@ -44,28 +44,6 @@ theme:
         icon: material/weather-sunny
         name: Switch to light mode
 
-markdown_extensions:
-  - admonition
-  - pymdownx.details
-  - pymdownx.highlight:
-      anchor_linenums: true
-      use_pygments: true
-  - pymdownx.inlinehilite
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.tabbed:
-      alternate_style: true
-  - toc:
-      permalink: true
-  - abbr
-  - attr_list
-  - md_in_html
-  - pymdownx.snippets:
-      base_path: docs
-
 plugins:
   - search:
       lang: en
@@ -118,27 +96,22 @@ nav:
   - Start Here:
       - Overview: index.md
       - Lab-Aligned Learning Path: lab-theory-map.md
-  - Theory:
-      - Foundations:
-          - Networking Models (OSI & TCP/IP): 01-networking-models.md
-          - Packets & IP Addressing: 02-packets-ip-addressing.md
-          - MAC Addresses & ARP: 06-mac-arp.md
-          - Switches vs Routers: 07-switches-routers.md
-      - Core Services:
-          - DNS & Ports: 03-dns-and-ports.md
-          - Subnetting & DHCP: 05-subnetting-dhcp.md
-          - TCP vs UDP: 09-tcp-udp.md
-          - HTTP/HTTPS & TLS: 10-http-https-tls.md
-      - Routing & Edge:
-          - Private IPs & NAT: 04-private-ip-nat.md
-          - Static Routing, OSPF & BGP: 13-routing-protocols.md
-          - VPNs, Proxies & Load Balancers: 12-vpn-proxies-loadbalancers.md
-      - Segmentation & Security:
-          - VLANs: 08-vlans.md
-          - ACLs & Network Segmentation: 14-acls-segmentation.md
-          - Firewalls: 11-firewalls.md
-      - Cloud & Hybrid:
-          - Cloud & Hybrid Networking: 15-cloud-hybrid-networking.md
+  - Theory — One Packet, End to End:
+      - 01 - Networking Models: 01-networking-models.md
+      - 02 - Packets & IP Addressing: 02-packets-ip-addressing.md
+      - 03 - MAC Addresses & ARP: 03-mac-arp.md
+      - 04 - Switches vs Routers: 04-switches-routers.md
+      - 05 - Private IPs, NAT & PAT: 05-private-ip-nat.md
+      - 06 - Subnetting & DHCP: 06-subnetting-dhcp.md
+      - 07 - VLANs: 07-vlans.md
+      - 08 - Static Routing, OSPF & BGP: 08-routing-protocols.md
+      - 09 - TCP vs UDP: 09-tcp-udp.md
+      - 10 - DNS & Ports: 10-dns-and-ports.md
+      - 11 - HTTP/HTTPS & TLS: 11-http-https-tls.md
+      - 12 - ACLs & Network Segmentation: 12-acls-segmentation.md
+      - 13 - Firewalls: 13-firewalls.md
+      - 14 - VPNs, Proxies & Load Balancers: 14-vpn-proxies-loadbalancers.md
+      - 15 - Cloud & Hybrid Networking: 15-cloud-hybrid-networking.md
       - Glossary & Cheat-Sheet: 99-glossary-cheatsheet.md
   - Terraform Track:
       - 01 - Setup & First Apply: terraform/01-setup-first-apply.md
@@ -151,9 +124,9 @@ nav:
       - 03 - Multi-Router NAT & DHCP: labs/3-multi-router-nat-dhcp-lab.md
       - 04 - DHCP & Relay: labs/lab4-DHCP/4-dhcp_lab.md
       - 05 - DNS & Name Resolution: labs/lab5-DNS/5-dns_lab.md
-      - 06 - NAT, PAT & Port Forwarding: labs/6-nat_pat_lab.md
+      - 06 - NAT, PAT & Port Forwarding: labs/lab6-NAT-PAT/6-nat_pat_lab.md
       - 07 - OSPF & eBGP: labs/7-bgp_ospf_lab.md
-      - 08 - VLANs & ACLs: labs/8-lan_acl_lab.md
+      - 08 - VLANs & ACLs: labs/lab8-LAN-ACL/8-lan_acl_lab.md
       - 09 - Packet Tracer GCP Equivalent: labs/9-networking_gcp_equivalent_lab.md
       - 10 - GCP Networking with Terraform: labs/10-gcp_terraform_networking_scenario.md
       - 11 - VPC Peering & Shared VPC: labs/lab_vpc_peering_shared_vpc.md

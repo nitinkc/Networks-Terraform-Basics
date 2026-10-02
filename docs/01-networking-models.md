@@ -1,4 +1,4 @@
-# 1. Networking Models: OSI & TCP/IP
+# Stage 1: Networking Models — OSI & TCP/IP
 
 !!! note "Key takeaways"
     - OSI is a 7-layer **conceptual** model — nothing in it is mandatory to implement literally
@@ -68,6 +68,12 @@ The receiving side does the reverse — each layer strips its own header
 before passing the payload up. This is *encapsulation* and
 *de-encapsulation*, and it's the mechanical reason each layer can stay
 ignorant of the layers above and below it.
+
+## ShopNow packet journey: establish the map
+
+When a customer opens `https://shop.example.com`, the request crosses every layer. Ethernet or Wi-Fi carries a local frame, IP moves packets between networks, TCP provides an ordered connection, TLS protects it, and HTTP expresses the application request. Inside GKE, another HTTP request may travel from the `web` Pod to the `orders` Service using the same layered model.
+
+Terraform and Kubernetes manifests are not additional network layers. They configure resources that participate at existing layers: Terraform creates VPC subnets and load balancers; Kubernetes creates Services, network policy, and application endpoints.
 
 ## Next
 [Packets & IP Addressing →](02-packets-ip-addressing.md)

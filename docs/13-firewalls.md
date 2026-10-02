@@ -1,4 +1,4 @@
-# 11. Firewalls
+# Stage 13: Firewalls
 
 !!! note "Key takeaways"
     - A firewall enforces policy on what traffic is allowed in/out
@@ -55,7 +55,7 @@ direction).
 
 ## Relationship to NAT (a common point of confusion)
 
-NAT (page 4) *incidentally* blocks unsolicited inbound connections,
+[NAT and PAT](05-private-ip-nat.md) *incidentally* block unsolicited inbound connections,
 because there's no existing translation-table entry for traffic nobody
 inside the network initiated — but that's a side effect of NAT's
 address-translation bookkeeping, not a security policy. A firewall is
@@ -63,5 +63,11 @@ an explicit, configurable policy layer; NAT's protective effect is
 implicit and much less flexible (no way to say "allow this specific
 inbound thing" without a separate feature like port forwarding).
 
+## ShopNow packet journey: enforce stateful policy
+
+ShopNow's cloud firewall permits the load balancer and health-check systems to reach the intended backends while denying unnecessary direct access to private nodes. Kubernetes NetworkPolicy further restricts Pod-to-Pod flows such as allowing `web` to call `orders` without allowing every workload in the cluster to do so.
+
+Terraform can create VPC firewall policy, but runtime verification is still required. A rule may target the wrong network tag or service account, and a healthy public frontend can coexist with blocked health checks or backend traffic.
+
 ## Next
-[VPNs, Proxies & Load Balancers →](12-vpn-proxies-loadbalancers.md)
+[VPNs, Proxies & Load Balancers →](14-vpn-proxies-loadbalancers.md)

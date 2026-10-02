@@ -1,4 +1,4 @@
-# Static Routing, OSPF, and BGP
+# Stage 8: Static Routing, OSPF & BGP
 
 > **Key takeaways:** Forwarding uses the routing table. Static routes are configured directly, OSPF discovers paths inside an organization, and BGP exchanges policy-controlled reachability between autonomous systems.
 
@@ -74,6 +74,15 @@ In the lab sequence, focus on three separate facts:
 - BGP peers can reach each other, but no `network` statement or redistribution advertises the prefix.
 - A prefix is learned but loses to a more preferred route source.
 - Forward routing works while the destination lacks a route back.
+
+## ShopNow packet journey: choose every next hop
+
+The customer side normally follows a default route toward an ISP. GCP uses VPC routes to reach cluster nodes and cloud services. If ShopNow connects an office or datacenter through Cloud VPN, Cloud Router can exchange private prefixes with BGP so both sides learn forward and return paths dynamically.
+
+Kubernetes also makes forwarding decisions for Service and Pod traffic, but those mechanisms do not replace VPC routing. Troubleshooting should identify which routing domain currently owns the packet: the client LAN, internet, GCP VPC, GKE node, or cluster network.
+
+## Next
+[TCP vs UDP →](09-tcp-udp.md)
 
 ## Related labs
 

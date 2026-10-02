@@ -1,4 +1,4 @@
-# ACLs and Network Segmentation
+# Stage 12: ACLs & Network Segmentation
 
 > **Key takeaways:** Segmentation creates boundaries; routing permits reachability across them; ACLs selectively restrict that reachability. ACL order, direction, placement, and the implicit deny determine the result.
 
@@ -77,10 +77,19 @@ For “HR may use HTTP to the corporate server but may not use SSH”:
 - Testing only an allowed flow hides an ineffective deny rule.
 - DNS, DHCP, or return traffic needed by the application was omitted.
 
+## ShopNow packet journey: express least-privilege flows
+
+ShopNow starts with a flow matrix: internet clients may reach the HTTPS frontend on TCP 443; the frontend may reach `web`; `web` may reach `orders`; `orders` may reach `inventory` and the database; ordinary Pods may not reach the control plane or management network. Writing these flows before writing rules exposes missing DNS, health-check, and return-traffic requirements.
+
+Cisco ACLs, GCP firewall rules, and Kubernetes NetworkPolicy use different matching and state models. Terraform manages the cloud firewall rules, while Kubernetes manifests manage Pod-level policy. A permit in one layer does not override a deny or missing route in another.
+
+## Next
+[Firewalls →](13-firewalls.md)
+
 ## Related theory and labs
 
-- [VLANs](08-vlans.md)
+- [VLANs](07-vlans.md)
 - [TCP and UDP](09-tcp-udp.md)
-- [Firewalls](11-firewalls.md)
-- [VLAN and ACL lab](labs/8-lan_acl_lab.md)
+- [Firewalls](13-firewalls.md)
+- [VLAN and ACL lab](labs/lab8-LAN-ACL/8-lan_acl_lab.md)
 - [Packet Tracer GCP equivalent](labs/9-networking_gcp_equivalent_lab.md)

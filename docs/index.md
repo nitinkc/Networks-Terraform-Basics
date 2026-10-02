@@ -1,56 +1,93 @@
-# Networking Fundamentals — A Systematic Refresher
+# Networking Fundamentals — One Packet, End to End
 
-This site organizes networking theory around the repository's practical labs. The theory pages explain the mechanisms first; the labs then provide observable evidence in Packet Tracer, Cisco IOS, GCP, and Terraform.
+This theory track follows one system from a developer's laptop to a production
+microservice running on Kubernetes in Google Cloud. Instead of treating each
+networking concept as an isolated lesson, every chapter explains one more part
+of the same packet journey.
 
-The material progresses from frames and local switching through routing, services, segmentation, security, cloud networking, and hybrid connectivity. The lab files remain the authoritative build instructions and are kept separately under the **Labs** navigation tab.
+The Packet Tracer labs remain separate, deliberately small exercises. Use them
+to observe individual mechanisms after learning how those mechanisms cooperate
+in the production story.
 
-## How to use this site
+## The continuing scenario: ShopNow
 
-Start with the [Lab-Aligned Learning Path](lab-theory-map.md). For each lab, read the linked theory, predict the packet flow, complete the lab, and compare the observed tables or packets with the theory. If you already know a topic, use its **Key takeaways** section as a quick review.
+ShopNow is a small e-commerce platform with three Kubernetes workloads:
 
-## Contents
+- `web` receives customer HTTPS requests.
+- `orders` implements the order API.
+- `inventory` checks and reserves stock.
 
-1. [Networking Models (OSI & TCP/IP)](01-networking-models.md)
-2. [Packets & IP Addressing](02-packets-ip-addressing.md)
-3. [DNS & Ports](03-dns-and-ports.md)
-4. [Private IPs & NAT](04-private-ip-nat.md)
-5. [Subnetting & DHCP](05-subnetting-dhcp.md)
-6. [MAC Addresses & ARP](06-mac-arp.md)
-7. [Switches vs Routers](07-switches-routers.md)
-8. [VLANs](08-vlans.md) — *not in the original material, added because it's
-   the natural extension of switching*
-9. [TCP vs UDP](09-tcp-udp.md)
-10. [HTTP/HTTPS & TLS](10-http-https-tls.md)
-11. [Firewalls](11-firewalls.md)
-12. [VPNs, Proxies & Load Balancers](12-vpn-proxies-loadbalancers.md)
-13. [Static Routing, OSPF & BGP](13-routing-protocols.md)
-14. [ACLs & Network Segmentation](14-acls-segmentation.md)
-15. [Cloud & Hybrid Networking](15-cloud-hybrid-networking.md)
-16. [Glossary & Interview Cheat-Sheet](99-glossary-cheatsheet.md)
+Terraform provisions the infrastructure: a GCP VPC, regional subnets, a private
+GKE cluster, Cloud NAT, firewall rules, Cloud DNS, and an external HTTPS load
+balancer. Kubernetes then schedules Pods and provides Services and Ingress for
+the applications.
 
-For a lab-first view of the same material, use the [Lab-Aligned Learning Path](lab-theory-map.md).
+```text
+Developer laptop
+    |
+Home/office switch -> router/NAT -> ISP and internet
+                                      |
+                              Cloud DNS record
+                                      |
+                           HTTPS load balancer
+                                      |
+                         GKE Ingress / Service
+                                      |
+                 web Pod -> orders Pod -> inventory Pod
+                                      |
+                              managed database
+```
 
-## The 20 concepts, mapped
+The example intentionally has two layers of declarative infrastructure:
 
-| # | Concept | Page |
-|---|---------|------|
-| 1 | OSI & TCP/IP models | [01](01-networking-models.md) |
-| 2 | Packets | [02](02-packets-ip-addressing.md) |
-| 3 | IP addressing (IPv4/IPv6) | [02](02-packets-ip-addressing.md) |
-| 4 | Routers & routing tables | [02](02-packets-ip-addressing.md), [07](07-switches-routers.md) |
-| 5 | DNS | [03](03-dns-and-ports.md) |
-| 6 | Ports | [03](03-dns-and-ports.md) |
-| 7 | Private IPs | [04](04-private-ip-nat.md) |
-| 8 | NAT | [04](04-private-ip-nat.md) |
-| 9 | Subnetting / CIDR | [05](05-subnetting-dhcp.md) |
-| 10 | DHCP | [05](05-subnetting-dhcp.md) |
-| 11 | MAC addresses | [06](06-mac-arp.md) |
-| 12 | ARP | [06](06-mac-arp.md) |
-| 13 | Switches | [07](07-switches-routers.md) |
-| 14 | TCP | [09](09-tcp-udp.md) |
-| 15 | UDP | [09](09-tcp-udp.md) |
-| 16 | HTTP/HTTPS | [10](10-http-https-tls.md) |
-| 17 | TLS | [10](10-http-https-tls.md) |
-| 18 | Firewalls | [11](11-firewalls.md) |
-| 19 | VPNs & Proxies | [12](12-vpn-proxies-loadbalancers.md) |
-| 20 | Load balancers | [12](12-vpn-proxies-loadbalancers.md) |
+- **Terraform** creates cloud networking and the Kubernetes cluster.
+- **Kubernetes manifests** describe application networking inside the cluster.
+
+The theory distinguishes physical networking, cloud virtual networking, and
+Kubernetes networking rather than pretending that similarly named components
+are identical.
+
+## Recommended theory sequence
+
+Read the chapters in this order. The filenames retain their original numbers so
+existing lab links and bookmarks continue to work; the navigation order is the
+learning order.
+
+| Stage | Topic | Question answered in the ShopNow journey |
+|:------|:------|:-------------------------------------------|
+| 1 | [Networking Models](01-networking-models.md) | Which layer owns each part of the request? |
+| 2 | [Packets & IP Addressing](02-packets-ip-addressing.md) | How is application data addressed and encapsulated? |
+| 3 | [MAC Addresses & ARP](03-mac-arp.md) | How does the laptop reach the first local hop? |
+| 4 | [Switches vs Routers](04-switches-routers.md) | How does traffic leave the local network? |
+| 5 | [Private IPs, NAT & PAT](05-private-ip-nat.md) | How do private clients and private cluster nodes reach public networks? |
+| 6 | [Subnetting & DHCP](06-subnetting-dhcp.md) | How are address ranges planned and client settings assigned? |
+| 7 | [VLANs](07-vlans.md) | How are local environments separated on shared hardware? |
+| 8 | [Routing](08-routing-protocols.md) | How is the next hop selected across networks and hybrid links? |
+| 9 | [TCP vs UDP](09-tcp-udp.md) | How do endpoints exchange reliable streams or datagrams? |
+| 10 | [DNS & Ports](10-dns-and-ports.md) | How does `shop.example.com` locate the correct service? |
+| 11 | [HTTP/HTTPS & TLS](11-http-https-tls.md) | How is the customer request represented and protected? |
+| 12 | [ACLs & Segmentation](12-acls-segmentation.md) | Which source-to-destination flows should be allowed? |
+| 13 | [Firewalls](13-firewalls.md) | How is stateful network policy enforced? |
+| 14 | [VPNs, Proxies & Load Balancers](14-vpn-proxies-loadbalancers.md) | How do operators connect and how is traffic distributed? |
+| 15 | [Cloud & Hybrid Networking](15-cloud-hybrid-networking.md) | How do Terraform, GCP, and Kubernetes assemble the complete design? |
+
+## How to study each stage
+
+1. Locate the component in the ShopNow diagram.
+2. Predict what addresses, ports, tables, and policies the packet will encounter.
+3. Read the theory chapter.
+4. Use the [Lab-Aligned Learning Path](lab-theory-map.md) to choose a focused lab.
+5. Return to the ShopNow scenario and explain how the lab mechanism appears in production.
+
+A useful troubleshooting habit throughout the track is to ask four separate
+questions:
+
+1. **Resolution:** Did the name resolve to the intended address?
+2. **Routing:** Is there a forward path and a return path?
+3. **Policy:** Is the protocol and port allowed in both directions?
+4. **Application:** Is a healthy process actually listening and responding?
+
+## Reference
+
+Use the [Glossary & Interview Cheat-Sheet](99-glossary-cheatsheet.md) for quick
+revision rather than as the primary learning sequence.

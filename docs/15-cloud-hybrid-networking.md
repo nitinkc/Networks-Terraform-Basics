@@ -1,4 +1,4 @@
-# Cloud and Hybrid Networking
+# Stage 15: Cloud & Hybrid Networking
 
 > **Key takeaways:** Cloud networking uses familiar prefixes, routes, NAT, DNS, and filtering, but implements them as distributed services. Separate connectivity, routing, security, and administration when evaluating a design.
 
@@ -17,6 +17,17 @@
 | Shared network administration | Shared VPC |
 
 The mapping is conceptual, not implementation-identical. A VPC is not a physical switch, Cloud Router does not forward packets, and firewall enforcement is distributed.
+
+## Phase 2: The "Networking to Terraform" Bridge (Cloud Parity)
+
+Packet Tracer Component                   GCP Terraform Resource
+─────────────────────────────────────────────────────────────────────────────
+Router0 / Subnet Segments          ───>   google_compute_network (Custom VPC)
+LAN 1 / LAN 2 Subnets              ───>   google_compute_subnetwork
+DHCP-Server0 (Relay & Pool)        ───>   Andromeda SDN (Built-in Subnet DHCP)
+DNS Server (8.8.8.8 / Local)       ───>   google_dns_managed_zone
+Router NAT / PAT                   ───>   google_compute_router_nat
+Client PCs & App Servers           ───>   google_compute_instance
 
 ## Routes, firewalls, and NAT answer different questions
 
@@ -83,6 +94,16 @@ A useful reading order is:
 - VPN encryption succeeds but BGP advertises no application prefixes.
 - Health checks are blocked even though user traffic is allowed.
 - DNS resolves correctly to an address that routing or policy cannot reach.
+
+## ShopNow packet journey: assemble the complete system
+
+Terraform applies the dependencies in layers: VPC and IP ranges, routes and Cloud NAT, firewall policy, private GKE cluster, load-balancer components, DNS records, and optional VPN/BGP connectivity. Kubernetes then deploys the `web`, `orders`, and `inventory` workloads plus Services, Ingress, and NetworkPolicy.
+
+The final customer flow is now explainable end to end: DNS resolves the frontend; the local LAN reaches its router through ARP and switching; PAT provides client egress; internet and cloud routes deliver packets; a firewall permits TCP 443; TLS protects HTTP; the load balancer selects a healthy backend; and Kubernetes networking carries internal service calls. Troubleshoot the same path in that order rather than treating the cloud as one opaque box.
+
+## Continue practicing
+
+Use the [Lab-Aligned Learning Path](lab-theory-map.md) to isolate each mechanism, then return to this packet journey and identify where the lab's tables, routes, translations, or policies appear in ShopNow.
 
 ## Related labs
 

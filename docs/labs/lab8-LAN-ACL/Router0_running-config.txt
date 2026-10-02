@@ -1,0 +1,104 @@
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Router0
+!
+!
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+!
+license udi pid CISCO1941/K9 sn FTX1524JJ7V-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0.10
+ description Engineering Gateway
+ encapsulation dot1Q 10
+ ip address 10.1.10.1 255.255.255.0
+!
+interface GigabitEthernet0/0.20
+ description HR Finance Gateway
+ encapsulation dot1Q 20
+ ip address 10.1.20.1 255.255.255.0
+ ip access-group HR_SECURITY_POLICY in
+!
+interface GigabitEthernet0/0.30
+ description Guest WiFi Gateway
+ encapsulation dot1Q 30
+ ip address 10.1.30.1 255.255.255.0
+ ip access-group GUEST_ISOLATION_POLICY in
+!
+interface GigabitEthernet0/1
+ description Server DMZ Subnet
+ ip address 10.1.50.1 255.255.255.0
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+!
+router rip
+!
+ip classless
+!
+ip flow-export version 9
+!
+!
+ip access-list extended HR_SECURITY_POLICY
+ permit tcp 10.1.20.0 0.0.0.255 host 10.1.50.10 eq www
+ deny tcp 10.1.20.0 0.0.0.255 host 10.1.50.10 eq 22
+ deny ip 10.1.20.0 0.0.0.255 10.1.10.0 0.0.0.255
+ permit ip any any
+ip access-list extended GUEST_ISOLATION_POLICY
+ deny ip 10.1.30.0 0.0.0.255 10.1.0.0 0.0.255.255
+ permit ip any any
+!
+!
+!
+!
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login
+!
+!
+!
+end
+

@@ -1,4 +1,4 @@
-# 10. HTTP/HTTPS & TLS
+# Stage 11: HTTP/HTTPS & TLS
 
 !!! note "Key takeaways"
     - HTTP is plaintext request/response over TCP; HTTPS adds TLS encryption on top
@@ -84,5 +84,11 @@ browser/OS ships with a list of trusted CAs; if a certificate wasn't
 signed by one of them (or has expired, or doesn't match the domain),
 you get the "connection not private" warning.
 
+## ShopNow packet journey: protect the application request
+
+The customer sends an HTTPS request such as `POST /api/orders` to `shop.example.com`. The external load balancer can terminate TLS using a certificate for that hostname, inspect the HTTP host and path, and route the request to ShopNow's web backend. The backend then calls the internal `orders` Service with another HTTP request.
+
+TLS termination defines a trust boundary. If traffic between the load balancer, Pods, and managed services must also be encrypted, ShopNow needs additional TLS connections or a service-mesh design; frontend HTTPS alone does not automatically encrypt every internal hop.
+
 ## Next
-[Firewalls →](11-firewalls.md)
+[ACLs & Network Segmentation →](12-acls-segmentation.md)

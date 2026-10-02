@@ -1,4 +1,4 @@
-# 6. MAC Addresses & ARP
+# Stage 3: MAC Addresses & ARP
 
 !!! note "Key takeaways"
     - MAC = Layer 2 hardware identifier, burned into the NIC, doesn't change with network
@@ -57,5 +57,11 @@ spoofing/poisoning**, the basis of many man-in-the-middle attacks on
 local networks. It's why enterprise switches often support **Dynamic
 ARP Inspection (DAI)** to validate ARP replies against known bindings.
 
+## ShopNow packet journey: reach the first hop
+
+The customer laptop does not ARP for ShopNow's public load-balancer IP because that address is outside the laptop's subnet. It ARPs for the default gateway's local IP, wraps the IP packet in a frame addressed to the gateway's MAC, and sends that frame through the local switch. Each routed hop replaces the Layer 2 frame while the routed IP packet continues toward its destination.
+
+GKE uses different implementation details depending on its network mode, but the principle remains: local delivery needs a link-layer next hop, while remote delivery goes through a gateway. ARP troubleshooting is therefore local to a broadcast domain; it cannot explain a failure several routed networks away.
+
 ## Next
-[Switches vs Routers →](07-switches-routers.md)
+[Switches vs Routers →](04-switches-routers.md)

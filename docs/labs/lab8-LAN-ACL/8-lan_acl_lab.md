@@ -12,12 +12,12 @@ This lab covers two fundamental pillars of network engineering and enterprise se
 [ VLAN 20: HR / Finance ] ─┤                                               │ (Gig0/1: 10.1.50.1/24)
   10.1.20.0/24             │                                               ▼
                            │                                          [Switch1: Server DMZ]
-[ VLAN 30: Guest Wi-Fi ] ──┘                                               │
+[ VLAN 34: Guest Wi-Fi ] ──┘                                               │
   10.1.30.0/24                                                             ▼
                                                                   [Corporate-Server0]
                                                                   IP: 10.1.50.10 (HTTP + SSH)
 ```
-
+![1.png](1.png)
 ## Security Policy Matrix
 
 | Source Subnet | Destination | Allowed Traffic | Blocked Traffic | Enforcement Method |
@@ -25,7 +25,7 @@ This lab covers two fundamental pillars of network engineering and enterprise se
 | **VLAN 10 (Engineering)** | Corporate Server | All (HTTP Port 80, SSH Port 22, ICMP Ping) | None | Explicit Permit |
 | **VLAN 20 (HR / Finance)** | Corporate Server | HTTP (Port 80) only | SSH (Port 22), ICMP Ping | Extended ACL Filter |
 | **VLAN 20 (HR / Finance)** | VLAN 10 (Engineering)| None | All inter-VLAN traffic | Extended ACL Filter |
-| **VLAN 30 (Guest Wi-Fi)** | Internal Network | None (Complete Isolation) | All internal subnets (`10.1.0.0/16`) | Standard / Extended ACL |
+| **VLAN 34 (Guest Wi-Fi)** | Internal Network | None (Complete Isolation) | All internal subnets (`10.1.0.0/16`) | Standard / Extended ACL |
 
 ## Addressing Plan
 
@@ -51,9 +51,9 @@ This lab covers two fundamental pillars of network engineering and enterprise se
 ### Cabling (Copper Straight-Through)
 * `PC-Eng` (`Fa0`) <—> `Switch0` (`FastEthernet0/10`)
 * `PC-HR` (`Fa0`) <—> `Switch0` (`FastEthernet0/20`)
-* `PC-Guest` (`Fa0`) <—> `Switch0` (`FastEthernet0/30`)
-* `Switch0` (`FastEthernet0/24`) <—> `Router0` (`GigabitEthernet0/0`)
-* `Router0` (`GigabitEthernet0/1`) <—> `Switch1` (`FastEthernet0/24`)
+* `PC-Guest` (`Fa0`) <—> `Switch0` (`FastEthernet0/24`)
+* `Switch0` (`GigabitEthernet0/1`) <—> `Router0` (`GigabitEthernet0/0`)
+* `Router0` (`GigabitEthernet0/1`) <—> `Switch1` (`GigabitEthernet0/1`)
 * `Switch1` (`FastEthernet0/1`) <—> `Corporate-Server0` (`FastEthernet0`)
 
 ## 2. Switch0 Configuration (VLANs, Access Ports & Trunking)
@@ -91,7 +91,7 @@ interface FastEthernet0/20
  no shutdown
 exit
 
-interface FastEthernet0/30
+interface FastEthernet0/24
  description PC-Guest Port
  switchport mode access
  switchport access vlan 30
@@ -99,7 +99,7 @@ interface FastEthernet0/30
 exit
 
 ! 3. Configure 802.1Q Trunk Uplink to Router0
-interface FastEthernet0/24
+interface GigabitEthernet0/1
  description Trunk to Router0
  switchport mode trunk
  switchport trunk native vlan 99

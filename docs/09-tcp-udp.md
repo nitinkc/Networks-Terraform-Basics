@@ -1,4 +1,4 @@
-# 9. TCP vs UDP
+# Stage 9: TCP vs UDP
 
 !!! note "Key takeaways"
     - TCP = reliable, ordered, connection-based — costs overhead
@@ -6,7 +6,7 @@
     - Choice of protocol is a direct trade: correctness vs speed
 
 Both operate at the **Transport layer** (Layer 4). Both use ports to
-identify applications (page 3). That's where the similarity ends.
+identify applications, as covered in [DNS and Ports](10-dns-and-ports.md). That's where the similarity ends.
 
 ## TCP (Transmission Control Protocol)
 
@@ -45,7 +45,7 @@ bank transaction or a downloaded file is unacceptable.
 ### When to use UDP
 Anything where a late or dropped packet is worse than a slightly wrong
 one: video calls, live streaming, online gaming, and — notably — **DNS**
-queries (page 3), which use UDP by default because a single small query
+queries, covered in [DNS and Ports](10-dns-and-ports.md), which use UDP by default because a single small query
 just isn't worth handshake overhead; if it's lost, the client just
 retries the whole query rather than needing byte-level retransmission.
 
@@ -69,5 +69,11 @@ entire call to retransmit an old one — so the application itself
 decides how to handle loss, rather than relying on the transport layer
 to force retransmission the way TCP would.
 
+## ShopNow packet journey: establish transport
+
+The browser normally uses TCP for an HTTPS connection to ShopNow. Its source is an ephemeral client port and its destination is TCP 443 on the load balancer. The load balancer may create a separate connection to a backend, so client-to-load-balancer and load-balancer-to-Pod are distinct transport sessions.
+
+Inside the cluster, `web` calls `orders` on a Service port, and DNS commonly uses UDP 53 with TCP available when needed. A Service's `port` is the stable port clients use; `targetPort` identifies the port on which the selected Pods listen.
+
 ## Next
-[HTTP/HTTPS & TLS →](10-http-https-tls.md)
+[DNS & Ports →](10-dns-and-ports.md)

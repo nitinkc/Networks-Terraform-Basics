@@ -1,4 +1,4 @@
-# 2. Packets & IP Addressing
+# Stage 2: Packets & IP Addressing
 
 !!! note "Key takeaways"
     - Data is chopped into packets so many flows can share a link fairly and recover from loss cheaply
@@ -42,7 +42,7 @@ device itself (a device with two network interfaces has two IPs).
 - 32-bit, written as 4 decimal octets: `192.168.1.10`
 - Total space: ~4.3 billion addresses
 - **Exhausted** as a public-address space years ago — this is *the*
-  reason NAT and private IP ranges exist (see page 4)
+  reason [NAT and private IP ranges](05-private-ip-nat.md) exist
 
 ### IPv6
 - 128-bit, written in hex groups: `2001:0db8:85a3:0000:0000:8a2e:0370:7334`
@@ -117,5 +117,11 @@ loop occurs — it's also exactly what `traceroute` exploits to map a
 path (it sends packets with deliberately increasing TTLs to force each
 router along the way to respond).
 
+## ShopNow packet journey: identify the endpoints
+
+A customer request has a source IP on the customer's network and a destination IP exposed by ShopNow's cloud load balancer. After the load balancer accepts it, later packets use internal addresses assigned to GKE nodes, Pods, or Services. These are separate network hops, not one unchanged end-to-end packet.
+
+Terraform plans non-overlapping VPC and subnet CIDRs before GKE is created. Kubernetes then allocates Pod and Service addresses from cluster ranges. Address planning matters because overlapping VPC, Pod, Service, and on-premises ranges make routing ambiguous.
+
 ## Next
-[DNS & Ports →](03-dns-and-ports.md)
+[MAC Addresses & ARP →](03-mac-arp.md)
