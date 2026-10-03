@@ -85,5 +85,10 @@ interface gig0/1
 !!! info "Cloud connection"
     A VPC subnet and a Kubernetes namespace are not VLANs. They can support similar organizational goals, but isolation in cloud and Kubernetes environments comes from routing and explicit firewall or NetworkPolicy rules—not from the namespace name alone.
 
+## Practice in Packet Tracer
+
+- [Lab 08 — VLANs & ACLs](labs/lab8-LAN-ACL/8-lan_acl_lab.md): configure access ports, an 802.1Q trunk, and router-on-a-stick.
+- [Lab 09 — GCP Architecture Equivalent](labs/9-networking_gcp_equivalent_lab.md): use VLAN-backed tiers as a physical analogy for cloud subnets.
+
 ## Next
 [Static Routing, OSPF & BGP →](08-routing-protocols.md)

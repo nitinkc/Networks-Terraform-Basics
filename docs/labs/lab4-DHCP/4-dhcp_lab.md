@@ -1,19 +1,20 @@
 # Dedicated DHCP & DHCP Relay Agent Lab (Packet Tracer)
 
+!!! info "Theory prerequisites"
+    Read [Switches vs Routers](../../04-switches-routers.md) and [Subnetting & DHCP](../../06-subnetting-dhcp.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
+
 This lab is designed to take you from DHCP fundamentals to advanced enterprise implementations. You will build and observe:
 
 * **Part 1: Basic Router-Based DHCP Server** (Local LAN pool with exclusions and options)
 * **Part 2: The DORA Process Deep-Dive** (Discover, Offer, Request, Acknowledge in Packet Tracer Simulation Mode)
 * **Part 3: Enterprise DHCP Relay Agent (`ip helper-address`)** (Centralized DHCP server providing leases to a remote subnet across a router)
 
-```
-[LAN 1: Sales / Clients]                                              [LAN 2: Server Farm]
-192.168.10.0/24                                                        192.168.20.0/24
+## Topology
 
-[PC0]──┐
-       ├──[Switch0]──(Gig0/0)[ Router0 ](Gig0/1)──[Switch1]──[DHCP-Server0]
-[PC1]──┘                 (DHCP Relay Agent)                    (192.168.20.10)
-```
+![Client DHCP broadcasts crossing Router0 as relayed unicasts to a centralized DHCP server](../diagrams/lab04-dhcp-relay.svg)
+
+!!! tip "Editable source"
+    Edit [`lab04-dhcp-relay.drawio`](../diagrams/lab04-dhcp-relay.drawio) and export it as SVG after changes.
 
 ![1.png](1.png)
 

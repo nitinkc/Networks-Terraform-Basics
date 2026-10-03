@@ -60,8 +60,65 @@ you're actually using its built-in switch for the first part and its
 router function for the second — it's easy to conflate the two because
 they're physically inseparable in that product.
 
+## WAN and LAN sides of an all-in-one router
+
+The **WAN (Wide Area Network) port** connects the router toward an upstream
+network—usually an ISP modem, fiber terminal, or another router. The **LAN
+(Local Area Network) ports** connect local devices through the router's built-in
+Layer 2 switch.
+
+```text
+                 [ ISP / UPSTREAM NETWORK ]
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │      WAN PORT       │  Outside/upstream interface
+                 ├─────────────────────┤
+                 │    ROUTER ENGINE    │  Routing, NAT/PAT, policy
+                 ├─────────────────────┤
+                 │   INTERNAL SWITCH   │  Layer 2 forwarding
+                 └──┬────┬────┬────┬───┘
+                    │    │    │    │
+                  LAN1 LAN2 LAN3 LAN4
+                    │    │    │    │
+                    ▼    ▼    ▼    ▼
+                       Local devices
+                    Private LAN subnet
+```
+
+| Feature | WAN side | LAN side |
+|:--------|:---------|:---------|
+| **Primary purpose** | Connects toward an ISP or upstream router | Connects local computers, printers, access points, and switches |
+| **Forwarding role** | Carries traffic toward remote networks and a default route | Carries local frames and traffic sent to the default gateway |
+| **Typical addressing** | Public ISP address, or sometimes a private address behind another NAT device | Private gateway address such as `192.168.1.1/24` |
+| **NAT terminology** | Commonly marked `ip nat outside` | Commonly marked `ip nat inside` |
+| **Physical layout** | Often one dedicated Ethernet port | Often several ports on an integrated switch |
+
+A few distinctions prevent common misunderstandings:
+
+- A WAN port is not guaranteed to hold a public address. It may receive a private
+  address when the router sits behind an ISP gateway or another router, creating
+  **double NAT**.
+- LAN switch ports do not assign addresses. A DHCP server—often another function
+  inside the same appliance—leases IP address, mask, gateway, and DNS settings.
+- NAT, routing, switching, DHCP, Wi-Fi, and firewalling are separate functions
+  even when one physical device performs all of them.
+- Blocking unsolicited inbound traffic is normally the result of NAT state and
+  firewall policy, not an inherent property of the physical WAN socket.
+- Enterprise routers may use several routed interfaces without labels such as
+  “WAN” and “LAN”; their role comes from addressing, routes, NAT, and policy.
+
+This inside/outside distinction leads directly into
+[Private IPs, NAT & PAT](05-private-ip-nat.md).
+
 !!! info "Cloud connection"
     Cloud VPC forwarding is distributed rather than performed by one visible physical router. A Kubernetes Service is also not an Ethernet switch; it is a stable virtual endpoint that directs traffic to selected Pods.
+
+## Practice in Packet Tracer
+
+- [Lab 01 — Single-Subnet FTP/HTTP](labs/lab1-switch/1-basic-ftp-http-lan.md): prove that same-subnet traffic needs switching, not routing.
+- [Lab 02 — Router & Subnets](labs/lab2-Routers&Subnets/2-router-ftp-http-lab.md): cross two broadcast domains through a router.
+- [Lab 04 — DHCP Relay](labs/lab4-DHCP/4-dhcp_lab.md): observe a router forwarding a normally local broadcast through a relay function.
 
 ## Next
 [Private IPs, NAT & PAT →](05-private-ip-nat.md)

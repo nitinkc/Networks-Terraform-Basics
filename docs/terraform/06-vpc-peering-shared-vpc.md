@@ -1,22 +1,32 @@
-# Lab: VPC Network Peering & Shared VPC (Multi-Project Cloud Networks)
+# Terraform Lab 06 — VPC Network Peering & Shared VPC
 
 In production cloud environments, single monolithic VPCs are rarely used. Instead, organizations deploy **Multi-VPC Hub-and-Spoke** topologies or **Shared VPCs** to segregate environments (Production vs. Staging vs. Shared Services).
 
-```
-   ┌────────────────────────────────────────────────────────┐
-   │            [ Hub / Shared Services VPC ]               │
-   │               CIDR: 10.0.0.0/16                        │
-   │           (DNS, Security Scanners, CI/CD)              │
-   └───────────────▲────────────────────────▲───────────────┘
-                   │                        │
-       VPC Peering │                        │ VPC Peering
-                   ▼                        ▼
-   ┌────────────────────────┐      ┌────────────────────────┐
-   │    [ Production VPC ]  │      │     [ Staging VPC ]    │
-   │   CIDR: 10.10.0.0/16   │      │   CIDR: 10.20.0.0/16   │
-   │  (Production App VMs)  │      │   (Testing / QA VMs)   │
-   └────────────────────────┘      └────────────────────────┘
-```
+## Lab contract
+
+| Item | This lab |
+|:-----|:---------|
+| **Execution model** | Standalone advanced scenario with a new working directory and state |
+| **Starts from** | Provider/variable scaffolding from Lab 01; conceptual knowledge from Lab 05 |
+| **Creates** | Two non-overlapping VPCs, two subnets, bidirectional peering, and cross-VPC policy |
+| **Scope boundary** | Demonstrates peering in one project; Shared VPC is compared conceptually, not provisioned |
+| **Next** | [Lab 07 — L4 & L7 Load Balancing](07-load-balancing-l4-l7.md) |
+
+## Resource summary
+
+| Terraform block | Count | Purpose |
+|:----------------|------:|:--------|
+| `google_compute_network` | 2 | Independent hub and production routing domains |
+| `google_compute_subnetwork` | 2 | Non-overlapping regional ranges |
+| `google_compute_network_peering` | 2 | One peering object in each direction |
+| `google_compute_firewall.allow_hub_to_prod` | 1 | Explicitly permits selected hub-to-production traffic |
+
+![Hub and production VPCs connected by bidirectional VPC Network Peering with explicit firewall policy](diagrams/lab06-vpc-peering.svg)
+
+!!! tip "Editable source"
+    Edit [`lab06-vpc-peering.drawio`](diagrams/lab06-vpc-peering.drawio) and export it as SVG after changes.
+
+The runnable configuration below creates the hub and production VPCs. A staging VPC is a natural extension exercise, not part of this lab's resource summary.
 
 ## Key Architectural Rules of VPC Peering
 
@@ -27,6 +37,33 @@ In production cloud environments, single monolithic VPCs are rarely used. Instea
 ## Complete Terraform Configuration: Hub-and-Spoke VPC Peering
 
 ```hcl
+terraform {
+  required_version = ">= 1.5.0"
+
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.0"
+    }
+  }
+}
+
+provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
+variable "project_id" {
+  description = "GCP project ID to deploy into"
+  type        = string
+}
+
+variable "region" {
+  description = "GCP region for both VPC subnets"
+  type        = string
+  default     = "us-central1"
+}
+
 # -----------------------------------------------------------------------------
 # 1. CREATE HUB VPC (Shared Services)
 # -----------------------------------------------------------------------------
@@ -38,7 +75,7 @@ resource "google_compute_network" "hub_vpc" {
 resource "google_compute_subnetwork" "hub_subnet" {
   name          = "hub-core-subnet"
   ip_cidr_range = "10.0.0.0/16"
-  region        = "us-central1"
+  region        = var.region
   network       = google_compute_network.hub_vpc.id
 }
 
@@ -53,7 +90,7 @@ resource "google_compute_network" "prod_spoke_vpc" {
 resource "google_compute_subnetwork" "prod_subnet" {
   name          = "prod-workload-subnet"
   ip_cidr_range = "10.10.0.0/16"
-  region        = "us-central1"
+  region        = var.region
   network       = google_compute_network.prod_spoke_vpc.id
 }
 
@@ -101,6 +138,22 @@ resource "google_compute_firewall" "allow_hub_to_prod" {
 }
 ```
 
+## Apply and verify
+
+```bash
+terraform init
+terraform fmt
+terraform validate
+terraform apply -var="project_id=YOUR_PROJECT_ID"
+
+gcloud compute networks peerings list
+gcloud compute firewall-rules describe allow-hub-to-prod
+```
+
+Verify that both peering directions are `ACTIVE`. This configuration creates no
+VMs, so it proves control-plane connectivity and policy creation; add temporary
+test VMs only if you want to verify data-plane traffic, then remove them.
+
 ## Shared VPC vs. VPC Peering Comparison
 
 | Dimension | VPC Network Peering | Shared VPC |
@@ -109,3 +162,11 @@ resource "google_compute_firewall" "allow_hub_to_prod" {
 | **Subnet Ownership** | Each project owns its own subnets | Projects share subnets created in a central Host Project |
 | **IAM Control** | Independent IAM permissions | Central Network Admin controls network; Service Admins control VMs |
 | **Use Case** | Multi-tenant SaaS, connecting partner networks | Large enterprise dividing Dev, QA, and Prod under one network team |
+
+## Cleanup and next step
+
+```bash
+terraform destroy -var="project_id=YOUR_PROJECT_ID"
+```
+
+Continue to [Lab 07 — L4 & L7 Load Balancing](07-load-balancing-l4-l7.md).

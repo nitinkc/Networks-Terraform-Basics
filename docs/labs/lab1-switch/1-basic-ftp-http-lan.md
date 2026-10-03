@@ -1,11 +1,14 @@
 # Basic single-LAN FTP/HTTP test lab (Packet Tracer)
 
-Topology:
-```
-[PC0]──┐
-       ├──[Switch0]──[Server0: FTP + HTTP]
-[PC1]──┘
-```
+!!! info "Theory prerequisites"
+    Read [Networking Models](../../01-networking-models.md), [MAC Addresses & ARP](../../03-mac-arp.md), [Switches vs Routers](../../04-switches-routers.md), and [HTTP/HTTPS & TLS](../../11-http-https-tls.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
+
+## Topology
+
+![Single flat LAN with two PCs, a switch, and an HTTP/FTP server](../diagrams/lab01-single-lan.svg)
+
+!!! tip "Editable source"
+    Edit [`lab01-single-lan.drawio`](../diagrams/lab01-single-lan.drawio) and export it as SVG after changes.
 
 No router, no NAT, no DHCP even required — everything lives on one flat
 192.168.1.0/24 network. This isolates FTP/HTTP behavior from routing.

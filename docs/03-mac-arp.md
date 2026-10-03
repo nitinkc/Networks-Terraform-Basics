@@ -60,5 +60,9 @@ ARP Inspection (DAI)** to validate ARP replies against known bindings.
 !!! info "Cloud connection"
     ARP remains local to a broadcast domain. Cloud platforms may virtualize or proxy Layer 2 behavior, so troubleshoot ARP only at the local hop rather than using it to explain a failure across routed cloud networks.
 
+## Practice in Packet Tracer
+
+- [Lab 01 — Single-Subnet FTP/HTTP](labs/lab1-switch/1-basic-ftp-http-lan.md): inspect ARP before the first local HTTP exchange.
+
 ## Next
 [Switches vs Routers →](04-switches-routers.md)

@@ -51,6 +51,26 @@ though the actual implementation is TCP/IP-based. This is why both
 models are worth knowing — OSI gives you the vocabulary, TCP/IP
 describes what's actually running.
 
+## Protocol roadmap
+
+The protocols introduced later in this theory sequence solve different problems
+at different layers. Learning them in dependency order prevents them from
+becoming a disconnected list of acronyms.
+
+| Protocol | What it does | Layer/context | Learn in |
+|:---------|:-------------|:--------------|:---------|
+| **ARP** | Maps a local IPv4 address to the MAC address needed to deliver an Ethernet frame | Link between Layers 2 and 3; local broadcast domain only | [Stage 3 — MAC Addresses & ARP](03-mac-arp.md) |
+| **NAT/PAT** | Rewrites private addresses, and with PAT transport identifiers, at a routed boundary | Layer 3 with Layer 4 awareness for PAT | [Stage 5 — Private IPs, NAT & PAT](05-private-ip-nat.md) |
+| **DHCP** | Leases an IP address, subnet mask, default gateway, DNS servers, and other options to a host | Application protocol using UDP; depends on local broadcast or relay | [Stage 6 — Subnetting & DHCP](06-subnetting-dhcp.md) |
+| **OSPF** | Exchanges topology information so routers inside one organization can calculate routes | Layer 3 routing control plane; IP protocol 89 | [Stage 8 — Routing](08-routing-protocols.md) |
+| **BGP** | Exchanges policy-controlled network reachability within or between autonomous systems | Routing control plane over TCP 179 | [Stage 8 — Routing](08-routing-protocols.md) |
+| **DNS** | Resolves names to addresses and stores other namespace records | Application protocol, normally UDP or TCP 53 | [Stage 10 — DNS & Ports](10-dns-and-ports.md) |
+
+These protocols cooperate but do not replace one another. For example, DHCP can
+tell a client which DNS resolver to use; DNS can return a remote IP address; the
+routing table chooses a next hop; ARP resolves the local next hop's MAC address;
+and NAT/PAT may translate the flow at the network edge.
+
 ## Encapsulation (how data moves down and up the stack)
 
 As data travels down the stack on the sending side, each layer wraps
@@ -71,6 +91,10 @@ ignorant of the layers above and below it.
 
 !!! info "Cloud connection"
     Terraform and Kubernetes are not additional network layers. They configure resources—such as subnets, load balancers, Services, and policies—that operate at the existing layers.
+
+## Practice in Packet Tracer
+
+- [Lab 01 — Single-Subnet FTP/HTTP](labs/lab1-switch/1-basic-ftp-http-lan.md): observe encapsulation from ARP through TCP and HTTP/FTP.
 
 ## Next
 [Packets & IP Addressing →](02-packets-ip-addressing.md)

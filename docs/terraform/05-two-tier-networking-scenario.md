@@ -1,6 +1,30 @@
-# Bridging Physical Networking to GCP with Terraform
+# Terraform Lab 05 — Two-Tier GCP Networking Scenario
 
 Now that you understand Subnetting, Default Gateways, NAT/PAT, DNS, and Routing from Packet Tracer, this guide translates those exact concepts into **Google Cloud Platform (GCP) software-defined networking using Terraform (Infrastructure as Code)**.
+
+## Lab contract
+
+| Item | This lab |
+|:-----|:---------|
+| **Execution model** | Standalone consolidation in a new working directory and state |
+| **Starts from** | Labs 01–04 completed; their resources should be destroyed |
+| **Creates** | A complete two-tier VPC, NAT, policy, DNS, and VM stack |
+| **Why standalone** | It rebuilds the foundation with new names and CIDRs rather than appending to Lab 04 |
+| **Next** | [Lab 06 — VPC Peering & Shared VPC](06-vpc-peering-shared-vpc.md) |
+
+## Resource summary
+
+| Resource type | Count | Purpose |
+|:--------------|------:|:--------|
+| `google_compute_network` | 1 | Custom production-style VPC |
+| `google_compute_subnetwork` | 2 | Web and private application tiers |
+| `google_compute_router` / `google_compute_router_nat` | 1 each | Private application-tier egress |
+| `google_compute_firewall` | 3 | Public HTTP, restricted administration, and web-to-app policy |
+| `google_dns_managed_zone` / `google_dns_record_set` | 1 each | Private backend service discovery |
+| `google_compute_instance` | 2 | Frontend and private backend workloads |
+
+!!! warning "New state, not an append"
+    Do not paste this complete configuration into the Labs 02–04 directory. Names, CIDRs, and Terraform addresses differ; use a new folder such as `terraform-labs/05-two-tier/`.
 
 ## The Mental Bridge: Physical vs. GCP vs. Terraform
 
@@ -23,24 +47,10 @@ You are provisioning a real-world enterprise infrastructure in `us-central1`:
 * **Cloud NAT:** The backend VM reaches external APIs and software updates safely via Cloud NAT.
 * **Private Cloud DNS:** The Web Server communicates with the backend using the internal domain name `api.corp.internal`.
 
-```
-[ GCP Virtual Private Cloud (VPC): custom-prod-vpc ]
+![Complete two-tier GCP architecture with public web tier, private app tier, private DNS, firewall policy, and Cloud NAT](diagrams/lab05-two-tier-network.svg)
 
-  ┌──────────────────────── Web Subnet (10.1.10.0/24) ────────────────────────┐
-  │                                                                           │
-  │   [ Frontend Web VM ] (Private IP: 10.1.10.2 + Ephemeral Public IP)      │
-  │         │                                                                 │
-  └─────────┼─────────────────────────────────────────────────────────────────┘
-            │ Internal Private Traffic (Port 8080) via Private DNS: api.corp.internal
-  ┌─────────┼─────────────────────────────────────────────────────────────────┐
-  │         ▼                                                                 │
-  │   [ Backend App VM ] (Private IP only: 10.1.20.2 - NO Public IP)          │
-  │         │                                                                 │
-  │         ▼ Outbound Internet Access (Updates) via Cloud NAT                │
-  │   [ Cloud Router + Cloud NAT ] (Translates 10.1.20.2 -> Public NAT IP)     │
-  │                                                                           │
-  └──────────────────────── App Subnet (10.1.20.0/24) ─────────────────────────┘
-```
+!!! tip "Editable source"
+    Edit [`lab05-two-tier-network.drawio`](diagrams/lab05-two-tier-network.drawio) and export it as SVG after changes.
 
 ## Complete Terraform Configuration (`main.tf`)
 
@@ -59,7 +69,23 @@ terraform {
 
 provider "google" {
   project = var.project_id
-  region  = "us-central1"
+  region  = var.region
+}
+
+variable "project_id" {
+  description = "GCP project ID to deploy into"
+  type        = string
+}
+
+variable "region" {
+  description = "GCP region for the two-tier stack"
+  type        = string
+  default     = "us-central1"
+}
+
+variable "my_ip" {
+  description = "Administrator public IP in CIDR form for SSH, for example 203.0.113.7/32"
+  type        = string
 }
 
 # -----------------------------------------------------------------------------
@@ -77,7 +103,7 @@ resource "google_compute_network" "vpc_network" {
 resource "google_compute_subnetwork" "web_subnet" {
   name          = "web-tier-subnet"
   ip_cidr_range = "10.1.10.0/24"
-  region        = "us-central1"
+  region        = var.region
   network       = google_compute_network.vpc_network.id
 }
 
@@ -85,7 +111,7 @@ resource "google_compute_subnetwork" "web_subnet" {
 resource "google_compute_subnetwork" "app_subnet" {
   name          = "app-tier-subnet"
   ip_cidr_range = "10.1.20.0/24"
-  region        = "us-central1"
+  region        = var.region
   network       = google_compute_network.vpc_network.id
   private_ip_google_access = true
 }
@@ -117,17 +143,29 @@ resource "google_compute_router_nat" "app_nat" {
 # 3. FIREWALL RULES (Stateful Traffic Filters)
 # -----------------------------------------------------------------------------
 
-# Allow HTTP and SSH to Web Tier from the Internet
-resource "google_compute_firewall" "allow_web_ingress" {
-  name    = "allow-web-ingress"
+resource "google_compute_firewall" "allow_web_http" {
+  name    = "allow-web-http"
   network = google_compute_network.vpc_network.name
 
   allow {
     protocol = "tcp"
-    ports    = ["80", "22"]
+    ports    = ["80"]
   }
 
   source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["web-tier"]
+}
+
+resource "google_compute_firewall" "allow_admin_ssh" {
+  name    = "allow-admin-ssh"
+  network = google_compute_network.vpc_network.name
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  source_ranges = [var.my_ip]
   target_tags   = ["web-tier"]
 }
 
@@ -183,7 +221,7 @@ resource "google_dns_record_set" "backend_dns_record" {
 resource "google_compute_instance" "frontend_vm" {
   name         = "frontend-web-vm"
   machine_type = "e2-micro"
-  zone         = "us-central1-a"
+  zone         = "${var.region}-a"
   tags         = ["web-tier"]
 
   boot_disk {
@@ -211,7 +249,7 @@ resource "google_compute_instance" "frontend_vm" {
 resource "google_compute_instance" "backend_vm" {
   name         = "backend-app-vm"
   machine_type = "e2-micro"
-  zone         = "us-central1-a"
+  zone         = "${var.region}-a"
   tags         = ["app-tier"]
 
   boot_disk {
@@ -252,9 +290,23 @@ Instead of configuring access-lists on router ports, GCP uses **Network Tags** (
 ### 4. How Cloud DNS Eliminates Hard-Coded IPs
 By attaching `google_dns_managed_zone` to the VPC, `frontend_vm` can make HTTP requests to `http://api.corp.internal:8080`. Even if the backend VM is destroyed and recreated with a new dynamic private IP, Terraform automatically updates the DNS record, ensuring zero broken dependencies.
 
-## Hands-On Verification Commands
+## Apply and verify
 
-Once applied (`terraform apply`):
+```bash
+gcloud services enable compute.googleapis.com dns.googleapis.com
+
+terraform init
+terraform fmt
+terraform validate
+terraform plan \
+  -var="project_id=YOUR_PROJECT_ID" \
+  -var="my_ip=$(curl -s ifconfig.me)/32"
+terraform apply \
+  -var="project_id=YOUR_PROJECT_ID" \
+  -var="my_ip=$(curl -s ifconfig.me)/32"
+```
+
+Once applied:
 
 ```bash
 # 1. SSH into the Frontend Web VM
@@ -268,3 +320,13 @@ curl http://api.corp.internal:8080
 
 # Expected Output: "Backend API Service Response"
 ```
+
+## Cleanup and next step
+
+```bash
+terraform destroy \
+  -var="project_id=YOUR_PROJECT_ID" \
+  -var="my_ip=$(curl -s ifconfig.me)/32"
+```
+
+Continue to [Lab 06 — VPC Peering & Shared VPC](06-vpc-peering-shared-vpc.md).

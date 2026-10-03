@@ -199,5 +199,11 @@ If PAT or port forwarding does not work, verify these items in order:
 !!! info "Cloud connection"
     Cloud NAT normally provides outbound translation for private workloads; it does not publish an inbound application. Public ingress is usually provided separately by a load balancer or another explicitly exposed endpoint.
 
+## Practice in Packet Tracer
+
+- [Lab 03 — Multi-Router NAT & DHCP](labs/3-multi-router-nat-dhcp-lab.md): combine client addressing, default routing, and PAT.
+- [Lab 06 — NAT, PAT & Port Forwarding](labs/lab6-NAT-PAT/6-nat_pat_lab.md): inspect outbound translations and inbound static PAT.
+- [Lab 09 — GCP Architecture Equivalent](labs/9-networking_gcp_equivalent_lab.md): map edge PAT to the Cloud NAT concept.
+
 ## Next
 [Subnetting & DHCP →](06-subnetting-dhcp.md)

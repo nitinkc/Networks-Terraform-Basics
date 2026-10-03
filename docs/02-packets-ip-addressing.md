@@ -120,5 +120,10 @@ router along the way to respond).
 !!! info "Cloud connection"
     Cloud designs must reserve non-overlapping CIDRs for VPC subnets and, where applicable, Kubernetes Pods and Services. A load balancer, node, Pod, and Service may each use a different address because they are separate network endpoints or forwarding stages.
 
+## Practice in Packet Tracer
+
+- [Lab 02 — Router & Subnets](labs/lab2-Routers&Subnets/2-router-ftp-http-lab.md): apply masks, gateways, and routed packet forwarding.
+- [Lab 07 — OSPF & eBGP](labs/7-bgp_ospf_lab.md): observe packets crossing several routed prefixes.
+
 ## Next
 [MAC Addresses & ARP →](03-mac-arp.md)

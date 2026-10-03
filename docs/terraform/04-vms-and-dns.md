@@ -5,6 +5,25 @@ PT's "Server-PT" with a real VM, and replace the lab-5 DNS server with
 Cloud DNS — then verify connectivity the same way you did in Packet Tracer
 (ping, curl, name resolution).
 
+## Lab contract
+
+| Item | This lab |
+|:-----|:---------|
+| **Execution model** | Final cumulative stage in the Labs 02–04 working directory |
+| **Starts from** | VPC/subnets from Lab 02 and NAT/firewall policy from Lab 03 |
+| **Adds** | Two VMs, one private DNS zone, and one A record |
+| **Ends with** | Verify the complete foundation, then destroy the shared Labs 02–04 state |
+| **Next** | [Lab 05 — Standalone Two-Tier Scenario](05-two-tier-networking-scenario.md) |
+
+## Resource summary
+
+| Terraform block | Count | Purpose | Depends on |
+|:----------------|------:|:--------|:-----------|
+| `google_compute_instance.frontend_vm` | 1 | Public test client/bastion tagged for restricted SSH | Client subnet and Lab 03 SSH rule |
+| `google_compute_instance.backend_vm` | 1 | Private nginx server using Cloud NAT for egress | Server subnet, NAT, and IAP SSH rule |
+| `google_dns_managed_zone.corp_internal` | 1 | Private `corp.internal.` namespace attached to the VPC | Lab 02 VPC |
+| `google_dns_record_set.backend_a` | 1 | Resolves the backend name to its computed private address | DNS zone and backend VM |
+
 ## Concept Map
 
 | Packet Tracer | GCP / Terraform |
@@ -16,16 +35,14 @@ Cloud DNS — then verify connectivity the same way you did in Packet Tracer
 
 ## The scenario
 
-```text
-[ tf-lab-vpc ]
+![Terraform Lab 04 architecture showing the frontend and backend subnets, private DNS, restricted SSH paths, and outbound Cloud NAT](diagrams/lab04-vms-private-dns.svg)
 
-  lan1-clients  ──▶  frontend-vm  (10.x + ephemeral public IP, SSH allowed)
-                          │  resolves "backend.corp.internal"
-                          ▼
-  lan2-servers  ──▶  backend-vm   (private IP only, outbound via Cloud NAT)
-```
+*Color key: blue = client subnet, green = private server subnet, yellow = managed control service, and red = address translation.*
 
-Two VMs, mirroring PT's "client talks to a server on the other subnet."
+Two VMs mirror Packet Tracer's “client talks to a server on another subnet,” while the diagram separates data flows from DNS, administration, and outbound translation.
+
+!!! tip "Editable source"
+    The SVG is optimized for the rendered documentation. Edit the source diagram in [`lab04-vms-private-dns.drawio`](diagrams/lab04-vms-private-dns.drawio), then export it again as SVG.
 
 ## `main.tf` (append to labs 02+03)
 
@@ -55,6 +72,8 @@ resource "google_compute_instance" "backend_vm" {
   name         = "backend-vm"
   machine_type = "e2-micro"
   zone         = "${var.region}-a"
+
+  tags = ["iap-ssh"]
 
   boot_disk {
     initialize_params {
@@ -98,6 +117,8 @@ resource "google_dns_record_set" "backend_a" {
 ## Apply & Verify — the same tests you ran in PT
 
 ```bash
+gcloud services enable dns.googleapis.com iap.googleapis.com
+
 terraform apply \
   -var="project_id=YOUR_PROJECT_ID" \
   -var="my_ip=$(curl -s ifconfig.me)/32"
@@ -115,8 +136,8 @@ ping -c3 <backend-vm-internal-ip>
 ping -c3 backend.corp.internal
 curl http://backend.corp.internal     # nginx installed by startup script
 
-# 5. Proof NAT works: on backend-vm (ssh via --tunnel-through-iap or
-#    gcloud's internal SSH), outbound internet works despite no public IP:
+# 5. Proof NAT works: connect through IAP, then test outbound egress.
+#    This requires IAP TCP forwarding IAM permission for your identity.
 gcloud compute ssh backend-vm --zone=us-central1-a --tunnel-through-iap
 curl -s ifconfig.me                  # returns the Cloud NAT public IP
 ```
@@ -158,7 +179,7 @@ Verify nothing remains: `gcloud compute instances list` should be empty.
 
 You now have every primitive used by the existing labs:
 
-* [Lab 10 — Full GCP Networking Scenario](../labs/10-gcp_terraform_networking_scenario.md) — this same architecture, end-to-end
-* [Lab 11 — VPC Peering & Shared VPC](../labs/lab_vpc_peering_shared_vpc.md) — connecting *two* VPCs (multi-router, cloud-style)
-* [Lab 12 — L4 & L7 Load Balancing](../labs/lab_load_balancing_l4_l7.md) — the cloud version of "the server"
-* [Lab 13 — IPsec VPN & BGP](../labs/lab_ipsec_vpn_bgp_hybrid_cloud.md) — hybrid cloud, the far edge of networking
+* [Stage 05 — Two-Tier Networking Scenario](05-two-tier-networking-scenario.md) — this same architecture, end-to-end
+* [Stage 06 — VPC Peering & Shared VPC](06-vpc-peering-shared-vpc.md) — connecting *two* VPCs (multi-router, cloud-style)
+* [Stage 07 — L4 & L7 Load Balancing](07-load-balancing-l4-l7.md) — the cloud version of "the server"
+* [Stage 08 — IPsec VPN & BGP](08-ipsec-vpn-bgp-hybrid.md) — hybrid cloud, the far edge of networking

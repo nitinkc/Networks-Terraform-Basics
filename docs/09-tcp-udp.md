@@ -72,5 +72,12 @@ to force retransmission the way TCP would.
 !!! info "Cloud connection"
     A proxy or load balancer may terminate one TCP connection and create a separate backend connection. In Kubernetes, a Service's `port` is the stable port clients use, while `targetPort` identifies the port on which selected Pods listen.
 
+## Practice in Packet Tracer
+
+- [Lab 01 — Single-Subnet FTP/HTTP](labs/lab1-switch/1-basic-ftp-http-lan.md): inspect TCP handshakes and application ports.
+- [Lab 05 — DNS](labs/lab5-DNS/5-dns_lab.md): compare a UDP DNS query with the following TCP HTTP connection.
+- [Lab 06 — NAT/PAT](labs/lab6-NAT-PAT/6-nat_pat_lab.md): see transport ports distinguish translated sessions.
+- [Lab 08 — VLANs & ACLs](labs/lab8-LAN-ACL/8-lan_acl_lab.md): filter application traffic by protocol and destination port.
+
 ## Next
 [DNS & Ports →](10-dns-and-ports.md)

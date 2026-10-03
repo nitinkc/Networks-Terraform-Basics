@@ -8,6 +8,29 @@ router:
 
 Now we rebuild that exact topology as a GCP VPC — same CIDRs, same roles.
 
+## Lab contract
+
+| Item | This lab |
+|:-----|:---------|
+| **Execution model** | Start the cumulative `terraform-labs/02-04-foundation/` configuration |
+| **Starts from** | Lab 01 completed and destroyed; reuse its provider/variable pattern, not its state |
+| **Creates** | One VPC and two regional subnets |
+| **Keep after completion** | Yes; Labs 03 and 04 append resources to this same configuration and state |
+| **Next** | [Lab 03 — Routing, NAT & Firewall](03-routing-nat-firewall.md) |
+
+## Resource summary
+
+| Terraform block | Count | Purpose | Introduced here |
+|:----------------|------:|:--------|:----------------|
+| `google_compute_network.lab_vpc` | 1 | Custom-mode routing domain | Yes |
+| `google_compute_subnetwork.lan1_clients` | 1 | Client/public-facing workload subnet | Yes |
+| `google_compute_subnetwork.lan2_servers` | 1 | Private server subnet | Yes |
+
+![Custom GCP VPC containing client and server subnets with built-in inter-subnet routing](diagrams/lab02-vpc-subnets.svg)
+
+!!! tip "Editable source"
+    Edit [`lab02-vpc-subnets.drawio`](diagrams/lab02-vpc-subnets.drawio) and export it as SVG after changes.
+
 ## Concept Map
 
 | Packet Tracer | GCP / Terraform |
@@ -21,7 +44,7 @@ Now we rebuild that exact topology as a GCP VPC — same CIDRs, same roles.
     In the cloud, routing *inside* a VPC is implicit — every subnet can
     reach every other subnet by default. You never model the router itself.
     What you *do* model is what you add on top: NAT, firewall rules, custom
-    routes, VPNs (labs 03–04 and labs 10–13).
+    routes, NAT, firewall policy, and VPNs (Labs 03–04 and 06–08).
 
 ## Addressing Plan (identical to the .pkt lab)
 

@@ -1,19 +1,36 @@
-# Lab: Site-to-Site IPsec VPN with BGP over VTI (On-Premises to GCP Cloud)
+# Terraform Lab 08 — Site-to-Site IPsec VPN with BGP
 
 This lab models a real-world **Hybrid Cloud Architecture**. You will connect an on-premises enterprise Cisco router to a Google Cloud Platform (GCP) Cloud VPN Gateway over the public internet, encrypting traffic with **IPsec (AES-256/SHA-256)** and dynamically exchanging routes using **BGP over a Virtual Tunnel Interface (VTI)**.
 
-```
-[ ON-PREMISES ENTERPRISE: AS 65001 ]                                [ GCP CLOUD REGION us-central1: AS 65000 ]
-  Private LAN: 10.1.0.0/16                                            VPC Subnet: 10.200.0.0/16
+## Lab contract
 
-[On-Prem-Client: 10.1.1.10]                                         [GCP-Cloud-VM: 10.200.1.50]
-        │                                                                     │
-        ▼                                                                     ▼
-[On-Prem-Router] ──── (203.0.113.1) ════════════════════ (198.51.100.1) ──── [GCP Cloud VPN Gateway]
-  (Cisco ISR)                          IPsec Tunnel (AES-256)                   (Cloud Router)
-                                  Inside BGP Link: 169.254.0.0/30
-                                  (169.254.0.1 <---> 169.254.0.2)
-```
+| Item | This lab |
+|:-----|:---------|
+| **Execution model** | Standalone capstone with separate Cisco and Terraform configuration |
+| **Starts from** | A reachable on-premises VPN gateway, one GCP project, and provider scaffolding from Lab 01 |
+| **Creates** | GCP VPC/subnet/test VM, firewall policy, HA VPN, Cloud Router, one tunnel, and one BGP peer |
+| **Availability scope** | One tunnel/interface for learning; production HA VPN normally uses redundant tunnels |
+| **Ends with** | Verify IKE/IPsec, BGP, learned routes, and bidirectional private traffic; then destroy GCP resources |
+
+## Resource summary
+
+| Terraform block | Count | Purpose |
+|:----------------|------:|:--------|
+| `google_compute_network.cloud_vpc` | 1 | GCP routing domain |
+| `google_compute_subnetwork.cloud_subnet` | 1 | Advertised GCP private prefix |
+| `google_compute_instance.cloud_vm` | 1 | Private target at `10.200.1.50` for end-to-end verification |
+| `google_compute_firewall.allow_onprem_icmp` | 1 | Permits ICMP only from the advertised on-premises prefix |
+| `google_compute_ha_vpn_gateway.ha_gateway` | 1 | GCP VPN endpoint |
+| `google_compute_external_vpn_gateway.onprem_gw` | 1 | Models the Cisco gateway's public interface |
+| `google_compute_router.cloud_router` | 1 | GCP BGP control plane |
+| `google_compute_vpn_tunnel.tunnel1` | 1 | One encrypted tunnel for the learning path |
+| `google_compute_router_interface.router_interface1` | 1 | Link-local BGP attachment to the tunnel |
+| `google_compute_router_peer.bgp_peer1` | 1 | Exchanges private prefixes with AS 65001 |
+
+![On-premises Cisco network connected to GCP through an IPsec tunnel with BGP route exchange](diagrams/lab08-ipsec-bgp-hybrid.svg)
+
+!!! tip "Editable source"
+    Edit [`lab08-ipsec-bgp-hybrid.drawio`](diagrams/lab08-ipsec-bgp-hybrid.drawio) and export it as SVG after changes.
 
 ## Addressing & IPsec Parameters
 
@@ -24,7 +41,10 @@ This lab models a real-world **Hybrid Cloud Architecture**. You will connect an 
 | **Inside BGP Tunnel IP** | `169.254.0.1/30` | `169.254.0.2/30` |
 | **Local Private Network** | `10.1.0.0/16` | `10.200.0.0/16` |
 | **IKEv2 / IPsec Cipher** | AES-256, SHA-256, DH Group 14 | AES-256, SHA-256, DH Group 14 |
-| **Pre-Shared Key (PSK)** | `CiscoGCPSharedSecretKey123!` | `CiscoGCPSharedSecretKey123!` |
+| **Pre-Shared Key (PSK)** | Secure value supplied out of band | The same sensitive value through `var.vpn_shared_secret` |
+
+!!! warning "Replace documentation addresses before deployment"
+    `203.0.113.0/24` and `198.51.100.0/24` are reserved TEST-NET ranges and cannot establish a real internet VPN. Use the real static public IP of the on-premises gateway. After applying the HA VPN gateway, retrieve its assigned interface IP and substitute it anywhere the Cisco example shows `198.51.100.1`.
 
 ## 1. On-Premises Cisco Router Configuration (IOS CLI)
 
@@ -65,7 +85,7 @@ exit
 crypto ikev2 keyring GCP-KEYRING
  peer GCP-PEER
   address 198.51.100.1
-  pre-shared-key CiscoGCPSharedSecretKey123!
+  pre-shared-key <PSK_FROM_SECURE_INPUT>
  exit
 exit
 
@@ -126,6 +146,39 @@ write memory
 ## 2. GCP Cloud Side Configuration (Terraform Code)
 
 ```hcl
+terraform {
+  required_version = ">= 1.5.0"
+
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.0"
+    }
+  }
+}
+
+provider "google" {
+  project = var.project_id
+  region  = var.region
+}
+
+variable "project_id" {
+  description = "GCP project ID to deploy into"
+  type        = string
+}
+
+variable "region" {
+  description = "GCP region for the VPN resources"
+  type        = string
+  default     = "us-central1"
+}
+
+variable "vpn_shared_secret" {
+  description = "Pre-shared key configured identically on both VPN peers"
+  type        = string
+  sensitive   = true
+}
+
 # 1. VPC Network and Subnet
 resource "google_compute_network" "cloud_vpc" {
   name                    = "gcp-prod-vpc"
@@ -135,22 +188,50 @@ resource "google_compute_network" "cloud_vpc" {
 resource "google_compute_subnetwork" "cloud_subnet" {
   name          = "cloud-app-subnet"
   ip_cidr_range = "10.200.0.0/16"
-  region        = "us-central1"
+  region        = var.region
   network       = google_compute_network.cloud_vpc.id
+}
+
+resource "google_compute_instance" "cloud_vm" {
+  name         = "gcp-cloud-vm"
+  machine_type = "e2-micro"
+  zone         = "${var.region}-a"
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-12"
+    }
+  }
+
+  network_interface {
+    subnetwork = google_compute_subnetwork.cloud_subnet.id
+    network_ip = "10.200.1.50"
+  }
+}
+
+resource "google_compute_firewall" "allow_onprem_icmp" {
+  name    = "allow-onprem-icmp"
+  network = google_compute_network.cloud_vpc.id
+
+  source_ranges = ["10.1.0.0/16"]
+
+  allow {
+    protocol = "icmp"
+  }
 }
 
 # 2. HA Cloud VPN Gateway
 resource "google_compute_ha_vpn_gateway" "ha_gateway" {
   name    = "gcp-to-onprem-vpn"
   network = google_compute_network.cloud_vpc.id
-  region  = "us-central1"
+  region  = var.region
 }
 
 # 3. Cloud Router with BGP ASN 65000
 resource "google_compute_router" "cloud_router" {
   name    = "gcp-hybrid-router"
   network = google_compute_network.cloud_vpc.name
-  region  = "us-central1"
+  region  = var.region
   bgp {
     asn = 65000
   }
@@ -169,11 +250,11 @@ resource "google_compute_external_vpn_gateway" "onprem_gw" {
 # 5. VPN Tunnel (IPsec)
 resource "google_compute_vpn_tunnel" "tunnel1" {
   name                            = "vpn-tunnel-to-onprem"
-  region                          = "us-central1"
+  region                          = var.region
   vpn_gateway                     = google_compute_ha_vpn_gateway.ha_gateway.id
   peer_external_gateway           = google_compute_external_vpn_gateway.onprem_gw.id
   peer_external_gateway_interface = 0
-  shared_secret                   = "CiscoGCPSharedSecretKey123!"
+  shared_secret                   = var.vpn_shared_secret
   router                          = google_compute_router.cloud_router.id
   vpn_gateway_interface           = 0
 }
@@ -182,7 +263,7 @@ resource "google_compute_vpn_tunnel" "tunnel1" {
 resource "google_compute_router_interface" "router_interface1" {
   name       = "router-if-1"
   router     = google_compute_router.cloud_router.name
-  region     = "us-central1"
+  region     = var.region
   ip_range   = "169.254.0.2/30"
   vpn_tunnel = google_compute_vpn_tunnel.tunnel1.name
 }
@@ -190,7 +271,7 @@ resource "google_compute_router_interface" "router_interface1" {
 resource "google_compute_router_peer" "bgp_peer1" {
   name                      = "bgp-peer-onprem"
   router                    = google_compute_router.cloud_router.name
-  region                    = "us-central1"
+  region                    = var.region
   peer_ip_address           = "169.254.0.1"
   peer_asn                  = 65001
   interface                 = google_compute_router_interface.router_interface1.name
@@ -198,7 +279,21 @@ resource "google_compute_router_peer" "bgp_peer1" {
 }
 ```
 
-## 3. Verification & Troubleshooting
+## 3. Apply, Verify & Troubleshoot
+
+Store the PSK outside version control and pass it through an environment variable
+or an uncommitted `.tfvars` file. For example:
+
+```bash
+export TF_VAR_vpn_shared_secret='REPLACE_WITH_A_STRONG_SHARED_SECRET'
+terraform init
+terraform fmt
+terraform validate
+terraform apply -var="project_id=YOUR_PROJECT_ID"
+```
+
+Configure the identical secret on the Cisco peer through an approved secure
+process; do not commit it to the router configuration stored in this repository.
 
 On **On-Premises Cisco Router**:
 ```text
@@ -208,3 +303,16 @@ show ip bgp summary           # Confirm BGP session is in "Established" state
 show ip route bgp             # Verify GCP 10.200.0.0/16 route is dynamically learned
 ping 10.200.1.50 source 10.1.1.1  # End-to-end encrypted ping test
 ```
+
+## Cleanup
+
+Remove or disable the Cisco-side test configuration after the GCP tunnel is no
+longer needed, then destroy the Terraform-managed resources:
+
+```bash
+terraform destroy -var="project_id=YOUR_PROJECT_ID"
+unset TF_VAR_vpn_shared_secret
+```
+
+Confirm that the VPN tunnel, external gateway model, Cloud Router, test VM,
+firewall rule, subnet, and VPC have been removed.

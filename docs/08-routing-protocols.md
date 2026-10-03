@@ -85,5 +85,5 @@ In the lab sequence, focus on three separate facts:
 
 - [Multi-router NAT and DHCP](labs/3-multi-router-nat-dhcp-lab.md)
 - [OSPF and eBGP](labs/7-bgp_ospf_lab.md)
-- [VPC peering and Shared VPC](labs/lab_vpc_peering_shared_vpc.md)
-- [IPsec VPN with BGP](labs/lab_ipsec_vpn_bgp_hybrid_cloud.md)
+- [VPC peering and Shared VPC](terraform/06-vpc-peering-shared-vpc.md)
+- [IPsec VPN with BGP](terraform/08-ipsec-vpn-bgp-hybrid.md)

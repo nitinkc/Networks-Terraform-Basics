@@ -414,7 +414,7 @@ expected address and port.
 
 ## Continue practicing
 
-Use the [Lab-Aligned Learning Path](lab-theory-map.md) to isolate mechanisms in
+Use the [Lab-Aligned Learning Path](labs/lab-theory-map.md) to isolate mechanisms in
 Packet Tracer and GCP. The labs remain smaller than this architecture so each
 routing table, translation, DNS exchange, or policy decision can be observed
 without the entire production stack obscuring it.

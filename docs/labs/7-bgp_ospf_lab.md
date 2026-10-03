@@ -1,25 +1,20 @@
 # Dynamic Routing Lab: OSPF (Internal) & eBGP (External) in Packet Tracer
 
+!!! info "Theory prerequisites"
+    Read [Packets & IP Addressing](../02-packets-ip-addressing.md) and [Static Routing, OSPF & BGP](../08-routing-protocols.md). Return to the [Lab-Aligned Learning Path](lab-theory-map.md) after verification.
+
 This lab bridges the gap between **Interior Gateway Protocols (IGP)** and **Exterior Gateway Protocols (EGP)**. You will build a multi-router topology where:
 
 * **OSPF (Open Shortest Path First - Area 0):** Dynamically routes internal enterprise traffic between branch and core routers within **Autonomous System 65001**.
 * **eBGP (External Border Gateway Protocol):** Establishes an exterior peering session between your enterprise edge router (**AS 65001**) and an upstream ISP (**AS 65002**).
 * **Default Route Injection (`default-information originate`):** Injects an exit path into OSPF so all internal PCs can seamlessly reach the internet/ISP.
 
-```
-[ AUTONOMOUS SYSTEM 65001: Enterprise Network ]              [ AUTONOMOUS SYSTEM 65002: ISP Network ]
-                  (OSPF Area 0)                                            (BGP AS 65002)
+## Topology
 
-[PC0: 10.1.1.10][Cloud-Server0: 198.51.100.2]
-       │                                                                                      │
-       ▼                                                                                      ▼
-  [Switch0]                                                                              [Switch1]
-       │                                                                                      │
-       ▼                                                                                      ▼
-[R1-Core] ──── (10.1.12.0/30) ──── [R2-Edge] ──── (203.0.113.0/30) ──── [ISP-Router]
-  Gig0/1                              Gig0/0    Gig0/1                     Gig0/0   Gig0/1
-            (OSPF Area 0)                         (eBGP Peering Link)
-```
+![Enterprise OSPF Area 0 connected through an eBGP edge to an ISP autonomous system and public server](diagrams/lab07-ospf-bgp.svg)
+
+!!! tip "Editable source"
+    Edit [`lab07-ospf-bgp.drawio`](diagrams/lab07-ospf-bgp.drawio) and export it as SVG after changes.
 
 ## Protocol Comparison: OSPF vs. BGP
 
@@ -233,7 +228,7 @@ http://198.51.100.2
 
 | Hop / Segment | Protocol in Control | Routing Decision |
 |---|---|---|
-| **PC0 $ightarrow$ R1-Core** | Default Gateway | PC forwards frame to default gateway `10.1.1.1`. |
-| **R1-Core $ightarrow$ R2-Edge** | **OSPF (IGP)** | R1-Core looks up `198.51.100.2`, matches the OSPF `O*E2` default route, and forwards across `10.1.12.0/30`. |
-| **R2-Edge $ightarrow$ ISP-Router** | **eBGP (EGP)** | R2-Edge checks its BGP routing table for `198.51.100.0/24`, finding next-hop `203.0.113.2` via AS 65002. |
-| **ISP-Router $ightarrow$ Cloud-Server** | Direct Connected | ISP-Router delivers frame to `Cloud-Server0` on its local subnet. |
+| **PC0 → R1-Core** | Default Gateway | PC forwards frame to default gateway `10.1.1.1`. |
+| **R1-Core → R2-Edge** | **OSPF (IGP)** | R1-Core looks up `198.51.100.2`, matches the OSPF `O*E2` default route, and forwards across `10.1.12.0/30`. |
+| **R2-Edge → ISP-Router** | **eBGP (EGP)** | R2-Edge checks its BGP routing table for `198.51.100.0/24`, finding next-hop `203.0.113.2` via AS 65002. |
+| **ISP-Router → Cloud-Server** | Direct Connected | ISP-Router delivers frame to `Cloud-Server0` on its local subnet. |

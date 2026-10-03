@@ -56,7 +56,7 @@ define or replace them.
 
 1. Read a theory chapter and explain the mechanism without referring to a cloud product.
 2. Use its **Cloud connection** note to map—not redefine—the concept.
-3. Complete a focused exercise from the [Lab-Aligned Learning Path](lab-theory-map.md).
+3. Complete a focused exercise from the [Lab-Aligned Learning Path](labs/lab-theory-map.md).
 4. After Stage 15, trace the complete case study from DNS through application response.
 5. For any failure, separate four questions:
    - **Resolution:** Did the name resolve to the intended address?
@@ -64,7 +64,6 @@ define or replace them.
    - **Policy:** Is the required protocol and port allowed?
    - **Application:** Is a healthy process listening and responding?
 
-## Reference
+## Consolidate your knowledge
 
-Use the [Glossary & Interview Cheat-Sheet](99-glossary-cheatsheet.md) for quick
-revision rather than as the primary learning sequence.
+After completing the theory sequence, take the [Networking Knowledge Check](99-quiz.md). The scored multiple-choice quiz provides immediate explanations and links back to each topic for review.

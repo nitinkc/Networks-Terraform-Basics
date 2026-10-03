@@ -1,5 +1,8 @@
 # Comprehensive NAT, PAT & Port Forwarding Lab (Packet Tracer)
 
+!!! info "Theory prerequisites"
+    Read [Private IPs, NAT & PAT](../../05-private-ip-nat.md), [TCP vs UDP](../../09-tcp-udp.md), and [Firewalls](../../13-firewalls.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
+
 This lab provides an in-depth, hands-on exploration of **Network Address Translation (NAT)** and 
 **Port Address Translation (PAT / NAT Overload)**. You will configure and test all three fundamental NAT types used 
 in enterprise and service provider networks:
@@ -12,16 +15,12 @@ Directly answers your previous question about running multiple backend ports (80
 
 What you will build: Configure Inside Local vs Inside Global IP translation, Port Address Translation (PAT / Overload), and static port forwards on the router perimeter.
 
-```
-[INSIDE LOCAL NETWORK: 192.168.1.0/24]                          [OUTSIDE PUBLIC NETWORK]
+## Topology
 
-[PC0: .1.10]──────┐                                             ┌──[Public-Web: 198.51.100.2]
-                  ├──[Switch0]──(Gig0/0)[ Router0 ](Gig0/1)──(Gig0/0)[ Router1 ](Gig0/1)──[Switch1]┤
-[PC1: .1.11]──────┤                      (NAT Border)             (ISP Gateway)                    └──[Outside-Client: 198.51.100.50]
-                  │                       Gig0/1: 203.0.113.1/30   Gig0/0: 203.0.113.2/30
-[Internal-Server]─┘
-(192.168.1.100:80)
-```
+![Inside clients and server crossing a NAT border to an ISP and public network, including inbound port forwarding](../diagrams/lab06-nat-pat.svg)
+
+!!! tip "Editable source"
+    Edit [`lab06-nat-pat.drawio`](../diagrams/lab06-nat-pat.drawio) and export it as SVG after changes.
 
 ![1.png](1.png)
 

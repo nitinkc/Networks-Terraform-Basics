@@ -77,5 +77,9 @@ above that are "dynamic/ephemeral" — the range your OS picks from when
 !!! info "Cloud connection"
     Public DNS can point a hostname to a cloud load balancer, while Kubernetes cluster DNS resolves internal Service names. DNS returns an address or alias; routing, policy, and a listening application must still make that destination usable.
 
+## Practice in Packet Tracer
+
+- [Lab 05 — DNS & Name Resolution](labs/lab5-DNS/5-dns_lab.md): configure A/CNAME records and observe DNS before HTTP.
+
 ## Next
 [HTTP/HTTPS & TLS →](11-http-https-tls.md)

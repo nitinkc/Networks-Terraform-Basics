@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="820" viewBox="0 0 1500 820" role="img" aria-labelledby="title desc">
+  <title id="title">Terraform Lab 04 VMs, Private DNS, and Cloud NAT</title>
+  <desc id="desc">A color-coded GCP VPC diagram showing frontend and backend subnets, private DNS, restricted SSH, IAP access, and outbound Cloud NAT.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#455a64"/></marker>
+    <style>
+      .title{font:700 25px system-ui,sans-serif;fill:#263238}.zone{stroke-width:2}.zone-title{font:700 16px system-ui,sans-serif;fill:#263238}.node{fill:#fff;stroke-width:2}.node-title{font:700 15px system-ui,sans-serif;fill:#263238}.label{font:13px system-ui,sans-serif;fill:#37474f}.edge{fill:none;stroke:#455a64;stroke-width:2;marker-end:url(#arrow)}.dash{stroke-dasharray:8 6}.edge-label{font:12px system-ui,sans-serif;fill:#37474f;paint-order:stroke;stroke:#fff;stroke-width:5;stroke-linejoin:round}
+    </style>
+  </defs>
+  <rect width="1500" height="820" fill="#fafafa"/>
+  <text x="750" y="40" text-anchor="middle" class="title">Terraform Lab 04 — VMs, Private DNS, and Cloud NAT</text>
+  <rect x="240" y="85" width="1050" height="650" rx="18" fill="#f3e8f7" stroke="#8e63a9" class="zone"/>
+  <text x="270" y="120" class="zone-title">tf-lab-vpc</text>
+  <rect x="290" y="145" width="390" height="285" rx="15" fill="#e3f2fd" stroke="#4f81bd" class="zone"/>
+  <text x="315" y="178" class="zone-title">lan1-clients · 192.168.10.0/24</text>
+  <rect x="850" y="145" width="390" height="285" rx="15" fill="#e6f4e2" stroke="#6c9f54" class="zone"/>
+  <text x="875" y="178" class="zone-title">lan2-servers · 192.168.20.0/24</text>
+  <rect x="360" y="225" width="250" height="120" rx="12" stroke="#4f81bd" class="node"/>
+  <text x="485" y="253" text-anchor="middle" class="node-title">frontend-vm</text><text x="485" y="278" text-anchor="middle" class="label">Private + ephemeral public IP</text><text x="485" y="301" text-anchor="middle" class="label">tag: ssh-allowed</text><text x="485" y="324" text-anchor="middle" class="label">Client / bastion role</text>
+  <rect x="920" y="225" width="250" height="120" rx="12" stroke="#6c9f54" class="node"/>
+  <text x="1045" y="253" text-anchor="middle" class="node-title">backend-vm</text><text x="1045" y="278" text-anchor="middle" class="label">Private IP only · nginx</text><text x="1045" y="301" text-anchor="middle" class="label">tag: iap-ssh</text><text x="1045" y="324" text-anchor="middle" class="label">Egress through Cloud NAT</text>
+  <rect x="465" y="505" width="340" height="105" rx="12" fill="#fff4cc" stroke="#c9a227" class="zone"/>
+  <text x="635" y="535" text-anchor="middle" class="node-title">Cloud DNS private zone</text><text x="635" y="561" text-anchor="middle" class="label">corp.internal.</text><text x="635" y="586" text-anchor="middle" class="label">backend.corp.internal → backend private IP</text>
+  <rect x="890" y="490" width="185" height="70" rx="12" fill="#ffe8cc" stroke="#d38b20" class="zone"/><text x="982" y="519" text-anchor="middle" class="node-title">Cloud Router</text><text x="982" y="542" text-anchor="middle" class="label">NAT control plane</text>
+  <rect x="890" y="600" width="185" height="70" rx="12" fill="#fde2e0" stroke="#bf5b55" class="zone"/><text x="982" y="629" text-anchor="middle" class="node-title">Cloud NAT</text><text x="982" y="652" text-anchor="middle" class="label">Outbound translation only</text>
+  <rect x="25" y="220" width="165" height="75" rx="12" fill="#fff" stroke="#607d8b" class="zone"/><text x="107" y="249" text-anchor="middle" class="node-title">Administrator</text><text x="107" y="274" text-anchor="middle" class="label">Restricted source IP</text>
+  <rect x="25" y="440" width="165" height="75" rx="12" fill="#fff4cc" stroke="#c9a227" class="zone"/><text x="107" y="469" text-anchor="middle" class="node-title">Identity-Aware Proxy</text><text x="107" y="494" text-anchor="middle" class="label">35.235.240.0/20</text>
+  <ellipse cx="1390" cy="635" rx="80" ry="48" fill="#eceff1" stroke="#607d8b" stroke-width="2"/><text x="1390" y="628" text-anchor="middle" class="node-title">Internet</text><text x="1390" y="651" text-anchor="middle" class="label">Updates / APIs</text>
+  <path d="M190 258 H360" class="edge"/><text x="265" y="247" text-anchor="middle" class="edge-label">SSH 22</text>
+  <path d="M190 478 H215 V375 H920 V315" class="edge"/><text x="480" y="366" text-anchor="middle" class="edge-label">IAP SSH 22</text>
+  <path d="M610 285 H920" class="edge"/><text x="765" y="274" text-anchor="middle" class="edge-label">HTTP / ICMP by private IP</text>
+  <path d="M485 345 V455 H550 V505" class="edge dash"/><text x="450" y="447" class="edge-label">DNS lookup</text>
+  <path d="M805 558 H835 V390 H1045 V345" class="edge dash"/><text x="885" y="380" class="edge-label">Private A record</text>
+  <path d="M1045 345 V450 H982 V490" class="edge dash"/><text x="1010" y="442" class="edge-label">Private egress</text>
+  <path d="M982 560 V600" class="edge"/>
+  <path d="M1075 635 H1310" class="edge dash"/><text x="1190" y="624" text-anchor="middle" class="edge-label">Translated outbound flow</text>
+  <g transform="translate(280 770)"><rect width="18" height="18" fill="#e3f2fd" stroke="#4f81bd"/><text x="26" y="14" class="label">Client subnet</text><rect x="160" width="18" height="18" fill="#e6f4e2" stroke="#6c9f54"/><text x="186" y="14" class="label">Private server subnet</text><rect x="380" width="18" height="18" fill="#fff4cc" stroke="#c9a227"/><text x="406" y="14" class="label">Managed control service</text><rect x="650" width="18" height="18" fill="#fde2e0" stroke="#bf5b55"/><text x="676" y="14" class="label">Address translation</text></g>
+</svg>

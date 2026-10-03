@@ -20,14 +20,14 @@ The mapping is conceptual, not implementation-identical. A VPC is not a physical
 
 ## Phase 2: The "Networking to Terraform" Bridge (Cloud Parity)
 
-Packet Tracer Component                   GCP Terraform Resource
-─────────────────────────────────────────────────────────────────────────────
-Router0 / Subnet Segments          ───>   google_compute_network (Custom VPC)
-LAN 1 / LAN 2 Subnets              ───>   google_compute_subnetwork
-DHCP-Server0 (Relay & Pool)        ───>   Andromeda SDN (Built-in Subnet DHCP)
-DNS Server (8.8.8.8 / Local)       ───>   google_dns_managed_zone
-Router NAT / PAT                   ───>   google_compute_router_nat
-Client PCs & App Servers           ───>   google_compute_instance
+| Packet Tracer component | GCP equivalent | Terraform resource or implementation |
+|:------------------------|:---------------|:-------------------------------------|
+| Router0 / routed network boundary | Custom-mode VPC | `google_compute_network` |
+| LAN 1 / LAN 2 subnets | Regional VPC subnets | `google_compute_subnetwork` |
+| DHCP-Server0 relay and address pool | Built-in subnet address assignment through Google Cloud's virtual networking | Managed by the platform; no separate Terraform DHCP resource |
+| Local or public DNS server | Cloud DNS managed zone | `google_dns_managed_zone` and `google_dns_record_set` |
+| Router NAT/PAT | Cloud NAT attached to Cloud Router | `google_compute_router` and `google_compute_router_nat` |
+| Client PCs and application servers | Compute Engine VM instances | `google_compute_instance` |
 
 ## Routes, firewalls, and NAT answer different questions
 
@@ -102,7 +102,7 @@ Apply the complete theory track in the [Terraform and GKE networking case study]
 ## Related labs
 
 - [Packet Tracer GCP equivalent](labs/9-networking_gcp_equivalent_lab.md)
-- [GCP networking with Terraform](labs/10-gcp_terraform_networking_scenario.md)
-- [VPC peering and Shared VPC](labs/lab_vpc_peering_shared_vpc.md)
-- [L4 and L7 load balancing](labs/lab_load_balancing_l4_l7.md)
-- [IPsec VPN with BGP](labs/lab_ipsec_vpn_bgp_hybrid_cloud.md)
+- [GCP networking with Terraform](terraform/05-two-tier-networking-scenario.md)
+- [VPC peering and Shared VPC](terraform/06-vpc-peering-shared-vpc.md)
+- [L4 and L7 load balancing](terraform/07-load-balancing-l4-l7.md)
+- [IPsec VPN with BGP](terraform/08-ipsec-vpn-bgp-hybrid.md)

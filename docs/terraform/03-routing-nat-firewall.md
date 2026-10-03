@@ -4,6 +4,26 @@ Your Packet Tracer labs 3 and 6 configured **NAT/PAT overload** and ACLs on
 Router0 so private clients could reach the internet. In GCP, those map to
 three separate resources — and unlike PT, you declare each piece explicitly.
 
+## Lab contract
+
+| Item | This lab |
+|:-----|:---------|
+| **Execution model** | Cumulative; append to the Lab 02 working directory and state |
+| **Starts from** | `lab_vpc`, `lan1_clients`, and `lan2_servers` from Lab 02 |
+| **Adds** | Cloud Router, Cloud NAT, and narrowly scoped ingress rules |
+| **Keep after completion** | Yes; Lab 04 attaches VMs and private DNS to these resources |
+| **Next** | [Lab 04 — VMs & Private DNS](04-vms-and-dns.md) |
+
+## Resource summary
+
+| Terraform block | Count | Purpose | Depends on |
+|:----------------|------:|:--------|:-----------|
+| `google_compute_router.nat_router` | 1 | Regional control-plane resource required by Cloud NAT | Lab 02 VPC |
+| `google_compute_router_nat.nat` | 1 | Outbound translation for the private server subnet | Router and `lan2_servers` |
+| `google_compute_firewall.allow_ssh` | 1 | SSH to explicitly tagged public-facing VMs from `var.my_ip` | Lab 02 VPC |
+| `google_compute_firewall.allow_iap_ssh` | 1 | IAP TCP forwarding to explicitly tagged private VMs | Lab 02 VPC |
+| `google_compute_firewall.allow_internal` | 1 | TCP, UDP, and ICMP between the two lab CIDRs | Lab 02 VPC |
+
 ## Concept Map
 
 | Packet Tracer | GCP / Terraform |
@@ -23,18 +43,10 @@ The `lan2-servers` subnet (from lab 02) will host VMs with **no public IP**.
 Like your PT clients behind PAT, they need outbound internet for updates —
 via Cloud NAT. And like your ACLs, we lock ingress down with firewall rules.
 
-```text
-[ tf-lab-vpc ]
+![GCP VPC with client and server subnets, firewall policy, IAP access, Cloud Router, and outbound Cloud NAT](diagrams/lab03-routing-nat-firewall.svg)
 
-  lan1-clients  192.168.10.0/24  ── public-facing workloads (lab 04)
-  lan2-servers  192.168.20.0/24  ── private VMs
-        │
-        └─ outbound only ──▶ [ Cloud Router + Cloud NAT ] ──▶ internet
-
-  Firewall:  deny everything by default
-             allow SSH (22) from your IP
-             allow internal traffic between subnets
-```
+!!! tip "Editable source"
+    Edit [`lab03-routing-nat-firewall.drawio`](diagrams/lab03-routing-nat-firewall.drawio) and export it as SVG after changes.
 
 ## `main.tf` (append to lab 02's config)
 
@@ -86,6 +98,21 @@ resource "google_compute_firewall" "allow_ssh" {
 }
 
 # Allow all traffic between our two subnets (like inter-VLAN routing permitting LANs)
+resource "google_compute_firewall" "allow_iap_ssh" {
+  name    = "tf-allow-iap-ssh"
+  network = google_compute_network.lab_vpc.id
+
+  direction     = "INGRESS"
+  source_ranges = ["35.235.240.0/20"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  target_tags = ["iap-ssh"]
+}
+
 resource "google_compute_firewall" "allow_internal" {
   name    = "tf-allow-internal"
   network = google_compute_network.lab_vpc.id
@@ -146,7 +173,8 @@ gcloud compute firewall-rules list --filter="network=tf-lab-vpc"
 ## Checklist before lab 04
 
 - [ ] Cloud NAT exists and is bound to `lan2-servers` only
-- [ ] SSH allowed only from your IP, only to tagged VMs
+- [ ] Direct SSH is allowed only from your IP to `ssh-allowed` VMs
+- [ ] IAP SSH is allowed only from Google's IAP TCP range to `iap-ssh` VMs
 - [ ] You can name the PT equivalent of each resource
 
 **Next:** [Lab 04 — VMs, Private DNS & Verification](04-vms-and-dns.md)

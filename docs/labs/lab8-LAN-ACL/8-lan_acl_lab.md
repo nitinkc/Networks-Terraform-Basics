@@ -1,22 +1,19 @@
 # Comprehensive VLAN & Access Control List (ACL) Lab (Packet Tracer)
 
+!!! info "Theory prerequisites"
+    Read [VLANs](../../07-vlans.md), [TCP vs UDP](../../09-tcp-udp.md), and [ACLs & Network Segmentation](../../12-acls-segmentation.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
+
 This lab covers two fundamental pillars of network engineering and enterprise security:
 
 * **Part 1: VLANs & 802.1Q Trunking:** Segmenting a physical switch into isolated Layer 2 broadcast domains and routing between them using **Router-on-a-Stick (ROAS)**.
 * **Part 2: Standard vs. Extended Access Control Lists (ACLs):** Enforcing departmental security policies, protocol-level filtering (HTTP vs. SSH), and mitigating unauthorized access.
 
-```
-[ VLAN 10: Engineering ] ──┐
-  10.1.10.0/24             │
-                           ├──[Switch0: 2960]══(Trunk: Fa0/24)══(Gig0/0)[Router0]
-[ VLAN 20: HR / Finance ] ─┤                                               │ (Gig0/1: 10.1.50.1/24)
-  10.1.20.0/24             │                                               ▼
-                           │                                          [Switch1: Server DMZ]
-[ VLAN 34: Guest Wi-Fi ] ──┘                                               │
-  10.1.30.0/24                                                             ▼
-                                                                  [Corporate-Server0]
-                                                                  IP: 10.1.50.10 (HTTP + SSH)
-```
+## Topology
+
+![Engineering, HR, and Guest VLANs crossing an 802.1Q trunk to Router0, where ACLs control access to a corporate server](../diagrams/lab08-vlan-acl.svg)
+
+!!! tip "Editable source"
+    Edit [`lab08-vlan-acl.drawio`](../diagrams/lab08-vlan-acl.drawio) and export it as SVG after changes.
 ![1.png](1.png)
 ## Security Policy Matrix
 

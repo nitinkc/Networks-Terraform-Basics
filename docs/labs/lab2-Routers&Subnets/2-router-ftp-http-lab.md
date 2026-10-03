@@ -1,5 +1,8 @@
 # Router-in-the-middle FTP/HTTP lab (Packet Tracer)
 
+!!! info "Theory prerequisites"
+    Read [Packets & IP Addressing](../../02-packets-ip-addressing.md), [Switches vs Routers](../../04-switches-routers.md), and [Subnetting & DHCP](../../06-subnetting-dhcp.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
+
 This lab builds directly on the router-in-the-middle architecture by implementing **VLSM / Subnetting (`/26` with mask `255.255.255.192`)** across two separate broadcast domains.
 
 The server now lives on a *different* subnet, reached through a
@@ -8,16 +11,12 @@ routing (no NAT yet — that's a separate concept).
 
 All IP addresses are statically assigned without DHCP or external internet connectivity.
 
-```
-[PC0]──┐
-       ├──[Switch0]──[Router0 Gig0/0]
-[PC1]──┘                    |  Gig0/1
-                            |
-                        [Switch1] ── [Laptop0]
-                            |
-                            |
-                        [Server0: FTP + HTTP]
-```
+## Topology
+
+![Two routed /26 subnets connected by Router0, with clients and an HTTP/FTP server](../diagrams/lab02-router-subnets.svg)
+
+!!! tip "Editable source"
+    Edit [`lab02-router-subnets.drawio`](../diagrams/lab02-router-subnets.drawio) and export it as SVG after changes.
 ![lab-2.png](lab-2.png)
 ## Addressing Plan
 

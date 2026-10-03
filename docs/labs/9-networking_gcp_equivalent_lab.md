@@ -1,37 +1,21 @@
 # Packet Tracer Lab: GCP 2-Tier Architecture Equivalent
 
+!!! info "Theory prerequisites"
+    Read [VLANs](../07-vlans.md), [Firewalls](../13-firewalls.md), and [Cloud & Hybrid Networking](../15-cloud-hybrid-networking.md). Return to the [Lab-Aligned Learning Path](lab-theory-map.md) after verification.
+
 This lab builds the exact physical equivalent of the **GCP 2-Tier Terraform architecture**. You will model:
 
 * **Web Subnet (`10.1.10.0/24`):** Public-facing tier hosting `Frontend-Web0`.
 * **App Subnet (`10.1.20.0/24`):** Isolated private backend hosting `Backend-App0` and private `DNS-Server0`.
 * **GCP Cloud NAT Equivalent:** `Router-Edge` translating private App Subnet traffic to access the outside WAN.
-* **GCP Firewall Rules Equivalent:** Cisco Extended Access Control Lists (ACLs) enforcing micro-segmentation (allowing Web $ightarrow$ App on port 8080 while blocking direct outside access to the backend).
+* **GCP Firewall Rules Equivalent:** Cisco Extended Access Control Lists (ACLs) enforcing micro-segmentation (allowing Web → App on port 8080 while blocking direct outside access to the backend).
 
-```
-[ PRIVATE ENTERPRISE / GCP VPC ]                                                     [ PUBLIC INTERNET ]
+## Topology
 
-  ┌─── Web Tier Subnet (10.1.10.0/24) ───┐
-  │ [Frontend-Web0: 10.1.10.2]           │
-  │          │                           │
-  │          ▼                           │
-  │     [Switch-Web]                     │
-  └──────────┬───────────────────────────┘
-             │ Gig0/0.10 (Sub-interface)
-             ▼
-      [ Router-Edge ] ──── Gig0/1 ──── (203.0.113.0/30) ──── Gig0/0 [ Router-ISP ] ──── [Internet-Client: 198.51.100.50]
-      (VPC, NAT & ACLs)                                                Gig0/1: 198.51.100.1
-             ▲
-             │ Gig0/0.20 (Sub-interface)
-  ┌──────────┴───────────────────────────┐
-  │     [Switch-App]                     │
-  │          ▲                           │
-  │          │                           │
-  │ ┌────────┴──────────────┐            │
-  │ │ [Backend-App0: .20.2] │            │
-  │ │ [DNS-Server0:  .20.5] │            │
-  │ └───────────────────────┘            │
-  └─── App Tier Subnet (10.1.20.0/24) ───┘
-```
+![Packet Tracer physical equivalent of a two-tier GCP VPC using VLANs, ACLs, NAT, DNS, and an ISP edge](diagrams/lab09-gcp-equivalent.svg)
+
+!!! tip "Editable source"
+    Edit [`lab09-gcp-equivalent.drawio`](diagrams/lab09-gcp-equivalent.drawio) and export it as SVG after changes.
 
 ## Direct Concept Mapping: GCP vs. Packet Tracer
 
@@ -40,8 +24,8 @@ This lab builds the exact physical equivalent of the **GCP 2-Tier Terraform arch
 | `google_compute_subnetwork.web_subnet` | VLAN 10 (`10.1.10.0/24`) on `Gig0/0.10` | Public-facing subnet. |
 | `google_compute_subnetwork.app_subnet` | VLAN 20 (`10.1.20.0/24`) on `Gig0/0.20` | Isolated private backend subnet. |
 | `google_compute_router_nat` | `ip nat inside source list 20 ... overload` | Translates backend private IPs to public WAN IP. |
-| `google_compute_firewall` (allow-web-to-app) | Cisco Extended ACL `101` on `Gig0/0.20` | Permits Web $ightarrow$ App on Port 8080 and DNS on Port 53; denies rest. |
-| `google_dns_managed_zone` (Private Zone) | `DNS-Server0` (`10.1.20.5`) with A-Record | Resolves `api.corp.internal` $ightarrow$ `10.1.20.2`. |
+| `google_compute_firewall` (allow-web-to-app) | Cisco Extended ACL `101` on `Gig0/0.20` | Permits Web → App on Port 8080 and DNS on Port 53; denies rest. |
+| `google_dns_managed_zone` (Private Zone) | `DNS-Server0` (`10.1.20.5`) with A-Record | Resolves `api.corp.internal` → `10.1.20.2`. |
 
 ## Addressing Plan
 
@@ -237,7 +221,7 @@ write memory
 ### A. DNS-Server0 (`10.1.20.5`)
 * **IP Configuration:** Static IP `10.1.20.5`, Mask `255.255.255.0`, Gateway `10.1.20.1`, DNS `127.0.0.1`.
 * **Services > DNS:** Toggle **On**.
-  * Add A-Record: `api.corp.internal` $ightarrow$ `10.1.20.2`.
+  * Add A-Record: `api.corp.internal` → `10.1.20.2`.
 
 ### B. Backend-App0 (`10.1.20.2`)
 * **IP Configuration:** Static IP `10.1.20.2`, Mask `255.255.255.0`, Gateway `10.1.20.1`, DNS `10.1.20.5`.
@@ -252,7 +236,7 @@ write memory
 
 ## 6. Hands-On Verification and Testing
 
-### Test 1: Internal Micro-Service Communication (Web $ightarrow$ App via DNS)
+### Test 1: Internal Micro-Service Communication (Web → App via DNS)
 1. Open **Frontend-Web0 > Desktop > Command Prompt**.
 2. Run `nslookup api.corp.internal` to confirm DNS resolution to `10.1.20.2`.
 3. Open **Web Browser** on `Frontend-Web0` and enter:
@@ -261,7 +245,7 @@ write memory
    ```
    *Result:* Web server successfully fetches data from the backend application tier.
 
-### Test 2: Outside Public Ingress (Internet Client $ightarrow$ Web Server)
+### Test 2: Outside Public Ingress (Internet Client → Web Server)
 1. Open **Internet-Client > Web Browser**.
 2. Navigate to the router's public IP:
    ```text

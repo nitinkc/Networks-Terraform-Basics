@@ -83,7 +83,7 @@ markdown_extensions:
         - .            # lets docs pages single-source the sandbox README/RUNBOOK
       check_paths: true
       auto_append:
-        - includes/abbreviations.md   # hover tooltips for abbreviations on every page
+        - abbreviations.md   # hover tooltips for abbreviations on every page
   - tables
 
 exclude_docs: |
@@ -95,8 +95,8 @@ extra_javascript:
 nav:
   - Start Here:
       - Overview: index.md
-      - Lab-Aligned Learning Path: lab-theory-map.md
-  - Theory — Systematic Sequence:
+      - Lab-Aligned Learning Path: labs/lab-theory-map.md
+  - Theory:
       - 01 - Networking Models: 01-networking-models.md
       - 02 - Packets & IP Addressing: 02-packets-ip-addressing.md
       - 03 - MAC Addresses & ARP: 03-mac-arp.md
@@ -112,15 +112,7 @@ nav:
       - 13 - Firewalls: 13-firewalls.md
       - 14 - VPNs, Proxies & Load Balancers: 14-vpn-proxies-loadbalancers.md
       - 15 - Cloud & Hybrid Networking: 15-cloud-hybrid-networking.md
-      - Glossary & Cheat-Sheet: 99-glossary-cheatsheet.md
-  - Applied Case Study:
-      - Terraform & GKE Microservices Network: 16-terraform-gke-case-study.md
-  - Terraform Track:
-      - 01 - Setup & First Apply: terraform/01-setup-first-apply.md
-      - 02 - VPC & Subnets: terraform/02-vpc-subnets.md
-      - 03 - Routing, NAT & Firewall: terraform/03-routing-nat-firewall.md
-      - 04 - VMs & Private DNS: terraform/04-vms-and-dns.md
-  - Labs:
+  - Packet Tracer Labs:
       - 01 - Single-Subnet FTP/HTTP: labs/lab1-switch/1-basic-ftp-http-lan.md
       - 02 - Router & Subnets: labs/lab2-Routers&Subnets/2-router-ftp-http-lab.md
       - 03 - Multi-Router NAT & DHCP: labs/3-multi-router-nat-dhcp-lab.md
@@ -129,11 +121,16 @@ nav:
       - 06 - NAT, PAT & Port Forwarding: labs/lab6-NAT-PAT/6-nat_pat_lab.md
       - 07 - OSPF & eBGP: labs/7-bgp_ospf_lab.md
       - 08 - VLANs & ACLs: labs/lab8-LAN-ACL/8-lan_acl_lab.md
-      - 09 - Packet Tracer GCP Equivalent: labs/9-networking_gcp_equivalent_lab.md
-      - 10 - GCP Networking with Terraform: labs/10-gcp_terraform_networking_scenario.md
-      - 11 - VPC Peering & Shared VPC: labs/lab_vpc_peering_shared_vpc.md
-      - 12 - L4 & L7 Load Balancing: labs/lab_load_balancing_l4_l7.md
-      - 13 - IPsec VPN & BGP: labs/lab_ipsec_vpn_bgp_hybrid_cloud.md
-      - Reference:
-          - Devices: labs/devices.md
-          - Protocols: labs/protocols.md
+      - 09 - GCP Architecture Equivalent: labs/9-networking_gcp_equivalent_lab.md
+  - Applied Case Study:
+      - Terraform & GKE Microservices Network: 16-terraform-gke-case-study.md
+  - Terraform & GCP Labs:
+      - 01 - Setup & First Apply: terraform/01-setup-first-apply.md
+      - 02 - VPC & Subnets: terraform/02-vpc-subnets.md
+      - 03 - Routing, NAT & Firewall: terraform/03-routing-nat-firewall.md
+      - 04 - VMs & Private DNS: terraform/04-vms-and-dns.md
+      - 05 - Two-Tier Networking Scenario: terraform/05-two-tier-networking-scenario.md
+      - 06 - VPC Peering & Shared VPC: terraform/06-vpc-peering-shared-vpc.md
+      - 07 - L4 & L7 Load Balancing: terraform/07-load-balancing-l4-l7.md
+      - 08 - IPsec VPN & BGP: terraform/08-ipsec-vpn-bgp-hybrid.md
+  - Knowledge Check Quiz: 99-quiz.md

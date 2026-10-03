@@ -75,5 +75,11 @@ which leased IP and for how long.
 !!! info "Cloud connection"
     Terraform can declare cloud subnet and secondary ranges. Cloud platforms assign VM addresses through managed networking, while Kubernetes assigns Pod and Service addresses through cluster IP address management—not through the DHCP DORA exchange.
 
+## Practice in Packet Tracer
+
+- [Lab 02 — Router & Subnets](labs/lab2-Routers&Subnets/2-router-ftp-http-lab.md): assign two `/26` networks and their gateways.
+- [Lab 03 — Multi-Router NAT & DHCP](labs/3-multi-router-nat-dhcp-lab.md): lease client settings at an internet edge.
+- [Lab 04 — DHCP Relay](labs/lab4-DHCP/4-dhcp_lab.md): trace DORA across a relay to a centralized server.
+
 ## Next
 [VLANs →](07-vlans.md)

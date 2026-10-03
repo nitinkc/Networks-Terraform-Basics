@@ -66,5 +66,11 @@ inbound thing" without a separate feature like port forwarding).
 !!! info "Cloud connection"
     Terraform can declare cloud firewall rules, but runtime verification is still required. A rule may target the wrong identity, tag, direction, or network, and load-balancer health checks often require their own permitted path.
 
+## Practice in Packet Tracer
+
+- [Lab 06 — NAT/PAT](labs/lab6-NAT-PAT/6-nat_pat_lab.md): distinguish translation state from explicit filtering policy.
+- [Lab 08 — VLANs & ACLs](labs/lab8-LAN-ACL/8-lan_acl_lab.md): implement stateless protocol/port policy with router ACLs.
+- [Lab 09 — GCP Architecture Equivalent](labs/9-networking_gcp_equivalent_lab.md): compare Cisco ACL enforcement with cloud firewall concepts.
+
 ## Next
 [VPNs, Proxies & Load Balancers →](14-vpn-proxies-loadbalancers.md)

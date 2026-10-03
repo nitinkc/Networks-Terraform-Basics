@@ -1,5 +1,8 @@
 # Two-Router NAT & DHCP Lab — Real-World ISP Architecture
 
+!!! info "Theory prerequisites"
+    Read [Private IPs, NAT & PAT](../05-private-ip-nat.md), [Subnetting & DHCP](../06-subnetting-dhcp.md), and [Static Routing, OSPF & BGP](../08-routing-protocols.md). Return to the [Lab-Aligned Learning Path](lab-theory-map.md) after verification.
+
 This lab builds a complete end-to-end network modeling a private enterprise or home LAN connected to a public ISP and
 cloud server. It integrates **DHCP**, **Default Routing**, and **NAT/PAT (Port Address Translation)**.
 
@@ -7,7 +10,16 @@ In this design, **Router0** operates as the boundary router (translating interna
 while **Router1** acts as the upstream ISP router hosting a public HTTP/FTP server. Because NAT hides the private 
 `192.168.1.0/24` network, Router1 requires no return routes for private IP space.
 
-Topology:
+## Topology
+
+![Private DHCP LAN crossing a PAT edge and ISP router to reach a public HTTP/FTP server](diagrams/lab03-nat-dhcp.svg)
+
+!!! tip "Editable source"
+    Edit [`lab03-nat-dhcp.drawio`](diagrams/lab03-nat-dhcp.drawio) and export it as SVG after changes.
+
+<details>
+<summary>Detailed text topology and NAT packet rewrite</summary>
+
 ```text
 ===============================================================================================================================================
 TWO-ROUTER END-TO-END NETWORK TOPOLOGY
@@ -68,6 +80,8 @@ Subnet: 192.168.1.0/24                         Subnet: 203.0.113.0/30           
 
 ===============================================================================================================================================
 ```
+
+</details>
 
 ## Addressing Plan
 

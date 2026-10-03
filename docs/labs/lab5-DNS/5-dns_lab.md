@@ -1,5 +1,8 @@
 # Dedicated DNS & Name Resolution Lab (Packet Tracer)
 
+!!! info "Theory prerequisites"
+    Read [TCP vs UDP](../../09-tcp-udp.md), [DNS & Ports](../../10-dns-and-ports.md), and [HTTP/HTTPS & TLS](../../11-http-https-tls.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
+
 This lab introduces **Domain Name System (DNS)** concepts from the ground up. 
 You will learn how human-friendly hostnames (such as `www.company.local` and `ftp.company.local`) are resolved into 
 IP addresses across different subnets.
@@ -11,13 +14,12 @@ You will configure:
 * **Integrated DHCP + DNS:** Automatically distributing DNS server settings to client PCs.
 * **Simulation Mode Packet Tracing:** Watching a DNS UDP query (Port 53) trigger before an HTTP TCP handshake (Port 80).
 
-```
-[LAN 1: Clients - 192.168.1.0/24]                      [LAN 2: Server Farm - 198.51.100.0/24]
+## Topology
 
-[PC0]──┐                                               ┌──[DNS-Server0: 198.51.100.5]
-       ├──[Switch0]──(Gig0/0)[ Router0 ](Gig0/1)──[Switch1]┤
-[PC1]──┘                                               └──[Web-Server0: 198.51.100.10]
-```
+![Client LAN resolving names through a dedicated DNS server before connecting to a web server](../diagrams/lab05-dns-resolution.svg)
+
+!!! tip "Editable source"
+    Edit [`lab05-dns-resolution.drawio`](../diagrams/lab05-dns-resolution.drawio) and export it as SVG after changes.
 
 ![1.png](1.png)
 
@@ -183,9 +185,7 @@ Switch Packet Tracer to **Simulation Mode** (Shift + S) and filter by **DNS, ICM
 
 | Concept / Record | Purpose | Example from Lab |
 |---|---|---|
-| **A Record** | Maps a domain name (FQDN) to an IPv4 address. | `www.company.local` $
-ightarrow$ `198.51.100.10` |
-| **CNAME Record** | Creates an alias pointing one name to another canonical name. | `ftp.company.local` $
-ightarrow$ `www.company.local` |
+| **A Record** | Maps a domain name (FQDN) to an IPv4 address. | `www.company.local` → `198.51.100.10` |
+| **CNAME Record** | Creates an alias pointing one name to another canonical name. | `ftp.company.local` → `www.company.local` |
 | **Port 53 (UDP vs TCP)** | Standard DNS queries use **UDP 53** for low latency; large transfers/zone transfers use **TCP 53**. | PC queries to `198.51.100.5:53` |
 | **Hierarchical Resolution** | In production, if a local DNS server cannot resolve an address, it forwards queries up to Root servers, TLD servers, and Authoritative servers. | In this lab, DNS-Server0 is authoritative for `.company.local`. |
