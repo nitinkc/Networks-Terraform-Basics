@@ -70,11 +70,8 @@ proxy — but its specific job is distributing incoming requests across
 | Reverse Proxy | Servers | Forward client requests inward | TLS termination, hiding backend |
 | Load Balancer | Servers (multiple) | Distribute + health-check traffic | Preventing any one server from overloading |
 
-## ShopNow packet journey: enter and operate the platform
-
-Customers enter through an external HTTPS load balancer, which acts as a reverse proxy and distributes requests across healthy backends. Kubernetes Ingress and Services continue the routing toward `web` Pods. These may be implemented by integrated controllers, but their responsibilities should still be traced separately: public frontend, TLS policy, health check, backend service, Service, and Pod endpoint.
-
-Operators use a VPN or identity-aware access path to reach private management endpoints without publishing them to the internet. Terraform provisions the cloud load balancer and connectivity; Kubernetes resources describe in-cluster exposure and backend selection.
+!!! info "Cloud connection"
+    Cloud load balancers, Kubernetes Ingress, and Services may be integrated by controllers, but their responsibilities remain distinct: public frontend, TLS policy, health checks, backend selection, Service routing, and Pod endpoints.
 
 ## Next
 [Cloud & Hybrid Networking →](15-cloud-hybrid-networking.md)

@@ -69,11 +69,8 @@ entire call to retransmit an old one — so the application itself
 decides how to handle loss, rather than relying on the transport layer
 to force retransmission the way TCP would.
 
-## ShopNow packet journey: establish transport
-
-The browser normally uses TCP for an HTTPS connection to ShopNow. Its source is an ephemeral client port and its destination is TCP 443 on the load balancer. The load balancer may create a separate connection to a backend, so client-to-load-balancer and load-balancer-to-Pod are distinct transport sessions.
-
-Inside the cluster, `web` calls `orders` on a Service port, and DNS commonly uses UDP 53 with TCP available when needed. A Service's `port` is the stable port clients use; `targetPort` identifies the port on which the selected Pods listen.
+!!! info "Cloud connection"
+    A proxy or load balancer may terminate one TCP connection and create a separate backend connection. In Kubernetes, a Service's `port` is the stable port clients use, while `targetPort` identifies the port on which selected Pods listen.
 
 ## Next
 [DNS & Ports →](10-dns-and-ports.md)

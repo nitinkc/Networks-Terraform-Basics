@@ -29,16 +29,16 @@ This lab covers two fundamental pillars of network engineering and enterprise se
 
 ## Addressing Plan
 
-| Device | Interface | IP Address | Subnet Mask | Default Gateway | VLAN ID | Role |
-|---|---|---|---|---|---|---|
-| **Router0** | `Gig0/0.10` | `10.1.10.1` | `255.255.255.0` | — | 10 | Engineering Gateway |
-| **Router0** | `Gig0/0.20` | `10.1.20.1` | `255.255.255.0` | — | 20 | HR / Finance Gateway |
-| **Router0** | `Gig0/0.30` | `10.1.30.1` | `255.255.255.0` | — | 30 | Guest Wi-Fi Gateway |
-| **Router0** | `Gig0/1` | `10.1.50.1` | `255.255.255.0` | — | Routed | Server DMZ Gateway |
-| **PC-Eng (VLAN 10)** | `Fa0` | `10.1.10.10` | `255.255.255.0` | `10.1.10.1` | 10 | Engineering Workstation |
-| **PC-HR (VLAN 20)** | `Fa0` | `10.1.20.10` | `255.255.255.0` | `10.1.20.1` | 20 | HR Workstation |
-| **PC-Guest (VLAN 30)**| `Fa0`| `10.1.30.10` | `255.255.255.0` | `10.1.30.1` | 30 | Guest Laptop |
-| **Corporate-Server0** | `Fa0` | `10.1.50.10` | `255.255.255.0` | `10.1.50.1` | — | DMZ Web (80) & SSH (22) Server |
+| Device                        | Interface | IP Address                 | Subnet Mask | Default Gateway | VLAN ID | Role |
+|-------------------------------|---|----------------------------|---|---|---|---|
+| **Router0**                   | `Gig0/0.10` | `10.1.10.1`                | `255.255.255.0` | — | 10 | Engineering Gateway |
+| **Router0**                   | `Gig0/0.20` | `10.1.20.1`                | `255.255.255.0` | — | 20 | HR / Finance Gateway |
+| **Router0**                   | `Gig0/0.30` | `10.1.30.1`                | `255.255.255.0` | — | 30 | Guest Wi-Fi Gateway |
+| **Router0**                   | `Gig0/1` | `10.1.50.1`                | `255.255.255.0` | — | Routed | Server DMZ Gateway |
+| **PC-Eng (VLAN 10)**, Laptop0 | `Fa0` | `10.1.10.10`, `10.1.10.11` | `255.255.255.0` | `10.1.10.1` | 10 | Engineering Workstation |
+| **PC-HR (VLAN 20)**           | `Fa0` | `10.1.20.10`               | `255.255.255.0` | `10.1.20.1` | 20 | HR Workstation |
+| **PC-Guest (VLAN 30)**        | `Fa0`| `10.1.30.10`               | `255.255.255.0` | `10.1.30.1` | 30 | Guest Laptop |
+| **Corporate-Server0**         | `Fa0` | `10.1.50.10`               | `255.255.255.0` | `10.1.50.1` | — | DMZ Web (80) & SSH (22) Server |
 
 ## 1. Place and Cable Devices
 
@@ -77,7 +77,7 @@ vlan 99
 exit
 
 ! 2. Assign Access Ports to VLANs
-interface FastEthernet0/10
+interface range FastEthernet0/1, FastEthernet0/10
  description PC-Eng Port
  switchport mode access
  switchport access vlan 10

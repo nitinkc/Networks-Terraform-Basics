@@ -75,11 +75,8 @@ In the lab sequence, focus on three separate facts:
 - A prefix is learned but loses to a more preferred route source.
 - Forward routing works while the destination lacks a route back.
 
-## ShopNow packet journey: choose every next hop
-
-The customer side normally follows a default route toward an ISP. GCP uses VPC routes to reach cluster nodes and cloud services. If ShopNow connects an office or datacenter through Cloud VPN, Cloud Router can exchange private prefixes with BGP so both sides learn forward and return paths dynamically.
-
-Kubernetes also makes forwarding decisions for Service and Pod traffic, but those mechanisms do not replace VPC routing. Troubleshooting should identify which routing domain currently owns the packet: the client LAN, internet, GCP VPC, GKE node, or cluster network.
+!!! info "Cloud connection"
+    Cloud VPC routes, hybrid BGP routes, and Kubernetes Service or Pod forwarding belong to different routing domains. Troubleshooting starts by identifying which domain currently owns the packet and checking both its forward and return paths.
 
 ## Next
 [TCP vs UDP →](09-tcp-udp.md)

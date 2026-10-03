@@ -117,11 +117,8 @@ loop occurs — it's also exactly what `traceroute` exploits to map a
 path (it sends packets with deliberately increasing TTLs to force each
 router along the way to respond).
 
-## ShopNow packet journey: identify the endpoints
-
-A customer request has a source IP on the customer's network and a destination IP exposed by ShopNow's cloud load balancer. After the load balancer accepts it, later packets use internal addresses assigned to GKE nodes, Pods, or Services. These are separate network hops, not one unchanged end-to-end packet.
-
-Terraform plans non-overlapping VPC and subnet CIDRs before GKE is created. Kubernetes then allocates Pod and Service addresses from cluster ranges. Address planning matters because overlapping VPC, Pod, Service, and on-premises ranges make routing ambiguous.
+!!! info "Cloud connection"
+    Cloud designs must reserve non-overlapping CIDRs for VPC subnets and, where applicable, Kubernetes Pods and Services. A load balancer, node, Pod, and Service may each use a different address because they are separate network endpoints or forwarding stages.
 
 ## Next
 [MAC Addresses & ARP →](03-mac-arp.md)

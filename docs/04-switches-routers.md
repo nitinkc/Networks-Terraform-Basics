@@ -60,11 +60,8 @@ you're actually using its built-in switch for the first part and its
 router function for the second — it's easy to conflate the two because
 they're physically inseparable in that product.
 
-## ShopNow packet journey: leave the local network
-
-The office switch forwards the customer's frame toward the default gateway. The router removes the local frame, examines the destination IP, selects a route, and creates a new frame for the next link. This switch-then-router transition is the first concrete step in the ShopNow request.
-
-In GCP, VPC forwarding is distributed rather than performed by a visible physical router, and a Kubernetes Service is not an Ethernet switch. The abstractions differ, but forwarding still depends on whether the destination is local and which next hop owns the route.
+!!! info "Cloud connection"
+    Cloud VPC forwarding is distributed rather than performed by one visible physical router. A Kubernetes Service is also not an Ethernet switch; it is a stable virtual endpoint that directs traffic to selected Pods.
 
 ## Next
 [Private IPs, NAT & PAT →](05-private-ip-nat.md)

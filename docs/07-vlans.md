@@ -82,11 +82,8 @@ interface gig0/1
   this same idea of logically-separated segments sharing physical
   infrastructure
 
-## ShopNow packet journey: create local boundaries
-
-The office may place developer laptops, build agents, and guest devices in separate VLANs even when they share physical switches. Each VLAN normally maps to a different IP subnet, and a router or Layer 3 switch controls traffic between them. This keeps guest broadcasts and direct access away from engineering systems.
-
-A GCP VPC subnet and a Kubernetes namespace are not VLANs. They can serve related organizational goals, but a namespace alone is not a network isolation boundary. In the ShopNow design, VPC subnets provide IP ranges, while firewall rules and Kubernetes NetworkPolicy provide explicit traffic policy.
+!!! info "Cloud connection"
+    A VPC subnet and a Kubernetes namespace are not VLANs. They can support similar organizational goals, but isolation in cloud and Kubernetes environments comes from routing and explicit firewall or NetworkPolicy rules—not from the namespace name alone.
 
 ## Next
 [Static Routing, OSPF & BGP →](08-routing-protocols.md)

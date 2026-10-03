@@ -74,11 +74,8 @@ privileges to bind to on Unix systems); 1024–49151 are "registered";
 above that are "dynamic/ephemeral" — the range your OS picks from when
 *your* machine initiates an outbound connection.
 
-## ShopNow packet journey: resolve the next service
-
-Public DNS maps `shop.example.com` to ShopNow's external HTTPS frontend. Terraform can create the public zone and record after the load balancer receives an address. The browser then opens a connection to that resolved address on TCP 443; DNS resolution and application connection are separate operations.
-
-Inside Kubernetes, cluster DNS resolves names such as `orders.shop.svc.cluster.local` to a Service IP. The Service sends traffic to healthy selected Pods. Public Cloud DNS, Kubernetes cluster DNS, a Service, and an Ingress solve different parts of the request path even though all contribute to locating an application.
+!!! info "Cloud connection"
+    Public DNS can point a hostname to a cloud load balancer, while Kubernetes cluster DNS resolves internal Service names. DNS returns an address or alias; routing, policy, and a listening application must still make that destination usable.
 
 ## Next
 [HTTP/HTTPS & TLS →](11-http-https-tls.md)

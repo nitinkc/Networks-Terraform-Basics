@@ -70,8 +70,8 @@ Suppose two inside PCs connect to the same public web server:
 
 ```text
 Inside local                 Inside global                Outside global
-192.168.1.10:54211   <-->    203.0.113.1:1025    <-->    198.51.100.2:80
-192.168.1.11:50876   <-->    203.0.113.1:1026    <-->    198.51.100.2:80
+192.168.1.10:54211   <-->    203.0.113.1:1025    <-->    198.51.100.2:80 (Server)
+192.168.1.11:50876   <-->    203.0.113.1:1026    <-->    198.51.100.2:80 (Server)
 ```
 
 Both sessions use the same inside global IP, `203.0.113.1`. Router0 assigns a
@@ -196,11 +196,8 @@ If PAT or port forwarding does not work, verify these items in order:
 !!! note "NAT is not a firewall"
     NAT changes addressing and keeps translation state. Although ordinary outbound PAT makes unsolicited inbound connections difficult, security policy should still be enforced with ACLs or a stateful firewall.
 
-## ShopNow packet journey: cross private/public boundaries
-
-The customer's laptop can use a private address while the home or office router uses PAT to represent many clients with one public address. On the cloud side, ShopNow's GKE nodes can remain private and use Cloud NAT for outbound package downloads and third-party API calls. Cloud NAT does not publish the application; the external HTTPS load balancer provides the inbound frontend.
-
-Terraform expresses those two cloud roles separately: `google_compute_router_nat` supplies controlled egress, while load-balancer resources define an ingress path. Keeping egress NAT and application ingress separate prevents the common mistake of expecting NAT to make a private service publicly reachable.
+!!! info "Cloud connection"
+    Cloud NAT normally provides outbound translation for private workloads; it does not publish an inbound application. Public ingress is usually provided separately by a load balancer or another explicitly exposed endpoint.
 
 ## Next
 [Subnetting & DHCP →](06-subnetting-dhcp.md)

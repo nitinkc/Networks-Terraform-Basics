@@ -95,15 +95,9 @@ A useful reading order is:
 - Health checks are blocked even though user traffic is allowed.
 - DNS resolves correctly to an address that routing or policy cannot reach.
 
-## ShopNow packet journey: assemble the complete system
+## Next
 
-Terraform applies the dependencies in layers: VPC and IP ranges, routes and Cloud NAT, firewall policy, private GKE cluster, load-balancer components, DNS records, and optional VPN/BGP connectivity. Kubernetes then deploys the `web`, `orders`, and `inventory` workloads plus Services, Ingress, and NetworkPolicy.
-
-The final customer flow is now explainable end to end: DNS resolves the frontend; the local LAN reaches its router through ARP and switching; PAT provides client egress; internet and cloud routes deliver packets; a firewall permits TCP 443; TLS protects HTTP; the load balancer selects a healthy backend; and Kubernetes networking carries internal service calls. Troubleshoot the same path in that order rather than treating the cloud as one opaque box.
-
-## Continue practicing
-
-Use the [Lab-Aligned Learning Path](lab-theory-map.md) to isolate each mechanism, then return to this packet journey and identify where the lab's tables, routes, translations, or policies appear in ShopNow.
+Apply the complete theory track in the [Terraform and GKE networking case study](16-terraform-gke-case-study.md).
 
 ## Related labs
 

@@ -96,7 +96,7 @@ nav:
   - Start Here:
       - Overview: index.md
       - Lab-Aligned Learning Path: lab-theory-map.md
-  - Theory — One Packet, End to End:
+  - Theory — Systematic Sequence:
       - 01 - Networking Models: 01-networking-models.md
       - 02 - Packets & IP Addressing: 02-packets-ip-addressing.md
       - 03 - MAC Addresses & ARP: 03-mac-arp.md
@@ -113,6 +113,8 @@ nav:
       - 14 - VPNs, Proxies & Load Balancers: 14-vpn-proxies-loadbalancers.md
       - 15 - Cloud & Hybrid Networking: 15-cloud-hybrid-networking.md
       - Glossary & Cheat-Sheet: 99-glossary-cheatsheet.md
+  - Applied Case Study:
+      - Terraform & GKE Microservices Network: 16-terraform-gke-case-study.md
   - Terraform Track:
       - 01 - Setup & First Apply: terraform/01-setup-first-apply.md
       - 02 - VPC & Subnets: terraform/02-vpc-subnets.md

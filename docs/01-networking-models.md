@@ -69,11 +69,8 @@ before passing the payload up. This is *encapsulation* and
 *de-encapsulation*, and it's the mechanical reason each layer can stay
 ignorant of the layers above and below it.
 
-## ShopNow packet journey: establish the map
-
-When a customer opens `https://shop.example.com`, the request crosses every layer. Ethernet or Wi-Fi carries a local frame, IP moves packets between networks, TCP provides an ordered connection, TLS protects it, and HTTP expresses the application request. Inside GKE, another HTTP request may travel from the `web` Pod to the `orders` Service using the same layered model.
-
-Terraform and Kubernetes manifests are not additional network layers. They configure resources that participate at existing layers: Terraform creates VPC subnets and load balancers; Kubernetes creates Services, network policy, and application endpoints.
+!!! info "Cloud connection"
+    Terraform and Kubernetes are not additional network layers. They configure resources—such as subnets, load balancers, Services, and policies—that operate at the existing layers.
 
 ## Next
 [Packets & IP Addressing →](02-packets-ip-addressing.md)

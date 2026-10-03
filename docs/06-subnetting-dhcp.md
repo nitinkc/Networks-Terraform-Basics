@@ -72,11 +72,8 @@ ip dhcp pool LANPOOL
 Verify with `show ip dhcp binding` — shows which device (by MAC) holds
 which leased IP and for how long.
 
-## ShopNow packet journey: plan the address space
-
-ShopNow reserves non-overlapping ranges for the VPC, GKE nodes, Pods, Services, and any connected office network. For example, nodes might use `10.10.0.0/20`, Pods `10.20.0.0/16`, and Services `10.30.0.0/20`. The exact ranges are design choices; the important rule is that every routed prefix has an unambiguous owner and enough room to grow.
-
-Terraform declares cloud subnet and secondary ranges. GCP supplies addresses to VM and GKE node interfaces through its managed network services, while Kubernetes IP address management assigns Pod and Service addresses. This resembles DHCP's goal of automated assignment, but Kubernetes Services do not obtain addresses through the DHCP DORA exchange.
+!!! info "Cloud connection"
+    Terraform can declare cloud subnet and secondary ranges. Cloud platforms assign VM addresses through managed networking, while Kubernetes assigns Pod and Service addresses through cluster IP address management—not through the DHCP DORA exchange.
 
 ## Next
 [VLANs →](07-vlans.md)

@@ -63,11 +63,8 @@ an explicit, configurable policy layer; NAT's protective effect is
 implicit and much less flexible (no way to say "allow this specific
 inbound thing" without a separate feature like port forwarding).
 
-## ShopNow packet journey: enforce stateful policy
-
-ShopNow's cloud firewall permits the load balancer and health-check systems to reach the intended backends while denying unnecessary direct access to private nodes. Kubernetes NetworkPolicy further restricts Pod-to-Pod flows such as allowing `web` to call `orders` without allowing every workload in the cluster to do so.
-
-Terraform can create VPC firewall policy, but runtime verification is still required. A rule may target the wrong network tag or service account, and a healthy public frontend can coexist with blocked health checks or backend traffic.
+!!! info "Cloud connection"
+    Terraform can declare cloud firewall rules, but runtime verification is still required. A rule may target the wrong identity, tag, direction, or network, and load-balancer health checks often require their own permitted path.
 
 ## Next
 [VPNs, Proxies & Load Balancers →](14-vpn-proxies-loadbalancers.md)

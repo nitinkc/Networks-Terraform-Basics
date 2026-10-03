@@ -77,11 +77,8 @@ For “HR may use HTTP to the corporate server but may not use SSH”:
 - Testing only an allowed flow hides an ineffective deny rule.
 - DNS, DHCP, or return traffic needed by the application was omitted.
 
-## ShopNow packet journey: express least-privilege flows
-
-ShopNow starts with a flow matrix: internet clients may reach the HTTPS frontend on TCP 443; the frontend may reach `web`; `web` may reach `orders`; `orders` may reach `inventory` and the database; ordinary Pods may not reach the control plane or management network. Writing these flows before writing rules exposes missing DNS, health-check, and return-traffic requirements.
-
-Cisco ACLs, GCP firewall rules, and Kubernetes NetworkPolicy use different matching and state models. Terraform manages the cloud firewall rules, while Kubernetes manifests manage Pod-level policy. A permit in one layer does not override a deny or missing route in another.
+!!! info "Cloud connection"
+    Cisco ACLs, cloud firewall rules, and Kubernetes NetworkPolicy use different targets and state models. Policy must be validated at every enforcement layer; a permit in one layer cannot override a deny or missing route in another.
 
 ## Next
 [Firewalls →](13-firewalls.md)
