@@ -75,8 +75,8 @@ proxy** — but its specific job is distributing incoming requests across
 
 ## Practice labs
 
-- [Terraform Lab 07 — L4 & L7 Load Balancing](terraform/07-load-balancing-l4-l7.md): build the load-balancer frontend and path-routing chain.
-- [Terraform Lab 08 — IPsec VPN & BGP](terraform/08-ipsec-vpn-bgp-hybrid.md): build a hybrid VPN and exchange private routes.
+- [Terraform Lab 07 — L4 & L7 Load Balancing](../terraform/07-load-balancing-l4-l7.md): build the load-balancer frontend and path-routing chain.
+- [Terraform Lab 08 — IPsec VPN & BGP](../terraform/08-ipsec-vpn-bgp-hybrid.md): build a hybrid VPN and exchange private routes.
 
 !!! note "Packet Tracer coverage"
     The current Packet Tracer track has no dedicated VPN lab. The Terraform/GCP hybrid lab contains the VPN exercise, while the Packet Tracer OSPF/eBGP lab provides the closest routing prerequisite.

@@ -43,10 +43,10 @@ The `lan2-servers` subnet (from lab 02) will host VMs with **no public IP**.
 Like your PT clients behind PAT, they need outbound internet for updates —
 via Cloud NAT. And like your ACLs, we lock ingress down with firewall rules.
 
-![GCP VPC with client and server subnets, firewall policy, IAP access, Cloud Router, and outbound Cloud NAT](diagrams/lab03-routing-nat-firewall.svg)
+![GCP VPC with client and server subnets, firewall policy, IAP access, Cloud Router, and outbound Cloud NAT](../diagrams/lab03-routing-nat-firewall.svg)
 
 !!! tip "Editable source"
-    Edit [`lab03-routing-nat-firewall.drawio`](diagrams/lab03-routing-nat-firewall.drawio) and export it as SVG after changes.
+    Edit [`lab03-routing-nat-firewall.drawio`](../diagrams/lab03-routing-nat-firewall.drawio) and export it as SVG after changes.
 
 ## `main.tf` (append to lab 02's config)
 

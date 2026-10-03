@@ -1,7 +1,7 @@
 # Basic single-LAN FTP/HTTP test lab (Packet Tracer)
 
 !!! info "Theory prerequisites"
-    Read [Networking Models](../../01-networking-models.md), [MAC Addresses & ARP](../../03-mac-arp.md), [Switches vs Routers](../../04-switches-routers.md), and [HTTP/HTTPS & TLS](../../11-http-https-tls.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
+    Read [Networking Models](../../theory/01-networking-models.md), [MAC Addresses & ARP](../../theory/03-mac-arp.md), [Switches vs Routers](../../theory/04-switches-routers.md), and [HTTP/HTTPS & TLS](../../theory/11-http-https-tls.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
 
 ## Topology
 

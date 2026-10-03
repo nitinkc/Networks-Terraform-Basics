@@ -1,7 +1,7 @@
 # Dynamic Routing Lab: OSPF (Internal) & eBGP (External) in Packet Tracer
 
 !!! info "Theory prerequisites"
-    Read [Packets & IP Addressing](../02-packets-ip-addressing.md) and [Static Routing, OSPF & BGP](../08-routing-protocols.md). Return to the [Lab-Aligned Learning Path](lab-theory-map.md) after verification.
+    Read [Packets & IP Addressing](../theory/02-packets-ip-addressing.md) and [Static Routing, OSPF & BGP](../theory/08-routing-protocols.md). Return to the [Lab-Aligned Learning Path](lab-theory-map.md) after verification.
 
 This lab bridges the gap between **Interior Gateway Protocols (IGP)** and **Exterior Gateway Protocols (EGP)**. You will build a multi-router topology where:
 

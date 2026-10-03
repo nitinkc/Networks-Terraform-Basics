@@ -1,7 +1,7 @@
 # Packet Tracer Lab: GCP 2-Tier Architecture Equivalent
 
 !!! info "Theory prerequisites"
-    Read [VLANs](../07-vlans.md), [Firewalls](../13-firewalls.md), and [Cloud & Hybrid Networking](../15-cloud-hybrid-networking.md). Return to the [Lab-Aligned Learning Path](lab-theory-map.md) after verification.
+    Read [VLANs](../theory/07-vlans.md), [Firewalls](../theory/13-firewalls.md), and [Cloud & Hybrid Networking](../theory/15-cloud-hybrid-networking.md). Return to the [Lab-Aligned Learning Path](lab-theory-map.md) after verification.
 
 This lab builds the exact physical equivalent of the **GCP 2-Tier Terraform architecture**. You will model:
 

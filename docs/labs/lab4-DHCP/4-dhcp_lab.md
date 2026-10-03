@@ -1,7 +1,7 @@
 # Dedicated DHCP & DHCP Relay Agent Lab (Packet Tracer)
 
 !!! info "Theory prerequisites"
-    Read [Switches vs Routers](../../04-switches-routers.md) and [Subnetting & DHCP](../../06-subnetting-dhcp.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
+    Read [Switches vs Routers](../../theory/04-switches-routers.md) and [Subnetting & DHCP](../../theory/06-subnetting-dhcp.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
 
 This lab is designed to take you from DHCP fundamentals to advanced enterprise implementations. You will build and observe:
 

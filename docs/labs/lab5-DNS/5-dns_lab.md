@@ -1,7 +1,7 @@
 # Dedicated DNS & Name Resolution Lab (Packet Tracer)
 
 !!! info "Theory prerequisites"
-    Read [TCP vs UDP](../../09-tcp-udp.md), [DNS & Ports](../../10-dns-and-ports.md), and [HTTP/HTTPS & TLS](../../11-http-https-tls.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
+    Read [TCP vs UDP](../../theory/09-tcp-udp.md), [DNS & Ports](../../theory/10-dns-and-ports.md), and [HTTP/HTTPS & TLS](../../theory/11-http-https-tls.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
 
 This lab introduces **Domain Name System (DNS)** concepts from the ground up. 
 You will learn how human-friendly hostnames (such as `www.company.local` and `ftp.company.local`) are resolved into 

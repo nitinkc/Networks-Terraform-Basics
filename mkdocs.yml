@@ -9,7 +9,7 @@ theme:
   features:
     # Navigation
     - navigation.tabs
-    #    - navigation.tabs.sticky
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.expand
     - navigation.indexes      # section landing pages (quiz/, sessions/)
@@ -83,11 +83,12 @@ markdown_extensions:
         - .            # lets docs pages single-source the sandbox README/RUNBOOK
       check_paths: true
       auto_append:
-        - abbreviations.md   # hover tooltips for abbreviations on every page
+        - theory/abbreviations.md   # hover tooltips for abbreviations on every page
   - tables
 
 exclude_docs: |
   includes/**
+  theory/abbreviations.md
 
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js
@@ -97,21 +98,21 @@ nav:
       - Overview: index.md
       - Lab-Aligned Learning Path: labs/lab-theory-map.md
   - Theory:
-      - 01 - Networking Models: 01-networking-models.md
-      - 02 - Packets & IP Addressing: 02-packets-ip-addressing.md
-      - 03 - MAC Addresses & ARP: 03-mac-arp.md
-      - 04 - Switches vs Routers: 04-switches-routers.md
-      - 05 - Private IPs, NAT & PAT: 05-private-ip-nat.md
-      - 06 - Subnetting & DHCP: 06-subnetting-dhcp.md
-      - 07 - VLANs: 07-vlans.md
-      - 08 - Static Routing, OSPF & BGP: 08-routing-protocols.md
-      - 09 - TCP vs UDP: 09-tcp-udp.md
-      - 10 - DNS & Ports: 10-dns-and-ports.md
-      - 11 - HTTP/HTTPS & TLS: 11-http-https-tls.md
-      - 12 - ACLs & Network Segmentation: 12-acls-segmentation.md
-      - 13 - Firewalls: 13-firewalls.md
-      - 14 - VPNs, Proxies & Load Balancers: 14-vpn-proxies-loadbalancers.md
-      - 15 - Cloud & Hybrid Networking: 15-cloud-hybrid-networking.md
+      - 01 - Networking Models: theory/01-networking-models.md
+      - 02 - Packets & IP Addressing: theory/02-packets-ip-addressing.md
+      - 03 - MAC Addresses & ARP: theory/03-mac-arp.md
+      - 04 - Switches vs Routers: theory/04-switches-routers.md
+      - 05 - Private IPs, NAT & PAT: theory/05-private-ip-nat.md
+      - 06 - Subnetting & DHCP: theory/06-subnetting-dhcp.md
+      - 07 - VLANs: theory/07-vlans.md
+      - 08 - Static Routing, OSPF & BGP: theory/08-routing-protocols.md
+      - 09 - TCP vs UDP: theory/09-tcp-udp.md
+      - 10 - DNS & Ports: theory/10-dns-and-ports.md
+      - 11 - HTTP/HTTPS & TLS: theory/11-http-https-tls.md
+      - 12 - ACLs & Network Segmentation: theory/12-acls-segmentation.md
+      - 13 - Firewalls: theory/13-firewalls.md
+      - 14 - VPNs, Proxies & Load Balancers: theory/14-vpn-proxies-loadbalancers.md
+      - 15 - Cloud & Hybrid Networking: theory/15-cloud-hybrid-networking.md
   - Packet Tracer Labs:
       - 01 - Single-Subnet FTP/HTTP: labs/lab1-switch/1-basic-ftp-http-lan.md
       - 02 - Router & Subnets: labs/lab2-Routers&Subnets/2-router-ftp-http-lab.md
@@ -123,7 +124,7 @@ nav:
       - 08 - VLANs & ACLs: labs/lab8-LAN-ACL/8-lan_acl_lab.md
       - 09 - GCP Architecture Equivalent: labs/9-networking_gcp_equivalent_lab.md
   - Applied Case Study:
-      - Terraform & GKE Microservices Network: 16-terraform-gke-case-study.md
+      - Terraform & GKE Microservices Network: theory/16-terraform-gke-case-study.md
   - Terraform & GCP Labs:
       - 01 - Setup & First Apply: terraform/01-setup-first-apply.md
       - 02 - VPC & Subnets: terraform/02-vpc-subnets.md
@@ -133,4 +134,4 @@ nav:
       - 06 - VPC Peering & Shared VPC: terraform/06-vpc-peering-shared-vpc.md
       - 07 - L4 & L7 Load Balancing: terraform/07-load-balancing-l4-l7.md
       - 08 - IPsec VPN & BGP: terraform/08-ipsec-vpn-bgp-hybrid.md
-  - Knowledge Check Quiz: 99-quiz.md
+  - Knowledge Check Quiz: theory/99-quiz.md

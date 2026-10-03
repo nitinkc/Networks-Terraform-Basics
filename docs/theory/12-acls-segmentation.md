@@ -88,5 +88,5 @@ For “HR may use HTTP to the corporate server but may not use SSH”:
 - [VLANs](07-vlans.md)
 - [TCP and UDP](09-tcp-udp.md)
 - [Firewalls](13-firewalls.md)
-- [VLAN and ACL lab](labs/lab8-LAN-ACL/8-lan_acl_lab.md)
-- [Packet Tracer GCP equivalent](labs/9-networking_gcp_equivalent_lab.md)
+- [VLAN and ACL lab](../labs/lab8-LAN-ACL/8-lan_acl_lab.md)
+- [Packet Tracer GCP equivalent](../labs/9-networking_gcp_equivalent_lab.md)

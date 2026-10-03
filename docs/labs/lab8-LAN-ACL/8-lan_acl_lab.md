@@ -1,7 +1,7 @@
 # Comprehensive VLAN & Access Control List (ACL) Lab (Packet Tracer)
 
 !!! info "Theory prerequisites"
-    Read [VLANs](../../07-vlans.md), [TCP vs UDP](../../09-tcp-udp.md), and [ACLs & Network Segmentation](../../12-acls-segmentation.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
+    Read [VLANs](../../theory/07-vlans.md), [TCP vs UDP](../../theory/09-tcp-udp.md), and [ACLs & Network Segmentation](../../theory/12-acls-segmentation.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
 
 This lab covers two fundamental pillars of network engineering and enterprise security:
 

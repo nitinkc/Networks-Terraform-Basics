@@ -47,10 +47,10 @@ You are provisioning a real-world enterprise infrastructure in `us-central1`:
 * **Cloud NAT:** The backend VM reaches external APIs and software updates safely via Cloud NAT.
 * **Private Cloud DNS:** The Web Server communicates with the backend using the internal domain name `api.corp.internal`.
 
-![Complete two-tier GCP architecture with public web tier, private app tier, private DNS, firewall policy, and Cloud NAT](diagrams/lab05-two-tier-network.svg)
+![Complete two-tier GCP architecture with public web tier, private app tier, private DNS, firewall policy, and Cloud NAT](../diagrams/lab05-two-tier-network.svg)
 
 !!! tip "Editable source"
-    Edit [`lab05-two-tier-network.drawio`](diagrams/lab05-two-tier-network.drawio) and export it as SVG after changes.
+    Edit [`lab05-two-tier-network.drawio`](../diagrams/lab05-two-tier-network.drawio) and export it as SVG after changes.
 
 ## Complete Terraform Configuration (`main.tf`)
 

@@ -7,7 +7,7 @@ notes show where the same idea appears in modern infrastructure without turning
 the cloud example into the definition of the concept.
 
 After completing the theory sequence, use the
-[Terraform and GKE networking case study](16-terraform-gke-case-study.md) to
+[Terraform and GKE networking case study](theory/16-terraform-gke-case-study.md) to
 combine the concepts in one production-style microservices architecture.
 
 The Packet Tracer labs remain separate, deliberately small exercises. They make
@@ -18,25 +18,25 @@ components are added.
 
 | Stage | Topic | Why it appears here |
 |:------|:------|:--------------------|
-| 1 | [Networking Models](01-networking-models.md) | Establish the vocabulary for every later layer. |
-| 2 | [Packets & IP Addressing](02-packets-ip-addressing.md) | Explain encapsulation, logical addresses, masks, and basic forwarding. |
-| 3 | [MAC Addresses & ARP](03-mac-arp.md) | Show how an IP packet reaches a local next hop. |
-| 4 | [Switches vs Routers](04-switches-routers.md) | Separate local Layer 2 forwarding from Layer 3 forwarding between networks. |
-| 5 | [Private IPs, NAT & PAT](05-private-ip-nat.md) | Explain private/public boundaries and translation after routing fundamentals. |
-| 6 | [Subnetting & DHCP](06-subnetting-dhcp.md) | Design address ranges and automate endpoint configuration. |
-| 7 | [VLANs](07-vlans.md) | Divide shared switching infrastructure into broadcast domains. |
-| 8 | [Static Routing, OSPF & BGP](08-routing-protocols.md) | Build and exchange paths across multiple networks. |
-| 9 | [TCP vs UDP](09-tcp-udp.md) | Add end-to-end transport behavior and application ports. |
-| 10 | [DNS & Ports](10-dns-and-ports.md) | Resolve names and identify services after transport is understood. |
-| 11 | [HTTP/HTTPS & TLS](11-http-https-tls.md) | Apply transport to web requests, encryption, and identity. |
-| 12 | [ACLs & Network Segmentation](12-acls-segmentation.md) | Convert source, destination, protocol, and port requirements into policy. |
-| 13 | [Firewalls](13-firewalls.md) | Extend filtering into stateful enforcement and security boundaries. |
-| 14 | [VPNs, Proxies & Load Balancers](14-vpn-proxies-loadbalancers.md) | Combine secure connectivity, intermediaries, and traffic distribution. |
-| 15 | [Cloud & Hybrid Networking](15-cloud-hybrid-networking.md) | Map the completed foundations to distributed cloud services and Terraform. |
+| 1 | [Networking Models](theory/01-networking-models.md) | Establish the vocabulary for every later layer. |
+| 2 | [Packets & IP Addressing](theory/02-packets-ip-addressing.md) | Explain encapsulation, logical addresses, masks, and basic forwarding. |
+| 3 | [MAC Addresses & ARP](theory/03-mac-arp.md) | Show how an IP packet reaches a local next hop. |
+| 4 | [Switches vs Routers](theory/04-switches-routers.md) | Separate local Layer 2 forwarding from Layer 3 forwarding between networks. |
+| 5 | [Private IPs, NAT & PAT](theory/05-private-ip-nat.md) | Explain private/public boundaries and translation after routing fundamentals. |
+| 6 | [Subnetting & DHCP](theory/06-subnetting-dhcp.md) | Design address ranges and automate endpoint configuration. |
+| 7 | [VLANs](theory/07-vlans.md) | Divide shared switching infrastructure into broadcast domains. |
+| 8 | [Static Routing, OSPF & BGP](theory/08-routing-protocols.md) | Build and exchange paths across multiple networks. |
+| 9 | [TCP vs UDP](theory/09-tcp-udp.md) | Add end-to-end transport behavior and application ports. |
+| 10 | [DNS & Ports](theory/10-dns-and-ports.md) | Resolve names and identify services after transport is understood. |
+| 11 | [HTTP/HTTPS & TLS](theory/11-http-https-tls.md) | Apply transport to web requests, encryption, and identity. |
+| 12 | [ACLs & Network Segmentation](theory/12-acls-segmentation.md) | Convert source, destination, protocol, and port requirements into policy. |
+| 13 | [Firewalls](theory/13-firewalls.md) | Extend filtering into stateful enforcement and security boundaries. |
+| 14 | [VPNs, Proxies & Load Balancers](theory/14-vpn-proxies-loadbalancers.md) | Combine secure connectivity, intermediaries, and traffic distribution. |
+| 15 | [Cloud & Hybrid Networking](theory/15-cloud-hybrid-networking.md) | Map the completed foundations to distributed cloud services and Terraform. |
 
 ## Applied case study
 
-The [Terraform and GKE networking case study](16-terraform-gke-case-study.md)
+The [Terraform and GKE networking case study](theory/16-terraform-gke-case-study.md)
 uses a three-service application to connect the completed theory:
 
 - Terraform provisions VPC ranges, HA VPN and hybrid routes, Cloud NAT, firewall
@@ -66,4 +66,4 @@ define or replace them.
 
 ## Consolidate your knowledge
 
-After completing the theory sequence, take the [Networking Knowledge Check](99-quiz.md). The scored multiple-choice quiz provides immediate explanations and links back to each topic for review.
+After completing the theory sequence, take the [Networking Knowledge Check](theory/99-quiz.md). The scored multiple-choice quiz provides immediate explanations and links back to each topic for review.

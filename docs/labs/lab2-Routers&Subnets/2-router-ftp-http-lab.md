@@ -1,7 +1,7 @@
 # Router-in-the-middle FTP/HTTP lab (Packet Tracer)
 
 !!! info "Theory prerequisites"
-    Read [Packets & IP Addressing](../../02-packets-ip-addressing.md), [Switches vs Routers](../../04-switches-routers.md), and [Subnetting & DHCP](../../06-subnetting-dhcp.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
+    Read [Packets & IP Addressing](../../theory/02-packets-ip-addressing.md), [Switches vs Routers](../../theory/04-switches-routers.md), and [Subnetting & DHCP](../../theory/06-subnetting-dhcp.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
 
 This lab builds directly on the router-in-the-middle architecture by implementing **VLSM / Subnetting (`/26` with mask `255.255.255.192`)** across two separate broadcast domains.
 

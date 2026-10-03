@@ -1,7 +1,7 @@
 # Comprehensive NAT, PAT & Port Forwarding Lab (Packet Tracer)
 
 !!! info "Theory prerequisites"
-    Read [Private IPs, NAT & PAT](../../05-private-ip-nat.md), [TCP vs UDP](../../09-tcp-udp.md), and [Firewalls](../../13-firewalls.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
+    Read [Private IPs, NAT & PAT](../../theory/05-private-ip-nat.md), [TCP vs UDP](../../theory/09-tcp-udp.md), and [Firewalls](../../theory/13-firewalls.md). Return to the [Lab-Aligned Learning Path](../lab-theory-map.md) after verification.
 
 This lab provides an in-depth, hands-on exploration of **Network Address Translation (NAT)** and 
 **Port Address Translation (PAT / NAT Overload)**. You will configure and test all three fundamental NAT types used 

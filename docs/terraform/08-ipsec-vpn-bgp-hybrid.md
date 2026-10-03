@@ -27,10 +27,10 @@ This lab models a real-world **Hybrid Cloud Architecture**. You will connect an 
 | `google_compute_router_interface.router_interface1` | 1 | Link-local BGP attachment to the tunnel |
 | `google_compute_router_peer.bgp_peer1` | 1 | Exchanges private prefixes with AS 65001 |
 
-![On-premises Cisco network connected to GCP through an IPsec tunnel with BGP route exchange](diagrams/lab08-ipsec-bgp-hybrid.svg)
+![On-premises Cisco network connected to GCP through an IPsec tunnel with BGP route exchange](../diagrams/lab08-ipsec-bgp-hybrid.svg)
 
 !!! tip "Editable source"
-    Edit [`lab08-ipsec-bgp-hybrid.drawio`](diagrams/lab08-ipsec-bgp-hybrid.drawio) and export it as SVG after changes.
+    Edit [`lab08-ipsec-bgp-hybrid.drawio`](../diagrams/lab08-ipsec-bgp-hybrid.drawio) and export it as SVG after changes.
 
 ## Addressing & IPsec Parameters
 

@@ -35,14 +35,14 @@ Cloud DNS — then verify connectivity the same way you did in Packet Tracer
 
 ## The scenario
 
-![Terraform Lab 04 architecture showing the frontend and backend subnets, private DNS, restricted SSH paths, and outbound Cloud NAT](diagrams/lab04-vms-private-dns.svg)
+![Terraform Lab 04 architecture showing the frontend and backend subnets, private DNS, restricted SSH paths, and outbound Cloud NAT](../diagrams/lab04-vms-private-dns.svg)
 
 *Color key: blue = client subnet, green = private server subnet, yellow = managed control service, and red = address translation.*
 
 Two VMs mirror Packet Tracer's “client talks to a server on another subnet,” while the diagram separates data flows from DNS, administration, and outbound translation.
 
 !!! tip "Editable source"
-    The SVG is optimized for the rendered documentation. Edit the source diagram in [`lab04-vms-private-dns.drawio`](diagrams/lab04-vms-private-dns.drawio), then export it again as SVG.
+    The SVG is optimized for the rendered documentation. Edit the source diagram in [`lab04-vms-private-dns.drawio`](../diagrams/lab04-vms-private-dns.drawio), then export it again as SVG.
 
 ## `main.tf` (append to labs 02+03)
 

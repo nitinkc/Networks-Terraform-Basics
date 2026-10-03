@@ -26,10 +26,10 @@ Now we rebuild that exact topology as a GCP VPC — same CIDRs, same roles.
 | `google_compute_subnetwork.lan1_clients` | 1 | Client/public-facing workload subnet | Yes |
 | `google_compute_subnetwork.lan2_servers` | 1 | Private server subnet | Yes |
 
-![Custom GCP VPC containing client and server subnets with built-in inter-subnet routing](diagrams/lab02-vpc-subnets.svg)
+![Custom GCP VPC containing client and server subnets with built-in inter-subnet routing](../diagrams/lab02-vpc-subnets.svg)
 
 !!! tip "Editable source"
-    Edit [`lab02-vpc-subnets.drawio`](diagrams/lab02-vpc-subnets.drawio) and export it as SVG after changes.
+    Edit [`lab02-vpc-subnets.drawio`](../diagrams/lab02-vpc-subnets.drawio) and export it as SVG after changes.
 
 ## Concept Map
 

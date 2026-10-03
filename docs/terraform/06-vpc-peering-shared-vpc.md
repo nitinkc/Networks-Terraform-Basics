@@ -21,10 +21,10 @@ In production cloud environments, single monolithic VPCs are rarely used. Instea
 | `google_compute_network_peering` | 2 | One peering object in each direction |
 | `google_compute_firewall.allow_hub_to_prod` | 1 | Explicitly permits selected hub-to-production traffic |
 
-![Hub and production VPCs connected by bidirectional VPC Network Peering with explicit firewall policy](diagrams/lab06-vpc-peering.svg)
+![Hub and production VPCs connected by bidirectional VPC Network Peering with explicit firewall policy](../diagrams/lab06-vpc-peering.svg)
 
 !!! tip "Editable source"
-    Edit [`lab06-vpc-peering.drawio`](diagrams/lab06-vpc-peering.drawio) and export it as SVG after changes.
+    Edit [`lab06-vpc-peering.drawio`](../diagrams/lab06-vpc-peering.drawio) and export it as SVG after changes.
 
 The runnable configuration below creates the hub and production VPCs. A staging VPC is a natural extension exercise, not part of this lab's resource summary.
 

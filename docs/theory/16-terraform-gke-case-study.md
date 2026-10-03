@@ -34,40 +34,10 @@ Gateway resources, and NetworkPolicy.
 
 ## Architecture
 
-```mermaid
-graph LR
-    C[Authorized client] --> S[Corporate LAN]
-    S --> O[On-prem VPN gateway]
-    O ==>|IPsec VPN + private routes| V[HA VPN / Cloud Router]
-    X[Internet client without VPN] -. blocked .-> F[No public ingress]
+![ShopNow private GCP access architecture requiring VPN](../diagrams/shopnow-network-architecture.svg)
 
-    subgraph GCP[Google Cloud provisioned by Terraform]
-        V --> D[Private DNS forwarding]
-        D -->|shop.internal| L[Internal HTTPS load balancer]
-        D -->|api.shop.internal| A[Private Apigee API endpoint]
-        L --> G[Internal Ingress or Gateway]
-        A -->|Authenticated API request| G
-        N[Cloud NAT - outbound only]
-
-        subgraph GKE[Private GKE cluster]
-            G --> WS[web Service]
-            G --> OS[orders Service]
-            WS --> WP[web Pods]
-            WP -->|orders.shop.svc| OS
-            OS --> OP[orders Pods]
-            OP -->|inventory.shop.svc| IS[inventory Service]
-            IS --> IP[inventory Pods]
-        end
-
-        OP -->|Private TCP 5432| DB[(Managed database)]
-        OP -. Outbound API .-> N
-    end
-
-    N -. Egress .-> I[Internet]
-```
-
-The editable source diagram is available as
-`diagrams/shopnow-network-architecture.drawio` at the repository root.
+!!! info "Editable source"
+    [Open the draw.io source](../diagrams/shopnow-network-architecture.drawio) to modify this diagram.
 
 ## Addressing plan
 
@@ -414,7 +384,7 @@ expected address and port.
 
 ## Continue practicing
 
-Use the [Lab-Aligned Learning Path](labs/lab-theory-map.md) to isolate mechanisms in
+Use the [Lab-Aligned Learning Path](../labs/lab-theory-map.md) to isolate mechanisms in
 Packet Tracer and GCP. The labs remain smaller than this architecture so each
 routing table, translation, DNS exchange, or policy decision can be observed
 without the entire production stack obscuring it.

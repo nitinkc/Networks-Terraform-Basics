@@ -42,10 +42,10 @@ and a real VPC created and destroyed from code.
 Every lab repeats its own **Lab contract** and **Resource summary** so it is clear
 whether to append, start fresh, retain state, or destroy resources.
 
-![Terraform lifecycle from configuration through init, plan, apply, state, and destroy](diagrams/lab01-terraform-lifecycle.svg)
+![Terraform lifecycle from configuration through init, plan, apply, state, and destroy](../diagrams/lab01-terraform-lifecycle.svg)
 
 !!! tip "Editable source"
-    Edit [`lab01-terraform-lifecycle.drawio`](diagrams/lab01-terraform-lifecycle.drawio) and export it as SVG after changes.
+    Edit [`lab01-terraform-lifecycle.drawio`](../diagrams/lab01-terraform-lifecycle.drawio) and export it as SVG after changes.
 
 ## The Mental Bridge
 

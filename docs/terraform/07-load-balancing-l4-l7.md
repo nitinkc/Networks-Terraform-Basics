@@ -23,10 +23,10 @@ Load Balancers act as intelligent traffic dispatchers. This lab covers the diffe
 | `google_compute_global_forwarding_rule.forwarding_rule` | 1 | Creates the public TCP 80 entry point |
 | `output.load_balancer_ip` | 1 | Exposes the assigned frontend address for verification |
 
-![Layer 7 load-balancing chain from global forwarding rule through proxy and URL map to web and API backend services](diagrams/lab07-l7-load-balancing.svg)
+![Layer 7 load-balancing chain from global forwarding rule through proxy and URL map to web and API backend services](../diagrams/lab07-l7-load-balancing.svg)
 
 !!! tip "Editable source"
-    Edit [`lab07-l7-load-balancing.drawio`](diagrams/lab07-l7-load-balancing.drawio) and export it as SVG after changes.
+    Edit [`lab07-l7-load-balancing.drawio`](../diagrams/lab07-l7-load-balancing.drawio) and export it as SVG after changes.
 
 ## Comparison Matrix: Layer 4 vs. Layer 7
 

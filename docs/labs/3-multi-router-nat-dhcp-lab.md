@@ -1,7 +1,7 @@
 # Two-Router NAT & DHCP Lab — Real-World ISP Architecture
 
 !!! info "Theory prerequisites"
-    Read [Private IPs, NAT & PAT](../05-private-ip-nat.md), [Subnetting & DHCP](../06-subnetting-dhcp.md), and [Static Routing, OSPF & BGP](../08-routing-protocols.md). Return to the [Lab-Aligned Learning Path](lab-theory-map.md) after verification.
+    Read [Private IPs, NAT & PAT](../theory/05-private-ip-nat.md), [Subnetting & DHCP](../theory/06-subnetting-dhcp.md), and [Static Routing, OSPF & BGP](../theory/08-routing-protocols.md). Return to the [Lab-Aligned Learning Path](lab-theory-map.md) after verification.
 
 This lab builds a complete end-to-end network modeling a private enterprise or home LAN connected to a public ISP and
 cloud server. It integrates **DHCP**, **Default Routing**, and **NAT/PAT (Port Address Translation)**.

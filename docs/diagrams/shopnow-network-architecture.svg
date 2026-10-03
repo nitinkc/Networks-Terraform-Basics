@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1400" viewBox="0 0 2400 1400" role="img" aria-labelledby="title desc">
+  <title id="title">ShopNow private GCP access architecture requiring VPN</title>
+  <desc id="desc">Authorized corporate clients reach private GCP DNS, an internal HTTPS load balancer, Apigee, and private GKE workloads through a site-to-site IPsec VPN. Clients without VPN access are denied. Cloud NAT provides outbound-only connectivity.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0 0L0 6L9 3z" fill="#455a64"/></marker>
+    <marker id="redArrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto"><path d="M0 0L0 6L9 3z" fill="#b85450"/></marker>
+    <style>
+      .title{font:700 32px system-ui,-apple-system,sans-serif;fill:#263238}.lane{font:700 19px system-ui,-apple-system,sans-serif;fill:#263238}.box{font:700 17px system-ui,-apple-system,sans-serif;fill:#263238}.small{font:15px system-ui,-apple-system,sans-serif;fill:#455a64}.edge{stroke:#455a64;stroke-width:3;fill:none;marker-end:url(#arrow)}.dashed{stroke-dasharray:10 8}.vpn{stroke:#4f81bd;stroke-width:7;fill:none;stroke-dasharray:16 10;marker-end:url(#arrow)}.deny{stroke:#b85450;stroke-width:3;fill:none;stroke-dasharray:10 8;marker-end:url(#redArrow)}.corpBox{fill:#fff;stroke:#6c8ebf}.svcBox{fill:#fff;stroke:#82b366}.control{fill:#fff2cc;stroke:#d6b656}.api{fill:#ffe6cc;stroke:#d79b00}.danger{fill:#f8cecc;stroke:#b85450}.neutral{fill:#f5f5f5;stroke:#666}
+    </style>
+  </defs>
+
+  <rect width="2400" height="1400" fill="#fafafa"/>
+  <text x="1200" y="52" text-anchor="middle" class="title">ShopNow Private GCP Access — VPN Required</text>
+
+  <!-- Corporate client lane -->
+  <rect x="40" y="130" width="360" height="760" rx="22" fill="#dae8fc" stroke="#6c8ebf" stroke-width="2"/>
+  <text x="220" y="165" text-anchor="middle" class="lane">Corporate network · 192.168.1.0/24</text>
+  <rect x="105" y="220" width="230" height="80" rx="12" class="corpBox" stroke-width="2"/>
+  <text x="220" y="252" text-anchor="middle" class="box">Authorized client</text>
+  <text x="220" y="278" text-anchor="middle" class="small">Corporate-managed device</text>
+  <rect x="105" y="390" width="230" height="80" rx="12" class="corpBox" stroke-width="2"/>
+  <text x="220" y="422" text-anchor="middle" class="box">Corporate DNS resolver</text>
+  <text x="220" y="448" text-anchor="middle" class="small">Conditional forwarding</text>
+  <rect x="105" y="630" width="230" height="85" rx="12" class="corpBox" stroke-width="2"/>
+  <text x="220" y="662" text-anchor="middle" class="box">On-prem VPN gateway</text>
+  <text x="220" y="688" text-anchor="middle" class="small">IPsec + BGP/static routes</text>
+
+  <!-- Transit and denial -->
+  <ellipse cx="570" cy="675" rx="80" ry="48" class="neutral" stroke-width="2"/>
+  <text x="570" y="670" text-anchor="middle" class="box">Internet</text>
+  <text x="570" y="696" text-anchor="middle" class="small">VPN underlay only</text>
+  <rect x="95" y="970" width="210" height="70" rx="12" class="danger" stroke-width="2"/>
+  <text x="200" y="1013" text-anchor="middle" class="box">Client without VPN</text>
+  <polygon points="560,955 655,1010 560,1065 455,1065 360,1010 455,955" class="danger" stroke-width="2"/>
+  <text x="560" y="993" text-anchor="middle" class="box">DENIED</text>
+  <text x="560" y="1018" text-anchor="middle" class="small">No public endpoint</text>
+  <text x="560" y="1041" text-anchor="middle" class="small">No private route or DNS</text>
+
+  <!-- GCP boundary -->
+  <rect x="740" y="90" width="1550" height="1120" rx="24" fill="#e1d5e7" stroke="#9673a6" stroke-width="2"/>
+  <text x="1515" y="128" text-anchor="middle" class="lane">Google Cloud · Terraform-managed · no public application ingress</text>
+
+  <rect x="820" y="590" width="210" height="80" rx="12" class="control" stroke-width="2"/>
+  <text x="925" y="622" text-anchor="middle" class="box">HA VPN gateway</text>
+  <text x="925" y="648" text-anchor="middle" class="small">IPsec termination</text>
+  <rect x="1140" y="590" width="220" height="80" rx="12" class="control" stroke-width="2"/>
+  <text x="1250" y="622" text-anchor="middle" class="box">Cloud Router</text>
+  <text x="1250" y="648" text-anchor="middle" class="small">BGP route exchange</text>
+  <rect x="1130" y="210" width="260" height="100" rx="12" class="control" stroke-width="2"/>
+  <text x="1260" y="244" text-anchor="middle" class="box">Private DNS + inbound forwarding</text>
+  <text x="1260" y="274" text-anchor="middle" class="small">shop.internal</text>
+  <text x="1260" y="296" text-anchor="middle" class="small">api.shop.internal</text>
+  <rect x="1480" y="190" width="270" height="100" rx="12" class="control" stroke-width="2"/>
+  <text x="1615" y="224" text-anchor="middle" class="box">Internal HTTPS load balancer</text>
+  <text x="1615" y="254" text-anchor="middle" class="small">Private IP · TCP 443</text>
+  <text x="1615" y="276" text-anchor="middle" class="small">Website entry point</text>
+  <rect x="1480" y="420" width="270" height="110" rx="12" class="api" stroke-width="2"/>
+  <text x="1615" y="455" text-anchor="middle" class="box">Private Apigee API endpoint</text>
+  <text x="1615" y="483" text-anchor="middle" class="small">Authentication · quotas</text>
+  <text x="1615" y="508" text-anchor="middle" class="small">Threat protection · analytics</text>
+
+  <!-- GKE lane; routing gutter remains clear at x1760-1840 -->
+  <rect x="1810" y="250" width="420" height="640" rx="20" fill="#d5e8d4" stroke="#82b366" stroke-width="2"/>
+  <text x="2020" y="287" text-anchor="middle" class="lane">Private GKE cluster</text>
+  <rect x="1900" y="320" width="240" height="70" rx="12" class="svcBox" stroke-width="2"/>
+  <text x="2020" y="363" text-anchor="middle" class="box">Internal Gateway / Ingress</text>
+  <rect x="1900" y="460" width="240" height="70" rx="12" class="svcBox" stroke-width="2"/>
+  <text x="2020" y="503" text-anchor="middle" class="box">web Service + Pods</text>
+  <rect x="1900" y="600" width="240" height="70" rx="12" class="svcBox" stroke-width="2"/>
+  <text x="2020" y="643" text-anchor="middle" class="box">orders Service + Pods</text>
+  <rect x="1900" y="740" width="240" height="70" rx="12" class="svcBox" stroke-width="2"/>
+  <text x="2020" y="783" text-anchor="middle" class="box">inventory Service + Pods</text>
+
+  <!-- Data and egress -->
+  <path d="M1920 1050c0-25 51-45 115-45s115 20 115 45v55c0 25-51 45-115 45s-115-20-115-45z" class="neutral" stroke-width="2"/>
+  <path d="M1920 1050c0 25 51 45 115 45s115-20 115-45" fill="none" stroke="#666" stroke-width="2"/>
+  <text x="2035" y="1075" text-anchor="middle" class="box">Managed database</text>
+  <text x="2035" y="1101" text-anchor="middle" class="small">Private IP · TCP 5432</text>
+  <rect x="1480" y="960" width="220" height="80" rx="12" class="danger" stroke-width="2"/>
+  <text x="1590" y="992" text-anchor="middle" class="box">Cloud NAT</text>
+  <text x="1590" y="1018" text-anchor="middle" class="small">Outbound only</text>
+  <rect x="1970" y="1260" width="250" height="80" rx="12" class="neutral" stroke-width="2"/>
+  <text x="2095" y="1292" text-anchor="middle" class="box">Approved external APIs</text>
+  <text x="2095" y="1318" text-anchor="middle" class="small">Public internet destinations</text>
+
+  <!-- Edges: all routes use open gutters -->
+  <path class="edge" d="M335 260H370V672H335"/><text x="365" y="475" class="small">Default gateway</text>
+  <path class="edge dashed" d="M160 300V390"/><text x="176" y="348" class="small">Private lookup</text>
+  <path class="edge" d="M335 672H490"/><text x="413" y="650" text-anchor="middle" class="small">Internet underlay</text>
+  <path class="vpn" d="M650 672H820"/><text x="735" y="640" text-anchor="middle" class="small">IPsec tunnel</text>
+  <path class="edge" d="M1030 630H1140"/><text x="1085" y="610" text-anchor="middle" class="small">BGP / routes</text>
+  <path class="edge dashed" d="M335 430H700V260H1130"/><text x="720" y="245" class="small">DNS forwarding across VPN</text>
+  <path class="edge" d="M1360 620H1420V240H1480"/><text x="1392" y="430" class="small">Private website route</text>
+  <path class="edge" d="M1360 650H1440V475H1480"/><text x="1402" y="550" class="small">Private API route</text>
+  <path class="edge" d="M1750 240H1780V355H1900"/><text x="1755" y="225" class="small">Website backend</text>
+  <path class="edge" d="M1750 475H1800V375H1900"/><text x="1760" y="455" class="small">Authenticated API request</text>
+  <path class="edge" d="M2020 390V460"/><path class="edge" d="M2020 530V600"/><text x="2037" y="570" class="small">orders API</text>
+  <path class="edge" d="M2020 670V740"/><text x="2037" y="710" class="small">inventory API</text>
+  <path class="edge" d="M1900 635H1840V1090H1920"/><text x="1818" y="880" class="small">Private DB connection</text>
+  <path class="edge dashed" d="M1900 665H1770V1000H1700"/><text x="1748" y="840" class="small">Outbound API</text>
+  <path class="edge dashed" d="M1590 1040V1300H1970"/><text x="1780" y="1280" class="small">Translated egress only</text>
+  <path class="deny" d="M305 1010H360"/><text x="332" y="990" text-anchor="middle" class="small">Blocked</text>
+</svg>
