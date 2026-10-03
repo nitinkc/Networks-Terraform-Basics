@@ -53,6 +53,12 @@ resource "google_compute_instance" "frontend_vm" {
 
   tags = ["ssh-allowed"]             # picks up the lab-03 SSH firewall rule
 
+  metadata = trimspace(var.ssh_public_key) == "" ? {} : {
+    block-project-ssh-keys = "TRUE"
+    enable-oslogin         = "FALSE"
+    ssh-keys               = "${var.ssh_user}:${trimspace(var.ssh_public_key)}"
+  }
+
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-12"
@@ -72,6 +78,12 @@ resource "google_compute_instance" "backend_vm" {
   zone         = "${var.region}-a"
 
   tags = ["iap-ssh"]
+
+  metadata = trimspace(var.ssh_public_key) == "" ? {} : {
+    block-project-ssh-keys = "TRUE"
+    enable-oslogin         = "FALSE"
+    ssh-keys               = "${var.ssh_user}:${trimspace(var.ssh_public_key)}"
+  }
 
   boot_disk {
     initialize_params {
@@ -112,33 +124,124 @@ resource "google_dns_record_set" "backend_a" {
 }
 ```
 
-## Apply & Verify — the same tests you ran in PT
+## Systematic deployment and verification
+
+Work through the lab in order so each test proves one layer before moving to the next.
+
+### Step 1 — Prepare an SSH identity
+
+Use a dedicated key for the lab. The first command shows whether it already exists; generate it only when it is missing.
+
+```bash
+test -f "$HOME/.ssh/network_lab" || \
+  ssh-keygen -t ed25519 -f "$HOME/.ssh/network_lab" -C "network-lab"
+```
+
+The private key stays on your computer. Terraform receives only
+`network_lab.pub` and installs it for `labuser`. Supplying an empty key is
+supported for teardown, but an SSH key is required when you want to connect.
+
+### Step 2 — Understand the two administration paths
+
+| VM | Addressing | SSH path | Required network control |
+|:---|:-----------|:---------|:-------------------------|
+| Frontend | Ephemeral public IPv4 | Your computer → public IP | Automatically discovered caller IPv4 allowed by `ssh-allowed` firewall rule |
+| Backend | Private IPv4 only | Your computer → IAP tunnel → private VM | IAP range allowed by `iap-ssh` firewall rule |
+
+Terraform discovers the caller's public IPv4 address through the HTTP provider
+and converts it to a `/32` firewall source range. Set `my_ip` only when you need
+to override discovery, such as when connecting through a corporate proxy. The
+backend path also requires the connecting identity to have the IAP TCP
+forwarding role.
+
+### Step 3 — Configure deterministic VM authentication
+
+Both VM resources use the same conditional metadata block:
+
+```hcl
+variable "ssh_user" {
+  description = "Linux user to create for SSH access"
+  type        = string
+  default     = "labuser"
+}
+
+variable "ssh_public_key" {
+  description = "OpenSSH public key used to access both VMs; omit for destroy"
+  type        = string
+  default     = ""
+}
+
+metadata = trimspace(var.ssh_public_key) == "" ? {} : {
+  block-project-ssh-keys = "TRUE"
+  enable-oslogin         = "FALSE"
+  ssh-keys               = "${var.ssh_user}:${trimspace(var.ssh_public_key)}"
+}
+```
+
+This connects three separate controls: the firewall permits the TCP connection,
+the VM metadata creates the Linux user and authorized key, and your private key
+proves your identity.
+
+### Step 4 — Enable APIs and apply
 
 ```bash
 gcloud services enable dns.googleapis.com iap.googleapis.com
 
 terraform apply \
   -var="project_id=YOUR_PROJECT_ID" \
-  -var="my_ip=$(curl -s ifconfig.me)/32"
-
-# 1. "ipconfig /all" equivalent — see both VMs' addresses
-gcloud compute instances list
-
-# 2. SSH into the frontend (needs the lab-03 firewall rule + tag)
-gcloud compute ssh frontend-vm --zone=us-central1-a
-
-# 3. From inside frontend-vm — the PT "ping across subnets" test:
-ping -c3 <backend-vm-internal-ip>
-
-# 4. The DNS test — resolves via your private zone, not public DNS:
-ping -c3 backend.corp.internal
-curl http://backend.corp.internal     # nginx installed by startup script
-
-# 5. Proof NAT works: connect through IAP, then test outbound egress.
-#    This requires IAP TCP forwarding IAM permission for your identity.
-gcloud compute ssh backend-vm --zone=us-central1-a --tunnel-through-iap
-curl -s ifconfig.me                  # returns the Cloud NAT public IP
+  -var="ssh_public_key=$(cat ~/.ssh/network_lab.pub)"
 ```
+
+Review the plan before approving it. It should create two VMs, the firewall and
+NAT resources, one private DNS zone, and one DNS record.
+
+### Step 5 — Verify from the outside in
+
+First confirm that both instances exist and note their public and private
+addresses:
+
+```bash
+gcloud compute instances list
+```
+
+Connect to the public frontend VM:
+
+```bash
+gcloud compute ssh labuser@frontend-vm \
+  --zone=us-central1-a \
+  --ssh-key-file="$HOME/.ssh/network_lab"
+```
+
+From the frontend shell, verify the layers in order:
+
+```bash
+ping -c3 <backend-vm-internal-ip> # Layer 3 reachability
+getent hosts backend.corp.internal # Private DNS
+curl http://backend.corp.internal  # nginx application response
+```
+
+Finally, leave the frontend shell and connect to the private backend through
+IAP, then verify Cloud NAT egress:
+
+```bash
+gcloud compute ssh labuser@backend-vm \
+  --zone=us-central1-a \
+  --tunnel-through-iap \
+  --ssh-key-file="$HOME/.ssh/network_lab"
+
+curl -4 -s ifconfig.me
+```
+
+### Step 6 — Interpret failures by layer
+
+| Symptom | Layer to check |
+|:--------|:---------------|
+| SSH timeout to frontend | Discovered public IPv4, optional `my_ip` override, VM tag, and SSH firewall rule |
+| `Permission denied (publickey)` | Username, public-key variable, and matching private key |
+| IAP permission error | IAP API and `roles/iap.tunnelResourceAccessor` for your identity |
+| Backend name does not resolve | Private zone attachment and DNS record |
+| Backend responds by IP but not HTTP | nginx startup-script completion and service status |
+| Backend has no outbound internet | Cloud Router, NAT, and included server subnet |
 
 ## What to notice
 
@@ -160,8 +263,7 @@ curl -s ifconfig.me                  # returns the Cloud NAT public IP
 
 ```bash
 terraform destroy \
-  -var="project_id=YOUR_PROJECT_ID" \
-  -var="my_ip=0.0.0.0/32"   # any valid value; destroy doesn't use it
+  -var="project_id=YOUR_PROJECT_ID"
 ```
 
 Verify nothing remains: `gcloud compute instances list` should be empty.

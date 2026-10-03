@@ -46,3 +46,85 @@ resource "google_compute_subnetwork" "lan2_servers" {
   region        = var.region
   network       = google_compute_network.lab_vpc.id
 }
+
+variable "my_ip" {
+  description = "Your public IP in CIDR form, for SSH access (e.g. 203.0.113.7/32)"
+  type        = string
+}
+
+# --- Cloud NAT: the cloud version of "ip nat inside source list ... overload" ---
+
+resource "google_compute_router" "nat_router" {
+  name    = "tf-lab-nat-router"
+  network = google_compute_network.lab_vpc.id
+  region  = var.region
+}
+
+resource "google_compute_router_nat" "nat" {
+  name   = "tf-lab-nat"
+  router = google_compute_router.nat_router.name
+  region = var.region
+
+  nat_ip_allocate_option = "AUTO_ONLY"   # PAT behavior: shared ephemeral IPs
+
+  source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
+
+  subnetwork {
+    name                    = google_compute_subnetwork.lan2_servers.id
+    source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+  }
+}
+
+# --- Firewall rules: the cloud version of ACLs ---
+
+# Allow SSH to instances tagged "ssh-allowed", only from your IP
+resource "google_compute_firewall" "allow_ssh" {
+  name    = "tf-allow-ssh"
+  network = google_compute_network.lab_vpc.id
+
+  direction     = "INGRESS"
+  source_ranges = [var.my_ip]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  target_tags = ["ssh-allowed"]
+}
+
+# Allow all traffic between our two subnets (like inter-VLAN routing permitting LANs)
+resource "google_compute_firewall" "allow_iap_ssh" {
+  name    = "tf-allow-iap-ssh"
+  network = google_compute_network.lab_vpc.id
+
+  direction     = "INGRESS"
+  source_ranges = ["35.235.240.0/20"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  target_tags = ["iap-ssh"]
+}
+
+resource "google_compute_firewall" "allow_internal" {
+  name    = "tf-allow-internal"
+  network = google_compute_network.lab_vpc.id
+
+  direction     = "INGRESS"
+  source_ranges = ["192.168.10.0/24", "192.168.20.0/24"]
+
+  allow {
+    protocol = "tcp"
+  }
+
+  allow {
+    protocol = "udp"
+  }
+
+  allow {
+    protocol = "icmp"
+  }
+}

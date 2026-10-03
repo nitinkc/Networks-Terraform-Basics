@@ -161,6 +161,11 @@ gcloud compute firewall-rules list --filter="network=tf-lab-vpc"
 5. Notice there is **no `google_compute_route` for the default route** —
    GCP gives every VPC a `0.0.0.0/0 → internet gateway` route for free.
 
+![1.png](diagrams/1.png)
+![2.png](diagrams/2.png)
+![3.png](diagrams/3.png)
+![4.png](diagrams/4.png)
+
 ## Exercises
 
 1. Remove `icmp` from `allow_internal`, `plan`, predict what breaks
