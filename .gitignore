@@ -6,3 +6,7 @@
 .DS_Store
 Thumbs.db
 site/
+terraform.tfstate
+terraform.tfstate.backup
+.terraform
+.terraform.lock.hcl

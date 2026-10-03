@@ -16,7 +16,6 @@
 *[DNS]: Domain Name System — resolves domain names to IP addresses and stores other namespace records.
 *[DORA]: Discover, Offer, Request, Acknowledge — the four-message exchange commonly used to obtain a DHCP lease.
 *[FTP]: File Transfer Protocol — a TCP-based protocol that uses separate control and data channels to transfer files.
-*[GCP]: Google Cloud Platform — Google's public cloud computing platform.
 *[HCL]: HashiCorp Configuration Language — the declarative language commonly used to write Terraform configuration.
 *[HTTP]: HyperText Transfer Protocol — an application-layer request/response protocol used by web clients and servers.
 *[HTTPS]: HyperText Transfer Protocol Secure — HTTP carried over TLS to provide encryption, integrity, and server authentication.
@@ -24,7 +23,6 @@
 *[IAM]: Identity and Access Management — controls which identities can perform which actions on which resources.
 *[ICMP]: Internet Control Message Protocol — carries network diagnostics and control messages, including those used by ping.
 *[IGW]: Internet Gateway — a logical gateway that provides a route between a private network and the internet.
-*[IP]: Internet Protocol — provides logical addressing and packet delivery across interconnected networks.
 *[IPsec]: Internet Protocol Security — a suite of protocols that authenticates and encrypts IP traffic, commonly for VPN tunnels.
 *[LAN]: Local Area Network — a network covering a limited local area or broadcast domain.
 *[LB]: Load Balancer — distributes connections or requests across multiple healthy backend systems.
@@ -38,8 +36,6 @@
 *[RFC]: Request for Comments — a publication series containing internet standards, protocols, and technical guidance.
 *[SSH]: Secure Shell — an encrypted protocol for remote command-line access and administration.
 *[SSL]: Secure Sockets Layer — the obsolete predecessor to TLS; the name is still used informally for certificates and encrypted web traffic.
-*[TCP]: Transmission Control Protocol — a reliable, ordered, connection-oriented transport protocol.
-*[TCP/IP]: Transmission Control Protocol / Internet Protocol — the practical layered protocol suite used by the internet.
 *[TLS]: Transport Layer Security — encrypts traffic and provides integrity and peer authentication.
 *[UDP]: User Datagram Protocol — a connectionless transport protocol with low overhead and no delivery or ordering guarantee.
 *[VLAN]: Virtual Local Area Network — divides shared switching infrastructure into separate Layer 2 broadcast domains.

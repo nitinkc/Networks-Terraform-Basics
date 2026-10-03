@@ -77,9 +77,9 @@ which leased IP and for how long.
 
 ## Practice in Packet Tracer
 
-- [Lab 02 — Router & Subnets](../labs/lab2-Routers&Subnets/2-router-ftp-http-lab.md): assign two `/26` networks and their gateways.
-- [Lab 03 — Multi-Router NAT & DHCP](../labs/3-multi-router-nat-dhcp-lab.md): lease client settings at an internet edge.
-- [Lab 04 — DHCP Relay](../labs/lab4-DHCP/4-dhcp_lab.md): trace DORA across a relay to a centralized server.
+- [Lab 02 — Router & Subnets](../labs/02-router-subnets/index.md): assign two `/26` networks and their gateways.
+- [Lab 03 — Multi-Router NAT & DHCP](../labs/03-multi-router-nat-dhcp/index.md): lease client settings at an internet edge.
+- [Lab 04 — DHCP Relay](../labs/04-dhcp-relay/index.md): trace DORA across a relay to a centralized server.
 
 ## Next
 [VLANs →](07-vlans.md)

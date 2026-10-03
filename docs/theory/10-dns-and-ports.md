@@ -79,7 +79,7 @@ above that are "dynamic/ephemeral" — the range your OS picks from when
 
 ## Practice in Packet Tracer
 
-- [Lab 05 — DNS & Name Resolution](../labs/lab5-DNS/5-dns_lab.md): configure A/CNAME records and observe DNS before HTTP.
+- [Lab 05 — DNS & Name Resolution](../labs/05-dns-name-resolution/index.md): configure A/CNAME records and observe DNS before HTTP.
 
 ## Next
 [HTTP/HTTPS & TLS →](11-http-https-tls.md)

@@ -122,8 +122,8 @@ router along the way to respond).
 
 ## Practice in Packet Tracer
 
-- [Lab 02 — Router & Subnets](../labs/lab2-Routers&Subnets/2-router-ftp-http-lab.md): apply masks, gateways, and routed packet forwarding.
-- [Lab 07 — OSPF & eBGP](../labs/7-bgp_ospf_lab.md): observe packets crossing several routed prefixes.
+- [Lab 02 — Router & Subnets](../labs/02-router-subnets/index.md): apply masks, gateways, and routed packet forwarding.
+- [Lab 07 — OSPF & eBGP](../labs/07-ospf-ebgp/index.md): observe packets crossing several routed prefixes.
 
 ## Next
 [MAC Addresses & ARP →](03-mac-arp.md)

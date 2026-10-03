@@ -94,7 +94,7 @@ ignorant of the layers above and below it.
 
 ## Practice in Packet Tracer
 
-- [Lab 01 — Single-Subnet FTP/HTTP](../labs/lab1-switch/1-basic-ftp-http-lan.md): observe encapsulation from ARP through TCP and HTTP/FTP.
+- [Lab 01 — Single-Subnet FTP/HTTP](../labs/01-single-subnet-ftp-http/index.md): observe encapsulation from ARP through TCP and HTTP/FTP.
 
 ## Next
 [Packets & IP Addressing →](02-packets-ip-addressing.md)

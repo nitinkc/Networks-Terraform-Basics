@@ -116,9 +116,9 @@ This inside/outside distinction leads directly into
 
 ## Practice in Packet Tracer
 
-- [Lab 01 — Single-Subnet FTP/HTTP](../labs/lab1-switch/1-basic-ftp-http-lan.md): prove that same-subnet traffic needs switching, not routing.
-- [Lab 02 — Router & Subnets](../labs/lab2-Routers&Subnets/2-router-ftp-http-lab.md): cross two broadcast domains through a router.
-- [Lab 04 — DHCP Relay](../labs/lab4-DHCP/4-dhcp_lab.md): observe a router forwarding a normally local broadcast through a relay function.
+- [Lab 01 — Single-Subnet FTP/HTTP](../labs/01-single-subnet-ftp-http/index.md): prove that same-subnet traffic needs switching, not routing.
+- [Lab 02 — Router & Subnets](../labs/02-router-subnets/index.md): cross two broadcast domains through a router.
+- [Lab 04 — DHCP Relay](../labs/04-dhcp-relay/index.md): observe a router forwarding a normally local broadcast through a relay function.
 
 ## Next
 [Private IPs, NAT & PAT →](05-private-ip-nat.md)

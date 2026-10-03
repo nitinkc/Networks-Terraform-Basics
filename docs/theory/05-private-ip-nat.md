@@ -201,9 +201,9 @@ If PAT or port forwarding does not work, verify these items in order:
 
 ## Practice in Packet Tracer
 
-- [Lab 03 — Multi-Router NAT & DHCP](../labs/3-multi-router-nat-dhcp-lab.md): combine client addressing, default routing, and PAT.
-- [Lab 06 — NAT, PAT & Port Forwarding](../labs/lab6-NAT-PAT/6-nat_pat_lab.md): inspect outbound translations and inbound static PAT.
-- [Lab 09 — GCP Architecture Equivalent](../labs/9-networking_gcp_equivalent_lab.md): map edge PAT to the Cloud NAT concept.
+- [Lab 03 — Multi-Router NAT & DHCP](../labs/03-multi-router-nat-dhcp/index.md): combine client addressing, default routing, and PAT.
+- [Lab 06 — NAT, PAT & Port Forwarding](../labs/06-nat-pat-port-forwarding/index.md): inspect outbound translations and inbound static PAT.
+- [Lab 09 — GCP Architecture Equivalent](../labs/09-gcp-architecture-equivalent/index.md): map edge PAT to the Cloud NAT concept.
 
 ## Next
 [Subnetting & DHCP →](06-subnetting-dhcp.md)

@@ -34,10 +34,8 @@ Gateway resources, and NetworkPolicy.
 
 ## Architecture
 
-![ShopNow private GCP access architecture requiring VPN](../diagrams/shopnow-network-architecture.svg)
+![ShopNow private GCP access architecture requiring VPN](diagrams/shopnow-network-architecture.svg)
 
-!!! info "Editable source"
-    [Open the draw.io source](../diagrams/shopnow-network-architecture.drawio) to modify this diagram.
 
 ## Addressing plan
 

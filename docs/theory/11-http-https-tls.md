@@ -89,9 +89,9 @@ you get the "connection not private" warning.
 
 ## Practice in Packet Tracer
 
-- [Lab 01 — Single-Subnet FTP/HTTP](../labs/lab1-switch/1-basic-ftp-http-lan.md): inspect basic HTTP request/response traffic.
-- [Lab 02 — Router & Subnets](../labs/lab2-Routers&Subnets/2-router-ftp-http-lab.md): carry HTTP/FTP across routed subnets.
-- [Lab 05 — DNS](../labs/lab5-DNS/5-dns_lab.md): observe name resolution before the HTTP connection.
+- [Lab 01 — Single-Subnet FTP/HTTP](../labs/01-single-subnet-ftp-http/index.md): inspect basic HTTP request/response traffic.
+- [Lab 02 — Router & Subnets](../labs/02-router-subnets/index.md): carry HTTP/FTP across routed subnets.
+- [Lab 05 — DNS](../labs/05-dns-name-resolution/index.md): observe name resolution before the HTTP connection.
 
 ## Next
 [ACLs & Network Segmentation →](12-acls-segmentation.md)

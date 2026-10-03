@@ -101,8 +101,8 @@ Apply the complete theory track in the [Terraform and GKE networking case study]
 
 ## Related labs
 
-- [Packet Tracer GCP equivalent](../labs/9-networking_gcp_equivalent_lab.md)
-- [GCP networking with Terraform](../terraform/05-two-tier-networking-scenario.md)
-- [VPC peering and Shared VPC](../terraform/06-vpc-peering-shared-vpc.md)
-- [L4 and L7 load balancing](../terraform/07-load-balancing-l4-l7.md)
-- [IPsec VPN with BGP](../terraform/08-ipsec-vpn-bgp-hybrid.md)
+- [Packet Tracer GCP equivalent](../labs/09-gcp-architecture-equivalent/index.md)
+- [GCP networking with Terraform](../terraform/05-two-tier-networking-scenario/index.md)
+- [VPC peering and Shared VPC](../terraform/06-vpc-peering-shared-vpc/index.md)
+- [L4 and L7 load balancing](../terraform/07-load-balancing-l4-l7/index.md)
+- [IPsec VPN with BGP](../terraform/08-ipsec-vpn-bgp-hybrid/index.md)
