@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1500" height="820" viewBox="0 0 1500 820" role="img" aria-labelledby="title desc">
   <title id="title">Terraform Lab 04 VMs, Private DNS, and Cloud NAT</title>
-  <desc id="desc">A color-coded GCP VPC diagram showing automatic public IPv4 discovery, SSH key metadata, frontend direct SSH, backend IAP access, private DNS, and outbound Cloud NAT.</desc>
+  <desc id="desc">A color-coded GCP VPC diagram showing SSH key metadata, IAP-only administration for both VMs, private DNS, and outbound Cloud NAT.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#455a64"/></marker>
     <style>
@@ -23,12 +23,11 @@
   <text x="635" y="535" text-anchor="middle" class="node-title">Cloud DNS private zone</text><text x="635" y="561" text-anchor="middle" class="label">corp.internal.</text><text x="635" y="586" text-anchor="middle" class="label">backend.corp.internal → backend private IP</text>
   <rect x="890" y="490" width="185" height="70" rx="12" fill="#ffe8cc" stroke="#d38b20" class="zone"/><text x="982" y="519" text-anchor="middle" class="node-title">Cloud Router</text><text x="982" y="542" text-anchor="middle" class="label">NAT control plane</text>
   <rect x="890" y="600" width="185" height="70" rx="12" fill="#fde2e0" stroke="#bf5b55" class="zone"/><text x="982" y="629" text-anchor="middle" class="node-title">Cloud NAT</text><text x="982" y="652" text-anchor="middle" class="label">Outbound translation only</text>
-  <rect x="25" y="100" width="165" height="85" rx="12" fill="#f3e8f7" stroke="#8e63a9" class="zone"/><text x="107" y="126" text-anchor="middle" class="node-title">HTTP data source</text><text x="107" y="149" text-anchor="middle" class="label">api.ipify.org</text><text x="107" y="171" text-anchor="middle" class="label">Public IPv4 → /32</text>
   <rect x="25" y="220" width="165" height="75" rx="12" fill="#fff" stroke="#607d8b" class="zone"/><text x="107" y="249" text-anchor="middle" class="node-title">Administrator</text><text x="107" y="274" text-anchor="middle" class="label">labuser + private key</text>
   <rect x="25" y="440" width="165" height="75" rx="12" fill="#fff4cc" stroke="#c9a227" class="zone"/><text x="107" y="469" text-anchor="middle" class="node-title">Identity-Aware Proxy</text><text x="107" y="494" text-anchor="middle" class="label">35.235.240.0/20</text>
   <ellipse cx="1390" cy="635" rx="80" ry="48" fill="#eceff1" stroke="#607d8b" stroke-width="2"/><text x="1390" y="628" text-anchor="middle" class="node-title">Internet</text><text x="1390" y="651" text-anchor="middle" class="label">Updates / APIs</text>
-  <path d="M190 143 H240 V240 H360" class="edge dash"/><text x="260" y="204" class="edge-label">firewall /32 source</text>
-  <path d="M190 258 H360" class="edge"/><text x="275" y="247" text-anchor="middle" class="edge-label">SSH 22 · matching key</text>
+  <path d="M107 295 V440" class="edge dash"/><text x="117" y="375" class="edge-label">authenticated tunnel</text>
+  <path d="M190 478 H230 V315 H360" class="edge"/><text x="245" y="306" class="edge-label">IAP SSH 22</text>
   <path d="M190 478 H215 V375 H920 V315" class="edge"/><text x="480" y="366" text-anchor="middle" class="edge-label">IAP SSH 22</text>
   <path d="M610 285 H920" class="edge"/><text x="765" y="274" text-anchor="middle" class="edge-label">HTTP / ICMP by private IP</text>
   <path d="M485 345 V455 H550 V505" class="edge dash"/><text x="450" y="447" class="edge-label">DNS lookup</text>

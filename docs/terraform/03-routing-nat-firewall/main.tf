@@ -47,11 +47,6 @@ resource "google_compute_subnetwork" "lan2_servers" {
   network       = google_compute_network.lab_vpc.id
 }
 
-variable "my_ip" {
-  description = "Your public IP in CIDR form, for SSH access (e.g. 203.0.113.7/32)"
-  type        = string
-}
-
 # --- Cloud NAT: the cloud version of "ip nat inside source list ... overload" ---
 
 resource "google_compute_router" "nat_router" {
@@ -65,7 +60,7 @@ resource "google_compute_router_nat" "nat" {
   router = google_compute_router.nat_router.name
   region = var.region
 
-  nat_ip_allocate_option = "AUTO_ONLY"   # PAT behavior: shared ephemeral IPs
+  nat_ip_allocate_option = "AUTO_ONLY" # PAT behavior: shared ephemeral IPs
 
   source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
 
@@ -77,23 +72,7 @@ resource "google_compute_router_nat" "nat" {
 
 # --- Firewall rules: the cloud version of ACLs ---
 
-# Allow SSH to instances tagged "ssh-allowed", only from your IP
-resource "google_compute_firewall" "allow_ssh" {
-  name    = "tf-allow-ssh"
-  network = google_compute_network.lab_vpc.id
-
-  direction     = "INGRESS"
-  source_ranges = [var.my_ip]
-
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
-  target_tags = ["ssh-allowed"]
-}
-
-# Allow all traffic between our two subnets (like inter-VLAN routing permitting LANs)
+# Allow SSH through Identity-Aware Proxy to explicitly tagged instances
 resource "google_compute_firewall" "allow_iap_ssh" {
   name    = "tf-allow-iap-ssh"
   network = google_compute_network.lab_vpc.id
@@ -106,7 +85,7 @@ resource "google_compute_firewall" "allow_iap_ssh" {
     ports    = ["22"]
   }
 
-  target_tags = ["iap-ssh"]
+  target_tags = ["ssh-allowed", "iap-ssh"]
 }
 
 resource "google_compute_firewall" "allow_internal" {

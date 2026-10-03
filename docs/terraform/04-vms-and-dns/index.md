@@ -141,18 +141,17 @@ The private key stays on your computer. Terraform receives only
 `network_lab.pub` and installs it for `labuser`. Supplying an empty key is
 supported for teardown, but an SSH key is required when you want to connect.
 
-### Step 2 — Understand the two administration paths
+### Step 2 — Understand the administration path
 
 | VM | Addressing | SSH path | Required network control |
 |:---|:-----------|:---------|:-------------------------|
-| Frontend | Ephemeral public IPv4 | Your computer → public IP | Automatically discovered caller IPv4 allowed by `ssh-allowed` firewall rule |
-| Backend | Private IPv4 only | Your computer → IAP tunnel → private VM | IAP range allowed by `iap-ssh` firewall rule |
+| Frontend | Ephemeral public IPv4 | Your computer → IAP tunnel → VM | IAP range allowed for the `ssh-allowed` tag |
+| Backend | Private IPv4 only | Your computer → IAP tunnel → VM | IAP range allowed for the `iap-ssh` tag |
 
-Terraform discovers the caller's public IPv4 address through the HTTP provider
-and converts it to a `/32` firewall source range. Set `my_ip` only when you need
-to override discovery, such as when connecting through a corporate proxy. The
-backend path also requires the connecting identity to have the IAP TCP
-forwarding role.
+Both VMs use Identity-Aware Proxy for administration, so no administrator IP
+variable or public SSH firewall rule is needed. The firewall accepts TCP 22 only
+from Google's IAP range (`35.235.240.0/20`). The connecting identity must have
+`roles/iap.tunnelResourceAccessor`.
 
 ### Step 3 — Configure deterministic VM authentication
 
@@ -204,11 +203,12 @@ addresses:
 gcloud compute instances list
 ```
 
-Connect to the public frontend VM:
+Connect to the frontend VM through IAP:
 
 ```bash
 gcloud compute ssh labuser@frontend-vm \
   --zone=us-central1-a \
+  --tunnel-through-iap \
   --ssh-key-file="$HOME/.ssh/network_lab"
 ```
 
@@ -236,7 +236,7 @@ curl -4 -s ifconfig.me
 
 | Symptom | Layer to check |
 |:--------|:---------------|
-| SSH timeout to frontend | Discovered public IPv4, optional `my_ip` override, VM tag, and SSH firewall rule |
+| SSH timeout | IAP API, IAP IAM role, VM tag, and IAP firewall rule |
 | `Permission denied (publickey)` | Username, public-key variable, and matching private key |
 | IAP permission error | IAP API and `roles/iap.tunnelResourceAccessor` for your identity |
 | Backend name does not resolve | Private zone attachment and DNS record |

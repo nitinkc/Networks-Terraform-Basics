@@ -1,7 +1,7 @@
 site_name: Computer Networks
-site_url:
-site_description:
-repo_url:
+site_url: ""
+site_description: ""
+repo_url: ""
 repo_name: Computer Networks
 
 theme:
@@ -135,4 +135,9 @@ nav:
       - 06 - VPC Peering & Shared VPC: terraform/06-vpc-peering-shared-vpc/index.md
       - 07 - L4 & L7 Load Balancing: terraform/07-load-balancing-l4-l7/index.md
       - 08 - IPsec VPN & BGP: terraform/08-ipsec-vpn-bgp-hybrid/index.md
-  - Knowledge Check Quiz: theory/99-quiz.md
+  - Knowledge Check Quiz:
+      - Quiz Home: theory/99-quiz.md
+      - 01 - Models & Local Delivery: theory/99-quiz-models-local-delivery.md
+      - 02 - Addressing & Routing: theory/99-quiz-addressing-routing.md
+      - 03 - Transport, DNS & Web: theory/99-quiz-transport-web.md
+      - 04 - NAT, Policy & Cloud: theory/99-quiz-nat-cloud.md

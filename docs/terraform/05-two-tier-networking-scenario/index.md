@@ -42,8 +42,8 @@ Now that you understand Subnetting, Default Gateways, NAT/PAT, DNS, and Routing 
 
 You are provisioning a real-world enterprise infrastructure in `us-central1`:
 
-* **Web Subnet (`10.1.10.0/24`):** Hosts a public-facing Web Server (`frontend-vm`) accessible via HTTP on port 80.
-* **App Subnet (`10.1.20.0/24`):** Hosts a private backend Application Server (`backend-vm`) with **NO public IP**.
+* **Web Subnet (`10.1.10.0/24`):** Hosts a public-facing Web Server (`frontend-web-vm`) accessible via HTTP on port 80.
+* **App Subnet (`10.1.20.0/24`):** Hosts a private backend Application Server (`backend-app-vm`) with **NO public IP**.
 * **Cloud NAT:** The backend VM reaches external APIs and software updates safely via Cloud NAT.
 * **Private Cloud DNS:** The Web Server communicates with the backend using the internal domain name `api.corp.internal`.
 
@@ -81,11 +81,6 @@ variable "region" {
   default     = "us-central1"
 }
 
-variable "my_ip" {
-  description = "Administrator public IP in CIDR form for SSH, for example 203.0.113.7/32"
-  type        = string
-}
-
 # -----------------------------------------------------------------------------
 # 1. VPC NETWORK & SUBNETS
 # -----------------------------------------------------------------------------
@@ -107,10 +102,10 @@ resource "google_compute_subnetwork" "web_subnet" {
 
 # Backend App Tier Subnet (Private Isolated)
 resource "google_compute_subnetwork" "app_subnet" {
-  name          = "app-tier-subnet"
-  ip_cidr_range = "10.1.20.0/24"
-  region        = var.region
-  network       = google_compute_network.vpc_network.id
+  name                     = "app-tier-subnet"
+  ip_cidr_range            = "10.1.20.0/24"
+  region                   = var.region
+  network                  = google_compute_network.vpc_network.id
   private_ip_google_access = true
 }
 
@@ -154,8 +149,8 @@ resource "google_compute_firewall" "allow_web_http" {
   target_tags   = ["web-tier"]
 }
 
-resource "google_compute_firewall" "allow_admin_ssh" {
-  name    = "allow-admin-ssh"
+resource "google_compute_firewall" "allow_iap_ssh" {
+  name    = "allow-iap-ssh"
   network = google_compute_network.vpc_network.name
 
   allow {
@@ -163,7 +158,7 @@ resource "google_compute_firewall" "allow_admin_ssh" {
     ports    = ["22"]
   }
 
-  source_ranges = [var.my_ip]
+  source_ranges = ["35.235.240.0/20"]
   target_tags   = ["web-tier"]
 }
 
@@ -224,7 +219,7 @@ resource "google_compute_instance" "frontend_vm" {
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image = "debian-cloud/debian-12"
     }
   }
 
@@ -252,7 +247,7 @@ resource "google_compute_instance" "backend_vm" {
 
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image = "debian-cloud/debian-12"
     }
   }
 
@@ -265,10 +260,35 @@ resource "google_compute_instance" "backend_vm" {
     #!/bin/bash
     apt-get update
     apt-get install -y python3
-    # Start a simple HTTP listener on port 8080
-    echo "Backend API Service Response" > response.txt
-    nohup python3 -m http.server 8080 &
+    install -d /opt/backend-api
+    echo "Backend API Service Response" > /opt/backend-api/index.html
+    cat > /etc/systemd/system/backend-api.service <<'UNIT'
+    [Unit]
+    Description=Lab 05 backend API
+    After=network-online.target
+
+    [Service]
+    ExecStart=/usr/bin/python3 -m http.server 8080 --directory /opt/backend-api
+    Restart=always
+
+    [Install]
+    WantedBy=multi-user.target
+    UNIT
+    systemctl daemon-reload
+    systemctl enable --now backend-api
   EOF
+}
+
+output "frontend_vm_name" {
+  value = google_compute_instance.frontend_vm.name
+}
+
+output "backend_vm_name" {
+  value = google_compute_instance.backend_vm.name
+}
+
+output "vm_zone" {
+  value = google_compute_instance.frontend_vm.zone
 }
 ```
 
@@ -279,8 +299,8 @@ In standard GCP, an "Auto Mode" VPC automatically creates a `/20` subnet in ever
 
 ### 2. How Cloud NAT Replaces the Router Gig0/1 NAT Config
 In our earlier lab, we ran `ip nat inside source list 1 interface gig0/1 overload`. In GCP:
-* The `backend-vm` has no `access_config` (no public IP), making it completely unreachable from the internet.
-* When `backend-vm` runs `apt-get update`, outbound packets hit `google_compute_router_nat`, which translates the private IP `10.1.20.2` to a temporary GCP public IP to fetch packages, then forwards replies back internally.
+* The `backend-app-vm` has no `access_config` (no public IP), making it completely unreachable from the internet.
+* When `backend-app-vm` runs `apt-get update`, outbound packets hit `google_compute_router_nat`, which translates its private IP to a temporary GCP public IP to fetch packages, then forwards replies back internally.
 
 ### 3. How Target Tags Implement Micro-Segmentation
 Instead of configuring access-lists on router ports, GCP uses **Network Tags** (`tags = ["web-tier"]` and `tags = ["app-tier"]`). The firewall rule `allow_web_to_app` only permits traffic from instances tagged `web-tier` to instances tagged `app-tier` on port `8080`, isolating the backend from all other unauthorized machines.
@@ -288,43 +308,89 @@ Instead of configuring access-lists on router ports, GCP uses **Network Tags** (
 ### 4. How Cloud DNS Eliminates Hard-Coded IPs
 By attaching `google_dns_managed_zone` to the VPC, `frontend_vm` can make HTTP requests to `http://api.corp.internal:8080`. Even if the backend VM is destroyed and recreated with a new dynamic private IP, Terraform automatically updates the DNS record, ensuring zero broken dependencies.
 
-## Apply and verify
+## Deploy and verify Lab 05
+
+Lab 05 is a standalone deployment. Entering its directory does not create its
+resources. If `gcloud compute instances list` shows only `frontend-vm` and
+`backend-vm`, those are Lab 04 resources; Lab 05 has not been applied yet.
+
+SSH administration uses Identity-Aware Proxy, so no administrator public IP is
+required. The connecting identity needs `roles/iap.tunnelResourceAccessor`.
+
+### 1. Enter the Lab 05 directory
+
+From the repository root:
 
 ```bash
-gcloud services enable compute.googleapis.com dns.googleapis.com
-
-terraform init
-terraform fmt
-terraform validate
-terraform plan \
-  -var="project_id=YOUR_PROJECT_ID" \
-  -var="my_ip=$(curl -s ifconfig.me)/32"
-terraform apply \
-  -var="project_id=YOUR_PROJECT_ID" \
-  -var="my_ip=$(curl -s ifconfig.me)/32"
+cd docs/terraform/05-two-tier-networking-scenario
+export PROJECT_ID="YOUR_PROJECT_ID"
 ```
 
-Once applied:
+### 2. Initialize and deploy
 
 ```bash
-# 1. SSH into the Frontend Web VM
-gcloud compute ssh frontend-web-vm --zone=us-central1-a
+gcloud services enable \
+  compute.googleapis.com \
+  dns.googleapis.com \
+  iap.googleapis.com \
+  --project="$PROJECT_ID"
 
-# 2. Test DNS resolution of the backend service
-nslookup api.corp.internal
+terraform init
+terraform fmt -check
+terraform validate
+terraform plan -var="project_id=$PROJECT_ID"
+terraform apply -var="project_id=$PROJECT_ID"
+```
 
-# 3. Test HTTP connectivity to the private backend application tier
+Approve the apply and wait for it to finish successfully. The apply creates
+`frontend-web-vm` and `backend-app-vm`; a plan alone creates nothing.
+
+### 3. Verify the Lab 05 resources exist
+
+```bash
+terraform state list
+
+gcloud compute instances list \
+  --project="$PROJECT_ID" \
+  --filter='name=(frontend-web-vm backend-app-vm)'
+```
+
+Do not continue until the list includes `frontend-web-vm` in
+`us-central1-a`. A `resource was not found` error means the apply did not
+complete in this directory and project.
+
+### 4. Connect to the frontend through IAP
+
+Use Terraform outputs rather than retyping the VM name and zone:
+
+```bash
+FRONTEND_VM="$(terraform output -raw frontend_vm_name)"
+VM_ZONE="$(terraform output -raw vm_zone)"
+
+gcloud compute ssh "$FRONTEND_VM" \
+  --project="$PROJECT_ID" \
+  --zone="$VM_ZONE" \
+  --tunnel-through-iap
+```
+
+### 5. Verify the private application tier
+
+Run these commands from the frontend VM shell:
+
+```bash
+getent hosts api.corp.internal
 curl http://api.corp.internal:8080
+curl http://10.1.20.2:8080
 
-# Expected Output: "Backend API Service Response"
+# Expected output: Backend API Service Response
 ```
 
 ## Cleanup and next step
 
+Run cleanup from the same Lab 05 directory and Terraform state:
+
 ```bash
-terraform destroy \
-  -var="project_id=YOUR_PROJECT_ID" \
-  -var="my_ip=$(curl -s ifconfig.me)/32"
+terraform destroy -var="project_id=$PROJECT_ID"
 ```
 
 Continue to [Lab 06 — VPC Peering & Shared VPC](../06-vpc-peering-shared-vpc/index.md).

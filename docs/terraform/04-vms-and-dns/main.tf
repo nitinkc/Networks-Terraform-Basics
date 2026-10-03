@@ -7,10 +7,6 @@ terraform {
       version = "~> 5.0"
     }
 
-    http = {
-      source  = "hashicorp/http"
-      version = "~> 3.4"
-    }
   }
 }
 
@@ -50,27 +46,6 @@ resource "google_compute_subnetwork" "lan2_servers" {
   ip_cidr_range = "192.168.20.0/24"
   region        = var.region
   network       = google_compute_network.lab_vpc.id
-}
-
-variable "my_ip" {
-  description = "Optional public IPv4 CIDR override for SSH; discovered automatically when omitted"
-  type        = string
-  default     = null
-  nullable    = true
-
-  validation {
-    condition     = var.my_ip == null ? true : can(cidrhost(var.my_ip, 0))
-    error_message = "my_ip must be a valid IPv4 CIDR such as 203.0.113.7/32."
-  }
-}
-
-data "http" "caller_ip" {
-  count = var.my_ip == null ? 1 : 0
-  url   = "https://api.ipify.org"
-}
-
-locals {
-  ssh_source_cidr = var.my_ip != null ? var.my_ip : "${trimspace(data.http.caller_ip[0].response_body)}/32"
 }
 
 variable "ssh_user" {
@@ -115,23 +90,7 @@ resource "google_compute_router_nat" "nat" {
 
 # --- Firewall rules: the cloud version of ACLs ---
 
-# Allow SSH to instances tagged "ssh-allowed", only from your IP
-resource "google_compute_firewall" "allow_ssh" {
-  name    = "tf-allow-ssh"
-  network = google_compute_network.lab_vpc.id
-
-  direction     = "INGRESS"
-  source_ranges = [local.ssh_source_cidr]
-
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
-  target_tags = ["ssh-allowed"]
-}
-
-# Allow all traffic between our two subnets (like inter-VLAN routing permitting LANs)
+# Allow SSH through Identity-Aware Proxy to explicitly tagged instances
 resource "google_compute_firewall" "allow_iap_ssh" {
   name    = "tf-allow-iap-ssh"
   network = google_compute_network.lab_vpc.id
@@ -144,7 +103,7 @@ resource "google_compute_firewall" "allow_iap_ssh" {
     ports    = ["22"]
   }
 
-  target_tags = ["iap-ssh"]
+  target_tags = ["ssh-allowed", "iap-ssh"]
 }
 
 resource "google_compute_firewall" "allow_internal" {

@@ -20,7 +20,7 @@ three separate resources — and unlike PT, you declare each piece explicitly.
 |:----------------|------:|:--------|:-----------|
 | `google_compute_router.nat_router` | 1 | Regional control-plane resource required by Cloud NAT | Lab 02 VPC |
 | `google_compute_router_nat.nat` | 1 | Outbound translation for the private server subnet | Router and `lan2_servers` |
-| `google_compute_firewall.allow_ssh` | 1 | SSH to explicitly tagged public-facing VMs from `var.my_ip` | Lab 02 VPC |
+| `google_compute_firewall.allow_iap_ssh` | 1 | SSH to explicitly tagged VMs through Identity-Aware Proxy | Lab 02 VPC |
 | `google_compute_firewall.allow_iap_ssh` | 1 | IAP TCP forwarding to explicitly tagged private VMs | Lab 02 VPC |
 | `google_compute_firewall.allow_internal` | 1 | TCP, UDP, and ICMP between the two lab CIDRs | Lab 02 VPC |
 
@@ -49,11 +49,6 @@ via Cloud NAT. And like your ACLs, we lock ingress down with firewall rules.
 ## `main.tf` (append to lab 02's config)
 
 ```hcl
-variable "my_ip" {
-  description = "Your public IP in CIDR form, for SSH access (e.g. 203.0.113.7/32)"
-  type        = string
-}
-
 # --- Cloud NAT: the cloud version of "ip nat inside source list ... overload" ---
 
 resource "google_compute_router" "nat_router" {
@@ -79,23 +74,7 @@ resource "google_compute_router_nat" "nat" {
 
 # --- Firewall rules: the cloud version of ACLs ---
 
-# Allow SSH to instances tagged "ssh-allowed", only from your IP
-resource "google_compute_firewall" "allow_ssh" {
-  name    = "tf-allow-ssh"
-  network = google_compute_network.lab_vpc.id
-
-  direction     = "INGRESS"
-  source_ranges = [var.my_ip]
-
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
-  target_tags = ["ssh-allowed"]
-}
-
-# Allow all traffic between our two subnets (like inter-VLAN routing permitting LANs)
+# Allow SSH through Identity-Aware Proxy to explicitly tagged instances
 resource "google_compute_firewall" "allow_iap_ssh" {
   name    = "tf-allow-iap-ssh"
   network = google_compute_network.lab_vpc.id
@@ -108,7 +87,7 @@ resource "google_compute_firewall" "allow_iap_ssh" {
     ports    = ["22"]
   }
 
-  target_tags = ["iap-ssh"]
+  target_tags = ["ssh-allowed", "iap-ssh"]
 }
 
 resource "google_compute_firewall" "allow_internal" {
@@ -135,12 +114,10 @@ resource "google_compute_firewall" "allow_internal" {
 ## Apply & Verify
 
 ```bash
-# Find your IP for the SSH rule
-curl -s ifconfig.me
+gcloud services enable iap.googleapis.com
 
 terraform apply \
-  -var="project_id=YOUR_PROJECT_ID" \
-  -var="my_ip=$(curl -s ifconfig.me)/32"
+  -var="project_id=YOUR_PROJECT_ID"
 
 gcloud compute routers describe tf-lab-nat-router --region=us-central1
 gcloud compute firewall-rules list --filter="network=tf-lab-vpc"

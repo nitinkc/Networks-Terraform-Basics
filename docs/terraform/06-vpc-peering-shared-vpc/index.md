@@ -138,17 +138,41 @@ resource "google_compute_firewall" "allow_hub_to_prod" {
 
 ## Apply and verify
 
-```bash
-terraform init
-terraform fmt
-terraform validate
-terraform apply -var="project_id=YOUR_PROJECT_ID"
+Lab 06 requires only `project_id`; `region` already defaults to `us-central1`.
+Variables named `web_instance_group` or `api_instance_group` belong to Lab 07.
+If Terraform requests them, stop and correct the terminal or IDE working
+directory before continuing.
 
-gcloud compute networks peerings list
-gcloud compute firewall-rules describe allow-hub-to-prod
+From the repository root:
+
+```bash
+cd docs/terraform/06-vpc-peering-shared-vpc
+
+# Confirm Terraform is using Lab 06, not Lab 07.
+pwd
+terraform validate
+
+export PROJECT_ID="YOUR_PROJECT_ID"
+terraform init
+terraform fmt -check
+terraform plan \
+  -input=false \
+  -var="project_id=$PROJECT_ID"
+terraform apply \
+  -var="project_id=$PROJECT_ID"
 ```
 
-Verify that both peering directions are `ACTIVE`. This configuration creates no
+Verify the two peering directions and firewall rule in the same project:
+
+```bash
+gcloud compute networks peerings list \
+  --project="$PROJECT_ID"
+
+gcloud compute firewall-rules describe allow-hub-to-prod \
+  --project="$PROJECT_ID"
+```
+
+Both peering directions should report `ACTIVE`. This configuration creates no
 VMs, so it proves control-plane connectivity and policy creation; add temporary
 test VMs only if you want to verify data-plane traffic, then remove them.
 
@@ -164,7 +188,7 @@ test VMs only if you want to verify data-plane traffic, then remove them.
 ## Cleanup and next step
 
 ```bash
-terraform destroy -var="project_id=YOUR_PROJECT_ID"
+terraform destroy -var="project_id=$PROJECT_ID"
 ```
 
 Continue to [Lab 07 — L4 & L7 Load Balancing](../07-load-balancing-l4-l7/index.md).

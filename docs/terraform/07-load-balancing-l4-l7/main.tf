@@ -1,47 +1,3 @@
-# Terraform Lab 07 — Layer 4 vs. Layer 7 Load Balancing
-
-Load Balancers act as intelligent traffic dispatchers. This lab covers the difference between **Layer 4 (Transport / TCP/UDP)** and **Layer 7 (Application / HTTP/HTTPS)** Load Balancing.
-
-## Lab contract
-
-| Item | This lab |
-|:-----|:---------|
-| **Execution model** | Standalone focused scenario with a new working directory and state |
-| **Starts from** | Only a GCP project ID; all backend infrastructure is created by this lab |
-| **Creates** | VPC, subnet, firewall, two instance templates, two managed instance groups, and the complete Layer 7 load-balancing chain |
-| **Cost note** | Global forwarding and backend resources may incur charges; destroy after verification |
-| **Next** | [Lab 08 — IPsec VPN & BGP](../08-ipsec-vpn-bgp-hybrid/index.md) |
-
-## Resource summary
-
-| Terraform block | Count | Purpose |
-|:----------------|------:|:--------|
-| `google_compute_network` / `google_compute_subnetwork` | 2 | Provides an isolated backend network |
-| `google_compute_instance_template` | 2 | Defines the web and API VM configurations |
-| `google_compute_instance_group_manager` | 2 | Creates one managed web VM and one managed API VM |
-| `google_compute_health_check.http_health` | 1 | Determines backend eligibility |
-| `google_compute_backend_service` | 2 | Separate web and API backend pools |
-| `google_compute_url_map.l7_url_map` | 1 | Sends `/api/*` to API and other paths to web |
-| `google_compute_target_http_proxy.http_proxy` | 1 | Terminates the HTTP frontend and uses the URL map |
-| `google_compute_global_forwarding_rule.forwarding_rule` | 1 | Creates the public TCP 80 entry point |
-| `output.load_balancer_ip` | 1 | Exposes the assigned frontend address for verification |
-
-![Layer 7 load-balancing chain from global forwarding rule through proxy and URL map to web and API backend services](diagrams/lab07-l7-load-balancing.svg)
-
-
-## Comparison Matrix: Layer 4 vs. Layer 7
-
-| Feature | Layer 4 (Network Load Balancer) | Layer 7 (Application Load Balancer) |
-|---|---|---|
-| **OSI Layer** | Layer 4 (TCP / UDP) | Layer 7 (HTTP / HTTPS / gRPC) |
-| **Inspection Capability**| IP addresses and Port numbers only | URLs, HTTP headers, Cookies, Query parameters |
-| **Routing Capability** | Distributes to a single backend pool | Content-based routing (`/api` → API pool, `/images` → Storage) |
-| **SSL/TLS Termination** | Pass-through (Client connects directly to VM) | Offloads TLS certificates at the edge; talks HTTP internally |
-| **Performance** | Extreme throughput, lowest latency | Rich traffic management, URL rewrites, and security |
-
-## Complete Terraform Configuration: L7 Cloud HTTP Load Balancer
-
-```hcl
 terraform {
   required_version = ">= 1.5.0"
 
@@ -184,9 +140,9 @@ resource "google_compute_instance_group_manager" "api" {
 
 # 1. Health Check (Probes backend VMs on port 80)
 resource "google_compute_health_check" "http_health" {
-  name               = "app-http-health-check"
-  check_interval_sec = 5
-  timeout_sec        = 3
+  name                = "app-http-health-check"
+  check_interval_sec  = 5
+  timeout_sec         = 3
   healthy_threshold   = 2
   unhealthy_threshold = 3
 
@@ -261,54 +217,3 @@ output "load_balancer_ip" {
   description = "Global frontend IP assigned to the HTTP load balancer"
   value       = google_compute_global_forwarding_rule.forwarding_rule.ip_address
 }
-```
-
-## Apply and verify
-
-Lab 07 creates its VPC, subnet, firewall rule, instance templates, and managed
-instance groups. Only `project_id` is required; all resource names and backend
-group links are derived inside Terraform.
-
-```bash
-cd docs/terraform/07-load-balancing-l4-l7
-export PROJECT_ID="YOUR_PROJECT_ID"
-
-gcloud services enable compute.googleapis.com \
-  --project="$PROJECT_ID"
-
-terraform init
-terraform fmt -check
-terraform validate
-terraform plan \
-  -input=false \
-  -var="project_id=$PROJECT_ID"
-terraform apply \
-  -var="project_id=$PROJECT_ID"
-```
-
-Wait for both managed instances and load-balancer backends to become healthy,
-then test path-based routing:
-
-```bash
-# 1. Fetch the global virtual IP assigned to the load balancer.
-VIP="$(terraform output -raw load_balancer_ip)"
-
-# 2. Test the default web backend.
-curl "http://$VIP/"
-# Expected: Web backend response
-
-# 3. Test the /api path routed to the API backend.
-curl "http://$VIP/api/users"
-# Expected: API backend response
-```
-
-## Cleanup and next step
-
-```bash
-terraform destroy \
-  -var="project_id=$PROJECT_ID"
-```
-
-This destroys the complete standalone Lab 07 stack, including both managed
-instance groups and their VMs. Continue to
-[Lab 08 — IPsec VPN & BGP](../08-ipsec-vpn-bgp-hybrid/index.md).
