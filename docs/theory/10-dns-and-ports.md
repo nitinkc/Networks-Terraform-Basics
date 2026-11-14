@@ -5,6 +5,12 @@
     - Ports let one IP address serve many simultaneous applications/connections
     - IP = building address, Port = apartment number
 
+## Visual summary
+
+![Recursive DNS resolution from client through resolver, root, TLD and authoritative servers, with record types](diagrams/10-dns-resolution-walk.svg)
+
+Editable source: [10-dns-resolution-walk.drawio](diagrams/10-dns-resolution-walk.drawio)
+
 ## DNS (Domain Name System)
 
 Humans use `google.com`; the network needs `142.250.72.14`. DNS is the

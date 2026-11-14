@@ -6,6 +6,12 @@
     - Reverse proxy: sits in front of servers, hides *them* from the client
     - Load balancer: usually implemented as a reverse proxy, distributes traffic across many backend servers
 
+## Visual summary
+
+![IPsec tunnel packet nesting, forward and reverse proxies, and a load balancer with health checks](diagrams/14-vpn-proxy-load-balancer.svg)
+
+Editable source: [14-vpn-proxy-load-balancer.drawio](diagrams/14-vpn-proxy-load-balancer.drawio)
+
 ## VPN (Virtual Private Network)
 
 A VPN creates an encrypted tunnel between your device and a VPN server.

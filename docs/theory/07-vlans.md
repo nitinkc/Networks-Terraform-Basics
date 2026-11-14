@@ -5,6 +5,12 @@
     - Devices in different VLANs can't talk to each other without going through a router (or Layer 3 switch)
     - Trunk ports carry multiple VLANs' traffic over a single physical link, tagged with 802.1Q
 
+## Visual summary
+
+![Two VLANs across two switches joined by an 802.1Q trunk with router-on-a-stick and the tag format](diagrams/07-vlans-and-trunking.svg)
+
+Editable source: [07-vlans-and-trunking.drawio](diagrams/07-vlans-and-trunking.drawio)
+
 ## The problem VLANs solve
 
 Physically, all your devices might be plugged into the same switch. But

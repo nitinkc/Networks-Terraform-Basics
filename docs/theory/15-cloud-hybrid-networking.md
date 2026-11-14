@@ -2,6 +2,12 @@
 
 > **Key takeaways:** Cloud networking uses familiar prefixes, routes, NAT, DNS, and filtering, but implements them as distributed services. Separate connectivity, routing, security, and administration when evaluating a design.
 
+## Visual summary
+
+![Google Cloud VPC, subnets, firewall rules, Cloud NAT and hybrid VPN mapped to classic networking terms and Terraform resources](diagrams/15-cloud-hybrid-concept-map.svg)
+
+Editable source: [15-cloud-hybrid-concept-map.drawio](diagrams/15-cloud-hybrid-concept-map.drawio)
+
 ## Physical-to-cloud mapping
 
 | Traditional concept | GCP-oriented equivalent |

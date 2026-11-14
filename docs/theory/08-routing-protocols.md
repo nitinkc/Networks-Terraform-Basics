@@ -2,6 +2,12 @@
 
 > **Key takeaways:** Forwarding uses the routing table. Static routes are configured directly, OSPF discovers paths inside an organization, and BGP exchanges policy-controlled reachability between autonomous systems.
 
+## Visual summary
+
+![OSPF cheapest path, BGP between autonomous systems, administrative distance, and route selection order](diagrams/08-routing-static-ospf-bgp.svg)
+
+Editable source: [08-routing-static-ospf-bgp.drawio](diagrams/08-routing-static-ospf-bgp.drawio)
+
 ## Control plane and data plane
 
 The **control plane** learns or creates routes. The **data plane** performs a longest-prefix match for each packet and forwards it through the selected next hop. A routing protocol does not carry user traffic; it supplies information used to build the forwarding table.

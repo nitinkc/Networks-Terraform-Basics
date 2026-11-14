@@ -5,6 +5,12 @@
     - Filtering can be based on IP, port, protocol, or connection state
     - Firewalls exist at every layer: on a single host, at a router, or at a network's edge
 
+## Visual summary
+
+![Stateless filtering needing two rules versus a stateful connection table, with a zone policy matrix](diagrams/13-stateless-vs-stateful-firewall.svg)
+
+Editable source: [13-stateless-vs-stateful-firewall.drawio](diagrams/13-stateless-vs-stateful-firewall.drawio)
+
 ## What a firewall actually does
 
 A firewall inspects traffic against a set of **rules** and decides to

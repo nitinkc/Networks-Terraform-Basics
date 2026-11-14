@@ -5,6 +5,12 @@
     - Router = Layer 3, forwards by IP address, connects *different* networks together
     - A home "router" is almost always a router + switch + modem combined into one box
 
+## Visual summary
+
+![Switch MAC learning compared with router prefix lookup, and which header fields change per hop](diagrams/04-switch-vs-router.svg)
+
+Editable source: [04-switch-vs-router.drawio](diagrams/04-switch-vs-router.drawio)
+
 ## Switches (Layer 2)
 
 A switch's job: receive a frame on one port, figure out which port the

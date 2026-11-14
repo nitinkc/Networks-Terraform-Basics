@@ -7,6 +7,12 @@
     - Static PAT, commonly called port forwarding, makes one service on an inside host reachable from outside.
     - NAT requires correct routing; it does not replace routes, ACLs, or a stateful firewall.
 
+## Visual summary
+
+![PAT rewriting two private hosts that chose the same source port, with the translation table and the four Cisco NAT terms](diagrams/05-nat-pat-translation.svg)
+
+Editable source: [05-nat-pat-translation.drawio](diagrams/05-nat-pat-translation.drawio)
+
 ## Private IP ranges (memorize these three)
 
 | Range                         | CIDR           | Common use                       |

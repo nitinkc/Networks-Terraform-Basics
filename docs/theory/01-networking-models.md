@@ -5,6 +5,12 @@
     - TCP/IP is the 4-layer model the real internet actually runs on
     - Almost every "which layer does X operate at" interview question maps back to this page
 
+## Visual summary
+
+![OSI and TCP/IP layers side by side with the headers added at each layer during encapsulation](diagrams/01-osi-tcpip-encapsulation.svg)
+
+Editable source: [01-osi-tcpip-encapsulation.drawio](diagrams/01-osi-tcpip-encapsulation.drawio)
+
 ## Why a layered model at all?
 
 Networking is broken into layers so that each layer only has to solve

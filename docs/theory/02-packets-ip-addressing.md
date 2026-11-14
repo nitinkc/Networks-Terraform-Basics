@@ -6,6 +6,12 @@
     - IPv4 = 32-bit (~4.3B addresses, exhausted); IPv6 = 128-bit (practically inexhaustible)
     - Routers move packets between networks by consulting a routing table
 
+## Visual summary
+
+![IPv4 header fields with TTL and protocol explained, plus an address split into network and host parts by its subnet mask](diagrams/02-packet-header-ipv4-mask.svg)
+
+Editable source: [02-packet-header-ipv4-mask.drawio](diagrams/02-packet-header-ipv4-mask.drawio)
+
 ## Why packets, not one continuous stream?
 
 If you sent a whole file as one unbroken transmission, one bit error

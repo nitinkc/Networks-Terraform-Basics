@@ -8,6 +8,12 @@
 Both operate at the **Transport layer** (Layer 4). Both use ports to
 identify applications, as covered in [DNS and Ports](10-dns-and-ports.md). That's where the similarity ends.
 
+## Visual summary
+
+![TCP three-way handshake with retransmission compared with connectionless UDP datagrams and their headers](diagrams/09-tcp-handshake-vs-udp.svg)
+
+Editable source: [09-tcp-handshake-vs-udp.drawio](diagrams/09-tcp-handshake-vs-udp.drawio)
+
 ## TCP (Transmission Control Protocol)
 
 ### The three-way handshake

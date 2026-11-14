@@ -114,6 +114,10 @@ nav:
       - 13 - Firewalls: theory/13-firewalls.md
       - 14 - VPNs, Proxies & Load Balancers: theory/14-vpn-proxies-loadbalancers.md
       - 15 - Cloud & Hybrid Networking: theory/15-cloud-hybrid-networking.md
+      - 17 - F5 XC Platform Architecture: theory/17-f5-xc-platform-architecture.md
+      - 18 - F5 XC Site Networking on GCP: theory/18-f5-xc-site-networking-gcp.md
+      - 19 - F5 XC Origins, Load Balancing & WAF: theory/19-f5-xc-traffic-security.md
+      - 20 - Apigee vs F5 Distributed Cloud: theory/20-apigee-vs-f5-xc.md
   - Packet Tracer Labs:
       - 01 - Single-Subnet FTP/HTTP: labs/01-single-subnet-ftp-http/index.md
       - 02 - Router & Subnets: labs/02-router-subnets/index.md
@@ -126,6 +130,7 @@ nav:
       - 09 - GCP Architecture Equivalent: labs/09-gcp-architecture-equivalent/index.md
   - Applied Case Study:
       - Terraform & GKE Microservices Network: theory/16-terraform-gke-case-study.md
+      - Apigee vs F5 Distributed Cloud: theory/20-apigee-vs-f5-xc.md
   - Terraform & GCP Labs:
       - 01 - Setup & First Apply: terraform/01-setup-first-apply/index.md
       - 02 - VPC & Subnets: terraform/02-vpc-subnets/index.md
@@ -135,6 +140,11 @@ nav:
       - 06 - VPC Peering & Shared VPC: terraform/06-vpc-peering-shared-vpc/index.md
       - 07 - L4 & L7 Load Balancing: terraform/07-load-balancing-l4-l7/index.md
       - 08 - IPsec VPN & BGP: terraform/08-ipsec-vpn-bgp-hybrid/index.md
+  - F5 Distributed Cloud Labs:
+      - 01 - GCP Networking & Site Concepts: f5-xc/01-gcp-networking-site-concepts/index.md
+      - 02 - Manual CE Deployment: f5-xc/02-manual-ce-deployment/index.md
+      - 03 - Terraform Dual-Provider Setup: f5-xc/03-terraform-dual-provider/index.md
+      - 04 - Automated Site, Discovery & WAF: f5-xc/04-automated-site-waf/index.md
   - Knowledge Check Quiz:
       - Quiz Home: theory/99-quiz.md
       - 01 - Models & Local Delivery: theory/99-quiz-models-local-delivery.md

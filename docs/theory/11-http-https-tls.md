@@ -5,6 +5,12 @@
     - TLS provides confidentiality, integrity, and authentication
     - The TLS handshake happens once per connection, then symmetric encryption takes over for speed
 
+## Visual summary
+
+![TLS 1.3 handshake, certificate chain of trust, asymmetric to symmetric key switch, and the HTTP exchange inside the tunnel](diagrams/11-tls-handshake-and-http.svg)
+
+Editable source: [11-tls-handshake-and-http.drawio](diagrams/11-tls-handshake-and-http.drawio)
+
 ## HTTP (HyperText Transfer Protocol)
 
 A request/response protocol between clients and servers, running over

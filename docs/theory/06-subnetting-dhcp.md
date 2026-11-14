@@ -5,6 +5,12 @@
     - CIDR notation (`/24`, `/16`, etc.) tells you the subnet's size
     - DHCP automates handing out IPs so nobody has to manually configure every device
 
+## Visual summary
+
+![A /24 split into /25 and /26 subnets with bit view, the DHCP DORA exchange, and DHCP relay](diagrams/06-subnetting-and-dhcp.svg)
+
+Editable source: [06-subnetting-and-dhcp.drawio](diagrams/06-subnetting-and-dhcp.drawio)
+
 ## Subnetting & CIDR
 
 CIDR notation (`/prefix`) tells you how many bits are fixed as the

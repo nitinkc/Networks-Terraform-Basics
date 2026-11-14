@@ -61,3 +61,17 @@ letting you push them to the repo via Git LFS.
 4. Follow the "What to observe" table at the bottom of each file to connect
    what you're seeing back to the underlying concept
 5. Save your working topology as `topology/<lab-name>.pkt`
+
+## Diagrams
+
+Every concept diagram under `docs/**/diagrams/` ships as an editable
+`.drawio` file plus a matching `.svg` that MkDocs embeds. Both are generated
+from one spec in `tools/diagrams/`, so they cannot drift apart.
+
+```shell
+python3 tools/diagrams/build.py          # rebuild all diagrams (stdlib only)
+python3 tools/diagrams/build.py labs     # rebuild one module group
+```
+
+Open any `.drawio` file in draw.io to tweak it by hand, or edit the spec and
+rebuild. Regenerating overwrites hand edits to the generated files.

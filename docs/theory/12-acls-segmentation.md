@@ -2,6 +2,12 @@
 
 > **Key takeaways:** Segmentation creates boundaries; routing permits reachability across them; ACLs selectively restrict that reachability. ACL order, direction, placement, and the implicit deny determine the result.
 
+## Visual summary
+
+![ACL rules evaluated top to bottom with implicit deny, inbound versus outbound placement, and wildcard masks](diagrams/12-acl-evaluation-and-segmentation.svg)
+
+Editable source: [12-acl-evaluation-and-segmentation.drawio](diagrams/12-acl-evaluation-and-segmentation.drawio)
+
 ## Segmentation and policy are different
 
 A VLAN creates a Layer 2 broadcast domain. A subnet defines a Layer 3 prefix. They are commonly paired, but neither alone expresses a complete security policy. Once a router or Layer 3 switch provides inter-VLAN routing, traffic can cross unless a policy blocks it.

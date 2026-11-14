@@ -1,13 +1,17 @@
+<!-- markdownlint-disable-file MD041 -->
 <!-- Abbreviation full-forms and concise definitions — auto-appended to every page via pymdownx.snippets auto_append.
-     Renders as hover tooltips (content.tooltips must stay enabled in mkdocs.yml). -->
+     Renders as hover tooltips (content.tooltips must stay enabled in mkdocs.yml).
+     Intentionally has no H1: it is a snippet fragment injected into other pages, not a standalone document. -->
 
 *[ACL]: Access Control List — an ordered set of permit/deny rules that filters traffic by addresses, protocols, and ports.
+*[ADN]: Application Delivery Network — a globally distributed proxy fabric that terminates client connections at edge points of presence and optimizes delivery to origins.
 *[API]: Application Programming Interface — a defined contract through which software systems exchange requests and responses.
 *[APIPA]: Automatic Private IP Addressing — a self-assigned 169.254.0.0/16 address used when an IPv4 host cannot obtain DHCP configuration.
 *[ARP]: Address Resolution Protocol — resolves a local IPv4 address to the MAC address needed for Layer 2 delivery.
 *[AS]: Autonomous System — a network or group of networks operated under one routing policy.
 *[AWS]: Amazon Web Services — Amazon's public cloud computing platform.
 *[BGP]: Border Gateway Protocol — a path-vector routing protocol used to exchange policy-controlled reachability between autonomous systems.
+*[CE]: Customer Edge — the F5 Distributed Cloud software node deployed inside a customer site or VPC that connects local workloads to the XC global network.
 *[CIDR]: Classless Inter-Domain Routing — prefix notation that defines the network and host portions of an IP range.
 *[CLI]: Command-Line Interface — a text-based interface for running commands and configuring a system.
 *[CML]: Cisco Modeling Labs — Cisco's network simulation and emulation platform.
@@ -16,6 +20,7 @@
 *[DNS]: Domain Name System — resolves domain names to IP addresses and stores other namespace records.
 *[DORA]: Discover, Offer, Request, Acknowledge — the four-message exchange commonly used to obtain a DHCP lease.
 *[FTP]: File Transfer Protocol — a TCP-based protocol that uses separate control and data channels to transfer files.
+*[GKE]: Google Kubernetes Engine — Google Cloud's managed Kubernetes service.
 *[HCL]: HashiCorp Configuration Language — the declarative language commonly used to write Terraform configuration.
 *[HTTP]: HyperText Transfer Protocol — an application-layer request/response protocol used by web clients and servers.
 *[HTTPS]: HyperText Transfer Protocol Secure — HTTP carried over TLS to provide encryption, integrity, and server authentication.
@@ -33,17 +38,24 @@
 *[OSPF]: Open Shortest Path First — a link-state interior routing protocol that calculates paths using cost.
 *[PAT]: Port Address Translation — allows many private flows to share one public IP by translating transport identifiers.
 *[PoP]: Point of Presence — a physical location where a provider exposes network connectivity or services.
+*[RE]: Regional Edge — an F5 Distributed Cloud point of presence that terminates client connections and forwards traffic to Customer Edges.
 *[RFC]: Request for Comments — a publication series containing internet standards, protocols, and technical guidance.
+*[SaaS]: Software as a Service — an application delivered and operated by a provider over the internet.
+*[SLI]: Site Local Inside — the F5 XC Customer Edge interface connected to the private, workload-facing network.
+*[SLO]: Site Local Outside — the F5 XC Customer Edge interface connected to the public/control-plane-facing network (distinct from Service Level Objective in general use).
 *[SSH]: Secure Shell — an encrypted protocol for remote command-line access and administration.
 *[SSL]: Secure Sockets Layer — the obsolete predecessor to TLS; the name is still used informally for certificates and encrypted web traffic.
 *[TLS]: Transport Layer Security — encrypts traffic and provides integrity and peer authentication.
 *[UDP]: User Datagram Protocol — a connectionless transport protocol with low overhead and no delivery or ordering guarantee.
 *[VLAN]: Virtual Local Area Network — divides shared switching infrastructure into separate Layer 2 broadcast domains.
 *[VM]: Virtual Machine — a software-defined computer running its own operating system on virtualized hardware.
+*[VIP]: Virtual IP — a load balancer's advertised frontend address that distributes traffic across backend servers.
 *[VPC]: Virtual Private Cloud — a logically isolated, software-defined cloud networking domain.
 *[VPN]: Virtual Private Network — an authenticated, encrypted tunnel that carries private traffic across an untrusted network.
 *[VPCS]: Virtual PC Simulator — a lightweight host simulator used in network emulation labs.
+*[WAF]: Web Application Firewall — a Layer 7 security policy that inspects HTTP requests and blocks attacks such as injection and XSS.
 *[WAN]: Wide Area Network — a network that connects geographically separated sites or upstream networks.
+*[XC]: F5 Distributed Cloud — F5's SaaS platform (formerly Volterra) providing global load balancing, WAF, and site connectivity through Customer and Regional Edges.
 
 <!-- Important non-abbreviated terms from the glossary. The Markdown abbr extension also supports multi-word terms. -->
 

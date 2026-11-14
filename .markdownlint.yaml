@@ -1,0 +1,11 @@
+# markdownlint configuration for this repository.
+#
+# Repo convention: table separator rows use the compact style (|:--|---|)
+# consistently across every doc (~50+ tables). MD060's padded-pipe style
+# would require churning nearly every file for zero rendering difference.
+MD060: false
+
+# Repo convention: prose is mostly wrapped near 80 columns but ~300 lines
+# across 35 files already exceed it, and table rows are long by design.
+# MD013 at the default would flag nearly every file.
+MD013: false

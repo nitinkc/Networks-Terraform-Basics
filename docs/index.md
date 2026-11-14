@@ -33,6 +33,13 @@ components are added.
 | 13 | [Firewalls](theory/13-firewalls.md) | Extend filtering into stateful enforcement and security boundaries. |
 | 14 | [VPNs, Proxies & Load Balancers](theory/14-vpn-proxies-loadbalancers.md) | Combine secure connectivity, intermediaries, and traffic distribution. |
 | 15 | [Cloud & Hybrid Networking](theory/15-cloud-hybrid-networking.md) | Map the completed foundations to distributed cloud services and Terraform. |
+| 16 | [F5 XC Platform Architecture](theory/17-f5-xc-platform-architecture.md) | Understand the SaaS control plane, Regional Edges, and Customer Edges behind the F5 labs. |
+| 17 | [F5 XC Site Networking on GCP](theory/18-f5-xc-site-networking-gcp.md) | Design the two-VPC SLO/SLI boundary and the site registration trust model. |
+| 18 | [F5 XC Origins, Load Balancing & WAF](theory/19-f5-xc-traffic-security.md) | Trace a request through DNS, edge policy, the site tunnel, and the private origin. |
+
+Stages 16–18 are an extension track: they explain the platform the
+[F5 Distributed Cloud labs](labs/lab-theory-map.md) exercise, and assume the
+Stage 15 cloud model as prerequisite.
 
 ## Applied case study
 
@@ -51,6 +58,11 @@ uses a three-service application to connect the completed theory:
 
 The case study is intentionally last. It demonstrates the concepts; it does not
 define or replace them.
+
+A companion comparison page, [Apigee vs F5 Distributed Cloud](theory/20-apigee-vs-f5-xc.md),
+sits between the case study and the F5 track: it contrasts the two front-door
+platforms, maps which is better under which scenario, and shows the combined
+edge-plus-governance pattern.
 
 ## How to study
 

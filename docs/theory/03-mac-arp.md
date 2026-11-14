@@ -5,6 +5,12 @@
     - IP = Layer 3 logical identifier, changes depending on which network you're on
     - ARP is the bridge: it maps a known IP to the MAC address needed to actually deliver a frame locally
 
+## Visual summary
+
+![ARP sequence: broadcast request flooded by the switch, unicast reply, cache entry, and the ARP request frame layout](diagrams/03-arp-resolution.svg)
+
+Editable source: [03-arp-resolution.drawio](diagrams/03-arp-resolution.drawio)
+
 ## MAC addresses
 
 - 48 bits, written as `A4:5E:60:1B:2C:3D`

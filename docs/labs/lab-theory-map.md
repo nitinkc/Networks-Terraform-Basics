@@ -6,6 +6,7 @@ Terraform/GCP deployments.
 
 - **Packet Tracer labs** isolate Cisco, protocol, and packet-flow fundamentals.
 - **Terraform & GCP labs** apply those fundamentals to declarative cloud infrastructure.
+- **F5 Distributed Cloud labs** put an F5 XC Customer Edge and WAF-protected global load balancer in front of those private GCP workloads.
 
 Read the listed theory first, predict the flow, complete the lab, and then prove
 the result using device state, packet inspection, or cloud runtime evidence.
@@ -42,6 +43,19 @@ first provider configuration toward multi-network and hybrid designs.
 | 6 | [VPC peering and Shared VPC](../terraform/06-vpc-peering-shared-vpc/index.md) | [Routing](../theory/08-routing-protocols.md), [Cloud networking](../theory/15-cloud-hybrid-networking.md) | Private connectivity and centralized network administration are separate design choices. |
 | 7 | [L4 and L7 load balancing](../terraform/07-load-balancing-l4-l7/index.md) | [TCP and UDP](../theory/09-tcp-udp.md), [HTTP/HTTPS](../theory/11-http-https-tls.md), [Load balancers](../theory/14-vpn-proxies-loadbalancers.md) | L4 distributes connections while L7 can route using HTTP information. |
 | 8 | [IPsec VPN and BGP](../terraform/08-ipsec-vpn-bgp-hybrid/index.md) | [Routing](../theory/08-routing-protocols.md), [VPNs](../theory/14-vpn-proxies-loadbalancers.md), [Cloud networking](../theory/15-cloud-hybrid-networking.md) | IPsec secures the tunnel while BGP exchanges the private prefixes that use it. |
+
+## F5 Distributed Cloud lab sequence
+
+The F5 XC labs are located under `docs/f5-xc/` and layer a SaaS edge platform on
+top of the GCP networking model. Complete Terraform stages 1–4 (or Labs 01–02 of
+this sequence) before the dual-provider work.
+
+| Stage | F5 XC lab | Read first | What the lab proves |
+|:------|:----------|:-----------|:--------------------|
+| 1 | [GCP networking and site concepts](../f5-xc/01-gcp-networking-site-concepts/index.md) | [XC platform architecture](../theory/17-f5-xc-platform-architecture.md), [XC site networking on GCP](../theory/18-f5-xc-site-networking-gcp.md), [Cloud networking](../theory/15-cloud-hybrid-networking.md) | A two-VPC SLO/SLI boundary isolates private workloads so only a Customer Edge can reach them. |
+| 2 | [Manual CE deployment](../f5-xc/02-manual-ce-deployment/index.md) | Stage 1, [XC origins, load balancing and WAF](../theory/19-f5-xc-traffic-security.md), [Load balancers](../theory/14-vpn-proxies-loadbalancers.md) | Site tokens, registration approval, origin pools, and HTTP load balancers publish a private backend globally. |
+| 3 | [Terraform dual-provider setup](../f5-xc/03-terraform-dual-provider/index.md) | Terraform stages 1–4, [XC platform architecture](../theory/17-f5-xc-platform-architecture.md) | GCP and F5 XC resources can be managed in one Terraform project with separate provider credentials. |
+| 4 | [Automated site, discovery and WAF](../f5-xc/04-automated-site-waf/index.md) | Stages 1–3, [XC origins, load balancing and WAF](../theory/19-f5-xc-traffic-security.md) | One apply provisions the landing zone, registers a CE site, and puts a declarative WAF in front of a private origin. |
 
 ## A repeatable study loop
 
