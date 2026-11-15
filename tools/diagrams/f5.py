@@ -12,7 +12,7 @@ def f5_architecture():
     c.group(44, 250, 262, 520, "CLIENTS", c="blue")
     for i, (t, s) in enumerate([("Browser", "portal.example.com"), ("Mobile app", "api.example.com"), ("Partner system", "machine to machine")]):
         c.rect(64, 308 + i * 108, 222, 88, [f"#{t}", f"~{s}"], c="blue", white=True, id=f"cl{i}", shadow=False)
-    c.rect(64, 640, 222, 110, [("!DNS resolves to the", PAL["blue"][2]), ("!nearest Regional Edge", PAL["blue"][2]), ("_anycast VIPs, no VPN", MUTED)], c="blue", white=True, shadow=False)
+    c.rect(64, 640, 222, 110, [("!DNS returns a VIP", PAL["blue"][2]), ("!Routing selects an RE", PAL["blue"][2]), ("_anycast entry, no VPN", MUTED)], c="blue", white=True, shadow=False)
     c.group(350, 250, 490, 520, "F5 XC GLOBAL ADN · REGIONAL EDGES", c="orange")
     for i, (t, d) in enumerate([("RE · Americas", "anycast VIP · TLS termination · WAF · L7 routing"), ("RE · Europe", "anycast VIP · TLS termination · WAF · L7 routing"), ("RE · Asia-Pacific", "anycast VIP · TLS termination · WAF · L7 routing")]):
         c.rect(374, 304 + i * 108, 442, 90, [f"#{t}", f"_{d}"], c="orange", white=True, id=f"re{i}", shadow=False, pad=4)
@@ -40,6 +40,35 @@ def f5_architecture():
     c.footer("", "REMEMBER", lines=["Clients never learn backend addresses: every request ends at a Regional Edge, is inspected and policy-checked,",
                                     "then rides an encrypted tunnel to the Customer Edge that owns the inside route to the origin."])
     c.save(out(T + "f5-xc-architecture"))
+
+
+def f5_anycast():
+    c = Canvas(1360, 1000, "Anycast: one public VIP, multiple possible edges",
+               "DNS supplies an address; network routing selects an edge; XC load balancing selects a healthy private origin", "STAGE 17 · ANYCAST")
+    c.group(44, 130, 1272, 190, "UNICAST · ONE SPECIFIC DESTINATION", c="blue")
+    c.rect(70, 194, 260, 80, ["#Client", "_destination: 192.0.2.10"], c="blue", white=True, id="uc")
+    c.rect(520, 194, 300, 80, ["#Network routing", "_route toward one destination"], c="gray", white=True, id="ur")
+    c.rect(1010, 194, 280, 80, ["#Service at one location", "~192.0.2.10"], c="blue", white=True, id="us")
+    c.edge("uc", "ur", c="blue", w=4)
+    c.edge("ur", "us", c="blue", w=4)
+    c.group(44, 350, 1272, 350, "ANYCAST · SAME VIP AT PARTICIPATING LOCATIONS", c="orange")
+    c.rect(70, 416, 260, 96, ["#Client A", "_DNS returns shared VIP", "~203.0.113.10"], c="blue", white=True, id="a")
+    c.rect(70, 566, 260, 96, ["#Client B", "_DNS returns SAME VIP", "~203.0.113.10"], c="purple", white=True, id="b")
+    c.rect(480, 416, 320, 96, ["#Routing from network A", "_selected BGP route to RE A", "_not a DNS proximity decision"], c="blue", white=True, id="ra")
+    c.rect(480, 566, 320, 96, ["#Routing from network B", "_selected BGP route to RE B", "_not packet replication"], c="purple", white=True, id="rb")
+    for suffix, y, col in [("a", 416, "blue"), ("b", 566, "purple")]:
+        c.rect(1010, y, 280, 96, [f"#Regional Edge {suffix.upper()}", "~VIP 203.0.113.10", "_advertises containing prefix"], c="orange", white=True, id=f"re{suffix}")
+        c.edge(suffix, f"r{suffix}", c=col, w=4)
+        c.edge(f"r{suffix}", f"re{suffix}", c=col, w=4)
+    c.text(44, 722, [("^AFTER INGRESS · A SEPARATE DECISION AT THE SELECTED RE", PAL["indigo"][2])])
+    stages = [("TLS + WAF", "inspect request", "orange"), ("Origin selection", "policy + health checks", "pink"), ("RE–CE tunnel", "encrypted site path", "purple"), ("CE → private origin", "unicast: 10.200.0.10", "green")]
+    for i, (title, detail, col) in enumerate(stages):
+        c.rect(44 + i * 326, 760, 294, 80, [f"#{title}", f"_{detail}"], c=col, id=f"post{i}")
+        if i:
+            c.edge(f"post{i - 1}", f"post{i}", c="gray", w=3)
+    c.footer("", "REMEMBER", lines=["Best route is not necessarily geographically closest. Route withdrawal needs convergence; existing sessions can break.",
+                                    "Public IPs shown are documentation examples. Anycast chooses an edge, not a backend; no request is copied to all REs."])
+    c.save(out(T + "f5-xc-anycast"))
 
 
 def f5_slo_sli():
@@ -89,7 +118,7 @@ def f5_request_path():
     c.line([(1169, 250), (1169, 290), (139, 290), (139, 250)], color="#1E9A63", w=3, dash="d")
     c.label(654, 290, "6 · return path: response retraces the same tunnel", c="green", solid=True)
     c.text(44, 336, [("^WHAT EACH STAGE DECIDES", PAL["indigo"][2])])
-    cards = [("DNS → VIP", "Decides WHICH edge serves it", "TCP + TLS to the nearest PoP. The origin never sees the session.", "http_loadbalancer.domains", "purple"),
+    cards = [("DNS + anycast routing", "Decides WHICH edge receives it", "DNS returns the VIP; routing selects an RE. The origin never sees the client session.", "http_loadbalancer.domains", "purple"),
              ("Edge policy", "Decides MAY this request pass", "WAF signatures, threat campaigns, service policy allow/deny, rate limits, bot rules.", "app_firewall · service_policy", "orange"),
              ("Origin pool", "Decides WHICH backend serves it", "Healthy endpoints only; endpoint_selection = LOCAL_PREFERRED picks the nearest site.", "origin_pool · healthcheck", "pink"),
              ("Tunnel + SLI", "Decides HOW to reach the site", "RE tunnel ends on the SLO; the CE forwards inward from its SLI address (SNAT).", "site (gcp_vpc_site)", "teal")]

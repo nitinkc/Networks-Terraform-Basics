@@ -61,6 +61,74 @@ at the control plane — it is policy and identity only.
     open from the internet. This inverts the usual edge appliance model and is
     why a CE fits inside a private VPC design.
 
+## Anycast: one public IP, multiple possible edges
+
+**Anycast** lets multiple geographically distributed locations serve the same
+IP address. Each participating location advertises a route for the prefix
+containing that address, typically using **BGP**. Internet routers select a
+best route, so a client's packets reach **one** of those locations—not every
+location. The packet still has an ordinary destination IP; there is no special
+"anycast" flag in its header.
+
+### Unicast vs anycast
+
+| Model | Where the destination is served | What happens to a packet | Example |
+|---|---|---|---|
+| **Unicast** | One specifically addressed destination (which may itself be a load balancer) | Routing delivers it toward that destination | CE forwards to private origin `10.200.0.10` |
+| **Anycast** | The same service IP is available at multiple locations | Routing delivers it to one selected location | Public XC VIP served at participating REs |
+| **Broadcast** | All hosts in a broadcast domain | The local network distributes it to everyone in that domain | An IPv4 ARP request |
+| **Multicast** | A receiver group | The network replicates packets toward group members | A multicast video stream |
+
+Anycast is **one-to-one-of-many**, not one-to-all. Unlike broadcast or
+multicast, it does not send a copy of a client's request to every RE.
+
+![Unicast reaches one destination; anycast uses a shared VIP and routing to select one Regional Edge, then XC selects a private origin](diagrams/f5-xc-anycast.svg)
+
+Editable source: [anycast and unicast diagram](diagrams/f5-xc-anycast.drawio).
+
+### How this applies to the XC labs
+
+For the **public, RE-advertised HTTP load balancer** used in these labs:
+
+1. **DNS returns the public VIP.** The application's DNS record leads to the
+   XC load balancer's public address. For illustration, use `203.0.113.10`
+   (a documentation-only address, not a real XC endpoint).
+2. **Internet routing selects an RE.** Participating RE locations advertise
+   the prefix containing that VIP. The client's network follows its selected
+   route to one RE. Another client can use the **same VIP** and reach a
+   different RE.
+3. **The RE processes the request.** It terminates the client connection,
+   applies TLS/WAF and routing policies, and selects a healthy origin using
+   the configured load-balancing policy.
+4. **XC reaches the private origin.** For this lab's CE-backed pool, traffic
+   crosses the RE–CE encrypted tunnel, then the CE forwards it to the origin's
+   private unicast address through SLI. The origin does not need the public VIP
+   or a public IP of its own.
+
+!!! important "DNS, anycast routing, and backend selection are different decisions"
+    **DNS:** which address should the client use? **Anycast routing:** which
+    participating edge receives packets for that address? **Load balancing:**
+    which healthy origin should handle the request after it reaches the edge?
+    Anycast alone does not choose a backend or apply a WAF policy. XC also
+    supports other advertisement modes; not every CE or LB is automatically
+    an internet-facing anycast endpoint.
+
+### What “nearest edge” actually means
+
+“Nearest” means **best according to network routing policy**, not necessarily
+shortest geographic distance or lowest measured latency. BGP policy, peering,
+path attributes, and internal routing costs influence where traffic enters.
+DNS does not inherently pick the closest RE simply because the VIP is anycast.
+
+Anycast can provide a stable entry address and distribute ingress across
+locations. If a location stops advertising its route and routing converges,
+clients can reach another location **without changing the VIP or waiting for a
+DNS TTL**. This is not instantaneous or guaranteed session migration: existing
+TCP/TLS connections can break when their path moves to a different edge, so
+clients may need to reconnect. An unhealthy backend is a separate concern:
+origin health checks and pool selection handle it; anycast does not inherently
+detect an application failure or withdraw an advertisement.
+
 ## Identity and isolation: tenant + namespace
 
 Almost every XC object lives in a **namespace** (`system`, `shared`, or one you
